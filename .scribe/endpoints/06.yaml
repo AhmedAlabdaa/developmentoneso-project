@@ -1,0 +1,65 @@
+name: 'Statement of Account'
+description: |-
+
+  APIs for retrieving statement of account for a ledger.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/statement-of-account/{ledger_id}'
+    metadata:
+      custom: []
+      groupName: 'Statement of Account'
+      groupDescription: |-
+
+        APIs for retrieving statement of account for a ledger.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Statement of Account'
+      description: |-
+        Retrieve the statement of account for a specific ledger. Returns all posted
+        journal transaction lines with debit, credit, running balance, notes, and source type.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      ledger_id:
+        custom: []
+        name: ledger_id
+        description: 'The ID of the ledger.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      ledger_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: '{"message":"Ledger not found"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

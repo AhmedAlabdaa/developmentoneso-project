@@ -1,0 +1,2104 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "http:\/\/74.162.89.93"
+        }
+    ],
+    "info": {
+        "name": "Laravel API Documentation",
+        "_postman_id": "ed999599-6d90-4ed8-9f8e-227ef5f85d04",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Bulk Journal Import",
+            "description": "\nAPIs for bulk importing journal vouchers via CSV.",
+            "item": [
+                {
+                    "name": "Bulk Import Journal Vouchers",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/journals\/bulk-import",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/journals\/bulk-import"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "file",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Import multiple journal entries from a CSV file. Each journal entry is grouped by posting_date.\n\nCSV columns:\n- ledger_name (required): Name of the ledger account\n- debit (required): Debit amount (use 0 if credit)\n- credit (required): Credit amount (use 0 if debit)\n- posting_date (required): Date in Y-m-d format\n- candidate_id (optional): Employee\/candidate ID\n- note (optional): Transaction note"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Import completed\",\n  \"created_journals\": 3,\n  \"total_rows\": 10,\n  \"errors\": []\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Invoice Services",
+            "description": "\nAPIs for managing invoice services.",
+            "item": [
+                {
+                    "name": "Lookup Invoice Services",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/invoice-services\/lookup",
+                            "query": [
+                                {
+                                    "key": "search",
+                                    "value": "Service+A",
+                                    "description": "Search by name or code.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "type",
+                                    "value": "1",
+                                    "description": "Filter by service type.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Items per page (max 50).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/invoice-services\/lookup?search=Service+A&type=1&page=1&per_page=20"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get a simplified list of invoice services for dropdowns, including nested lines.\nReturns format: {id, text, lines: [...]}"
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"results\":[],\"pagination\":{\"more\":false,\"current_page\":1,\"total\":0}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "List Invoice Services",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/invoice-services",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "15",
+                                    "description": "Number of items per page.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_by",
+                                    "value": "created_at",
+                                    "description": "Field to sort by.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_direction",
+                                    "value": "desc",
+                                    "description": "Sort direction.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/invoice-services?per_page=15&sort_by=created_at&sort_direction=desc"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Display a listing of the resource."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":11,\"name\":\"Service with cash back\",\"code\":\"n\",\"note\":\"g\",\"status\":false,\"type\":3,\"settings\":null,\"created_by\":null,\"updated_by\":null,\"created_by_name\":null,\"updated_by_name\":null,\"total_amount\":0,\"govt_fee\":0,\"center_fee\":0,\"service_charge\":0,\"tax\":0,\"is_taxable\":false,\"lines\":[{\"id\":28,\"ledger_account_id\":30,\"ledger_name\":\"Mohre Cash back receivable\",\"invoice_service_id\":11,\"amount_debit\":\"76.14\",\"amount_credit\":\"0.00\",\"vatable\":false,\"note\":\"m\",\"source_amount\":2,\"created_at\":\"2026-01-31T14:42:18.000000Z\",\"updated_at\":\"2026-01-31T14:42:18.000000Z\"},{\"id\":29,\"ledger_account_id\":20,\"ledger_name\":\"credit card\",\"invoice_service_id\":11,\"amount_debit\":\"0.00\",\"amount_credit\":\"76.14\",\"vatable\":false,\"note\":\"m\",\"source_amount\":2,\"created_at\":\"2026-01-31T14:42:18.000000Z\",\"updated_at\":\"2026-01-31T14:42:18.000000Z\"},{\"id\":30,\"ledger_account_id\":19,\"ledger_name\":\"typing profit\",\"invoice_service_id\":11,\"amount_debit\":\"0.00\",\"amount_credit\":\"72.51\",\"vatable\":false,\"note\":\"m\",\"source_amount\":2,\"created_at\":\"2026-01-31T14:42:18.000000Z\",\"updated_at\":\"2026-01-31T14:42:18.000000Z\"},{\"id\":31,\"ledger_account_id\":10,\"ledger_name\":\"VAT\",\"invoice_service_id\":11,\"amount_debit\":\"0.00\",\"amount_credit\":\"3.63\",\"vatable\":false,\"note\":\"m\",\"source_amount\":2,\"created_at\":\"2026-01-31T14:42:18.000000Z\",\"updated_at\":\"2026-01-31T14:42:18.000000Z\"},{\"id\":32,\"ledger_account_id\":22,\"ledger_name\":\"noqodi\",\"invoice_service_id\":11,\"amount_debit\":\"0.00\",\"amount_credit\":\"535.75\",\"vatable\":false,\"note\":\"m\",\"source_amount\":2,\"created_at\":\"2026-01-31T14:42:18.000000Z\",\"updated_at\":\"2026-01-31T14:42:18.000000Z\"}],\"created_at\":\"2026-01-31T14:24:13.000000Z\",\"updated_at\":\"2026-01-31T14:42:18.000000Z\"}],\"links\":{\"first\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/invoice-services?page=1\",\"last\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/invoice-services?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"active\":false},{\"url\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/invoice-services?page=1\",\"label\":\"1\",\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"active\":false}],\"path\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/invoice-services\",\"per_page\":15,\"to\":1,\"total\":1}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Invoice Service",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/invoice-services",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/invoice-services"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"code\":\"n\",\"note\":\"g\",\"status\":true,\"type\":\"1\",\"lines\":[{\"ledger_account_id\":16,\"amount_debit\":39,\"amount_credit\":84,\"vatable\":true,\"note\":\"z\",\"source_amount\":\"2\"}]}"
+                        },
+                        "description": "Store a newly created resource in storage."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Invoice Service",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/invoice-services\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/invoice-services\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "11",
+                                    "description": "The ID of the invoice service."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Display the specified resource."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":11,\"name\":\"Service with cash back\",\"code\":\"n\",\"note\":\"g\",\"status\":false,\"type\":3,\"settings\":null,\"created_by\":null,\"updated_by\":null,\"created_by_name\":null,\"updated_by_name\":null,\"total_amount\":0,\"govt_fee\":0,\"center_fee\":0,\"service_charge\":0,\"tax\":0,\"is_taxable\":false,\"lines\":[{\"id\":28,\"ledger_account_id\":30,\"ledger_name\":\"Mohre Cash back receivable\",\"invoice_service_id\":11,\"amount_debit\":\"76.14\",\"amount_credit\":\"0.00\",\"vatable\":false,\"note\":\"m\",\"source_amount\":2,\"created_at\":\"2026-01-31T14:42:18.000000Z\",\"updated_at\":\"2026-01-31T14:42:18.000000Z\"},{\"id\":29,\"ledger_account_id\":20,\"ledger_name\":\"credit card\",\"invoice_service_id\":11,\"amount_debit\":\"0.00\",\"amount_credit\":\"76.14\",\"vatable\":false,\"note\":\"m\",\"source_amount\":2,\"created_at\":\"2026-01-31T14:42:18.000000Z\",\"updated_at\":\"2026-01-31T14:42:18.000000Z\"},{\"id\":30,\"ledger_account_id\":19,\"ledger_name\":\"typing profit\",\"invoice_service_id\":11,\"amount_debit\":\"0.00\",\"amount_credit\":\"72.51\",\"vatable\":false,\"note\":\"m\",\"source_amount\":2,\"created_at\":\"2026-01-31T14:42:18.000000Z\",\"updated_at\":\"2026-01-31T14:42:18.000000Z\"},{\"id\":31,\"ledger_account_id\":10,\"ledger_name\":\"VAT\",\"invoice_service_id\":11,\"amount_debit\":\"0.00\",\"amount_credit\":\"3.63\",\"vatable\":false,\"note\":\"m\",\"source_amount\":2,\"created_at\":\"2026-01-31T14:42:18.000000Z\",\"updated_at\":\"2026-01-31T14:42:18.000000Z\"},{\"id\":32,\"ledger_account_id\":22,\"ledger_name\":\"noqodi\",\"invoice_service_id\":11,\"amount_debit\":\"0.00\",\"amount_credit\":\"535.75\",\"vatable\":false,\"note\":\"m\",\"source_amount\":2,\"created_at\":\"2026-01-31T14:42:18.000000Z\",\"updated_at\":\"2026-01-31T14:42:18.000000Z\"}],\"created_at\":\"2026-01-31T14:24:13.000000Z\",\"updated_at\":\"2026-01-31T14:42:18.000000Z\"}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Invoice Service",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/invoice-services\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/invoice-services\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "11",
+                                    "description": "The ID of the invoice service."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"code\":\"n\",\"note\":\"g\",\"status\":true,\"type\":\"2\",\"lines\":[{\"ledger_account_id\":16,\"amount_debit\":39,\"amount_credit\":84,\"vatable\":true,\"note\":\"z\",\"source_amount\":\"2\"}]}"
+                        },
+                        "description": "Update the specified resource in storage."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Invoice Service",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/invoice-services\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/invoice-services\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "11",
+                                    "description": "The ID of the invoice service."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Remove the specified resource from storage."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Journal Entries",
+            "description": "\nAPIs for managing journal entries (headers) with nested transaction lines.",
+            "item": [
+                {
+                    "name": "List all journal entries",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/journals",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Number of items per page.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_by",
+                                    "value": "posting_date",
+                                    "description": "Field to sort by (id, posting_date, status, total_debit, total_credit, created_at, updated_at, posted_at).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_direction",
+                                    "value": "desc",
+                                    "description": "Sort direction (asc or desc).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "DRAFT",
+                                    "description": "Filter by status.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "posting_date_from",
+                                    "value": "2026-01-01",
+                                    "description": "date Filter from posting date (Y-m-d).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "posting_date_to",
+                                    "value": "2026-01-31",
+                                    "description": "date Filter to posting date (Y-m-d).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "source_type",
+                                    "value": "App%5CModels%5CInvoice",
+                                    "description": "Filter by source type.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "source_id",
+                                    "value": "123",
+                                    "description": "Filter by source ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "created_by",
+                                    "value": "1",
+                                    "description": "Filter by creator user ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "posted_by",
+                                    "value": "1",
+                                    "description": "Filter by poster user ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "created_from",
+                                    "value": "2026-01-01",
+                                    "description": "date Filter from created date (Y-m-d).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "created_to",
+                                    "value": "2026-01-31",
+                                    "description": "date Filter to created date (Y-m-d).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "payment",
+                                    "description": "Search across notes.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/journals?per_page=20&sort_by=posting_date&sort_direction=desc&status=DRAFT&posting_date_from=2026-01-01&posting_date_to=2026-01-31&source_type=App%5CModels%5CInvoice&source_id=123&created_by=1&posted_by=1&created_from=2026-01-01&created_to=2026-01-31&search=payment"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get a paginated list of journal entries with optional filtering and sorting."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[],\"links\":{\"first\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/journals?page=1\",\"last\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/journals?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":null,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"active\":false},{\"url\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/journals?page=1\",\"label\":\"1\",\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"active\":false}],\"path\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/journals\",\"per_page\":20,\"to\":null,\"total\":0}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new journal entry",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/journals",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/journals"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"posting_date\":\"2026-01-07\",\"status\":0,\"source_type\":\"App\\\\Models\\\\Invoice\",\"source_id\":123,\"pre_src_type\":\"App\\\\Models\\\\Order\",\"pre_src_id\":456,\"note\":\"Monthly payment entry\",\"meta_json\":{\"reference\":\"PAY-001\"},\"created_by\":16,\"lines\":[\"architecto\"]}"
+                        },
+                        "description": "Store a newly created journal entry with nested transaction lines."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get a specific journal entry",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/journals\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/journals\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the journal entry."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Display the details of a specific journal entry with nested lines."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 404,
+                            "body": "{\"success\":false,\"message\":\"Journal entry not found\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update a journal entry",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/journals\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/journals\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the journal entry."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"posting_date\":\"2026-01-08\",\"status\":1,\"source_type\":\"App\\\\Models\\\\Invoice\",\"source_id\":123,\"pre_src_type\":\"App\\\\Models\\\\Order\",\"pre_src_id\":456,\"note\":\"Updated entry\",\"meta_json\":{\"reference\":\"PAY-001\"},\"lines\":[\"architecto\"]}"
+                        },
+                        "description": "Update the details of a specific journal entry and its nested lines."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete a journal entry",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/journals\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/journals\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the journal entry to delete."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Remove a specific journal entry and its transaction lines from the database."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Journal Transaction Lines",
+            "description": "\nAPIs for querying journal transaction lines from posted journal vouchers.",
+            "item": [
+                {
+                    "name": "List journal transaction lines",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/journal-tran-lines",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Number of items per page.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_by",
+                                    "value": "created_at",
+                                    "description": "Field to sort by (id, journal_header_id, ledger_id, debit, credit, created_at, updated_at).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_direction",
+                                    "value": "desc",
+                                    "description": "Sort direction (asc or desc).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "journal_header_id",
+                                    "value": "1",
+                                    "description": "Filter by journal header ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "ledger_id",
+                                    "value": "5",
+                                    "description": "Filter by ledger account ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "candidate_id",
+                                    "value": "10",
+                                    "description": "Filter by candidate\/employee ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "1",
+                                    "description": "Filter by journal header status (0=Draft, 1=Posted, 2=Void).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "only_posted",
+                                    "value": "1",
+                                    "description": "Filter to only include posted journal entries.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "posting_date_from",
+                                    "value": "2026-01-01",
+                                    "description": "date Filter from posting date (Y-m-d).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "posting_date_to",
+                                    "value": "2026-01-31",
+                                    "description": "date Filter to posting date (Y-m-d).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "type",
+                                    "value": "debit",
+                                    "description": "Filter by transaction type (debit or credit).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "payment",
+                                    "description": "Search across notes and ledger names.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/journal-tran-lines?per_page=20&sort_by=created_at&sort_direction=desc&journal_header_id=1&ledger_id=5&candidate_id=10&status=1&only_posted=1&posting_date_from=2026-01-01&posting_date_to=2026-01-31&type=debit&search=payment"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get a paginated list of journal transaction lines with optional filtering.\nBy default, returns lines from posted journal vouchers."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[],\"links\":{\"first\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/journal-tran-lines?page=1\",\"last\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/journal-tran-lines?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":null,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"active\":false},{\"url\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/journal-tran-lines?page=1\",\"label\":\"1\",\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"active\":false}],\"path\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/journal-tran-lines\",\"per_page\":20,\"to\":null,\"total\":0}}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Ledger of Accounts",
+            "description": "\nAPIs for managing ledger accounts with filtering, sorting, and pagination.",
+            "item": [
+                {
+                    "name": "Lookup ledger accounts for dropdowns",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/ledgers\/lookup",
+                            "query": [
+                                {
+                                    "key": "search",
+                                    "value": "Cash",
+                                    "description": "Search by account name.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "type",
+                                    "value": "dr",
+                                    "description": "Filter by type (dr or cr).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "group",
+                                    "value": "Assets",
+                                    "description": "Filter by group.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "spacial",
+                                    "value": "3",
+                                    "description": "Filter by spacial.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "customer",
+                                    "value": "1",
+                                    "description": "Filter for customers (spacial=3).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number for pagination.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Items per page (max 50).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/ledgers\/lookup?search=Cash&type=dr&group=Assets&spacial=3&customer=1&page=1&per_page=20"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get a simplified list of ledger accounts optimized for Select2\/dropdown menus.\nReturns format: {id, text, type, group}"
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"results\":[],\"pagination\":{\"more\":false,\"current_page\":1,\"total\":0}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Lookup customers with CRM search",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/ledgers\/lookup-customers",
+                            "query": [
+                                {
+                                    "key": "search",
+                                    "value": "0501234567",
+                                    "description": "Search by name, mobile, CL number.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Items per page.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/ledgers\/lookup-customers?search=0501234567&page=1&per_page=20"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Specialized lookup for customers that searches in CRM fields (mobile, etc)."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"results\":[],\"pagination\":{\"more\":false,\"current_page\":1,\"total\":0}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "List all ledger accounts",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/ledgers",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Number of items per page.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_by",
+                                    "value": "name",
+                                    "description": "Field to sort by.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_direction",
+                                    "value": "asc",
+                                    "description": "Sort direction (asc or desc).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "name",
+                                    "value": "Cash",
+                                    "description": "Filter by name (partial match).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "class",
+                                    "value": "1",
+                                    "description": "Filter by class.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sub_class",
+                                    "value": "1",
+                                    "description": "Filter by sub-class.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "group",
+                                    "value": "Assets",
+                                    "description": "Filter by group.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "spacial",
+                                    "value": "1",
+                                    "description": "Filter by spacial.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "type",
+                                    "value": "dr",
+                                    "description": "Filter by type (dr or cr).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "created_by",
+                                    "value": "1",
+                                    "description": "Filter by creator user ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "created_from",
+                                    "value": "2025-01-01",
+                                    "description": "date Filter from date (Y-m-d).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "created_to",
+                                    "value": "2026-01-31",
+                                    "description": "date Filter to date (Y-m-d).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "cash",
+                                    "description": "Search across name, group, and note.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/ledgers?per_page=20&sort_by=name&sort_direction=asc&name=Cash&class=1&sub_class=1&group=Assets&spacial=1&type=dr&created_by=1&created_from=2025-01-01&created_to=2026-01-31&search=cash"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get a paginated list of ledger accounts with optional filtering and sorting."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[],\"links\":{\"first\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/ledgers?page=1\",\"last\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/ledgers?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":null,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"active\":false},{\"url\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/ledgers?page=1\",\"label\":\"1\",\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"active\":false}],\"path\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/ledgers\",\"per_page\":20,\"to\":null,\"total\":0}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new ledger account",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/ledgers",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/ledgers"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Cash Account\",\"class\":1,\"sub_class\":0,\"group\":\"Assets\",\"spacial\":0,\"type\":\"dr\",\"note\":\"Main cash account\",\"created_by\":16,\"updated_by\":16}"
+                        },
+                        "description": "Store a newly created ledger account in the database."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get a specific ledger account",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/ledgers\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/ledgers\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the ledger account."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Display the details of a specific ledger account."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 404,
+                            "body": "{\"success\":false,\"message\":\"Ledger account not found\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update a ledger account",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/ledgers\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/ledgers\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the ledger account."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Updated Cash Account\",\"class\":1,\"sub_class\":0,\"group\":\"Assets\",\"spacial\":0,\"type\":\"dr\",\"note\":\"Updated notes\",\"created_by\":16,\"updated_by\":16}"
+                        },
+                        "description": "Update the details of a specific ledger account."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete a ledger account",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/ledgers\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/ledgers\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the ledger account to delete."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Remove a specific ledger account from the database."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Package One",
+            "description": "\nAPIs for creating Package One journal entries (financial impact only).\nInvoices are created separately via InvoiceController.",
+            "item": [
+                {
+                    "name": "Create Received Voucher for Package One",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/package-one\/received-voucher",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/package-one\/received-voucher"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"invoice_id\":1,\"customer_id\":5,\"debit_ledger_id\":2,\"amount\":500,\"method_mode\":1,\"note\":\"Payment received for Package One\"}"
+                        },
+                        "description": "Create a receipt voucher for Package One, linked to an Invoice as source.\nThe customer's ledger account is used as the credit side, and the provided\ndebit_ledger_id is used as the debit side (e.g., Cash\/Bank)."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Credit Note for Package One",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/package-one\/credit-note",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/package-one\/credit-note"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"invoice_id\":1}"
+                        },
+                        "description": "Create a credit note that reverses the original journal entries for an invoice.\nThe original debit becomes credit and vice versa. The invoice will be marked as refunded."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Charging Entry for Package One",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/package-one\/charging",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/package-one\/charging"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"invoice_id\":1,\"customer_id\":5,\"note\":\"Additional charges for services\",\"lines\":[{\"ledger_id\":10,\"amount\":100,\"note\":\"Service charge\"},{\"ledger_id\":11,\"amount\":50,\"note\":\"Processing fee\"}]}"
+                        },
+                        "description": "Create a charging journal entry with custom lines (ledger_id with debit\/credit amounts).\nThe invoice is referenced as the source."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List Package One Journal Entries",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/package-one",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Number of items per page.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_by",
+                                    "value": "id",
+                                    "description": "Field to sort by.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_direction",
+                                    "value": "desc",
+                                    "description": "Sort direction (asc or desc).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "cn_number",
+                                    "value": "CN-2026",
+                                    "description": "Filter by CN Number.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "PKG",
+                                    "description": "Search in note or CN_Number.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/package-one?per_page=20&sort_by=id&sort_direction=desc&cn_number=CN-2026&search=PKG"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get a paginated list of Package One journal entries."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[],\"links\":{\"first\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/package-one?page=1\",\"last\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/package-one?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":null,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"active\":false},{\"url\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/package-one?page=1\",\"label\":\"1\",\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"active\":false}],\"path\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/package-one\",\"per_page\":20,\"to\":null,\"total\":0}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Package One Journal Entry",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/package-one",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/package-one"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"invoice_id\":1,\"cn_number\":\"CN-2026-001\",\"customer_id\":5,\"invoice_service_id\":1,\"amount_received\":500,\"debit_ledger_id\":2}"
+                        },
+                        "description": "Create journal entries for Package One (financial impact only).\nThe cn_number will be stored in all journal transaction lines.\nInvoice creation is handled separately via InvoiceController."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Package One Journal Entry",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/package-one\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/package-one\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The journal ID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Display a specific Package One journal entry."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 404,
+                            "body": "{\"message\":\"Journal entry not found\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Package One Journal Entry",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/package-one\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/package-one\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The journal ID."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Delete a Package One journal entry and its lines."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Receipt Vouchers",
+            "description": "\nAPIs for managing receipt vouchers with automatic journal entry creation.",
+            "item": [
+                {
+                    "name": "List all receipt vouchers",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/receipt-vouchers",
+                            "query": [
+                                {
+                                    "key": "limit",
+                                    "value": "20",
+                                    "description": "Number of items per page.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_by",
+                                    "value": "created_at",
+                                    "description": "Field to sort by (id, serial_number, status, payment_mode, created_at, updated_at).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_desc",
+                                    "value": "true",
+                                    "description": "Sort in descending order (true or false).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "RV-000001",
+                                    "description": "Search by serial number.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "posted",
+                                    "description": "Filter by status (draft, posted, void).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/receipt-vouchers?limit=20&sort_by=created_at&sort_desc=true&search=RV-000001&status=posted"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get a paginated list of receipt vouchers with optional filtering and sorting."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[],\"links\":{\"first\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/receipt-vouchers?page=1\",\"last\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/receipt-vouchers?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":null,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"active\":false},{\"url\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/receipt-vouchers?page=1\",\"label\":\"1\",\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"active\":false}],\"path\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/receipt-vouchers\",\"per_page\":20,\"to\":null,\"total\":0}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new receipt voucher",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/receipt-vouchers",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/receipt-vouchers"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"source_type\":\"architecto\",\"candidate_id\":5,\"credit_ledger_id\":10,\"debit_ledger_id\":20,\"source_id\":16,\"attachments\":[\"url1\",\"url2\"],\"status\":\"posted\",\"amount\":1500,\"payment_mode\":1}"
+                        },
+                        "description": "Store a newly created receipt voucher with automatic journal entry creation.\nThe journal entry will be created with a debit to the specified debit_ledger_id\nand a credit to the credit_ledger_id for the specified amount."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get a specific receipt voucher",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/receipt-vouchers\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/receipt-vouchers\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the receipt voucher."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Display the details of a specific receipt voucher with its source and journal entry."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 404,
+                            "body": "{\"success\":false,\"message\":\"Receipt voucher not found\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update a receipt voucher",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/receipt-vouchers\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/receipt-vouchers\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the receipt voucher."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"serial_number\":\"bngzmi\",\"source_type\":\"architecto\",\"source_id\":16,\"status\":\"posted\",\"amount\":2000,\"payment_mode\":2,\"candidate_id\":5,\"credit_ledger_id\":10,\"debit_ledger_id\":20}"
+                        },
+                        "description": "Update the details of a specific receipt voucher and its associated journal entry."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete a receipt voucher",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/receipt-vouchers\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/receipt-vouchers\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the receipt voucher to delete."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Remove a specific receipt voucher and its associated journal entry from the database."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Statement of Account",
+            "description": "\nAPIs for retrieving statement of account for a ledger.",
+            "item": [
+                {
+                    "name": "Get Statement of Account",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/statement-of-account\/:ledger_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/statement-of-account\/:ledger_id",
+                            "variable": [
+                                {
+                                    "id": "ledger_id",
+                                    "key": "ledger_id",
+                                    "value": "1",
+                                    "description": "The ID of the ledger."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieve the statement of account for a specific ledger. Returns all posted\njournal transaction lines with debit, credit, running balance, notes, and source type."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 404,
+                            "body": "{\"message\":\"Ledger not found\"}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Trial Balance",
+            "description": "\nAPIs for retrieving trial balance report data.",
+            "item": [
+                {
+                    "name": "Get Trial Balance",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/trial-balance",
+                            "query": [
+                                {
+                                    "key": "posting_date_from",
+                                    "value": "2026-01-01",
+                                    "description": "date Filter from posting date (Y-m-d).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "posting_date_to",
+                                    "value": "2026-01-31",
+                                    "description": "date Filter to posting date (Y-m-d).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "spacial",
+                                    "value": "3",
+                                    "description": "Filter by spacial type (e.g., 3 for Customer).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/trial-balance?posting_date_from=2026-01-01&posting_date_to=2026-01-31&spacial=3"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieve a trial balance report with ledger accounts organized by class, group, and sub-class.\nEach ledger shows total debits, total credits, closing balance, and balance type (DR\/CR).\nLedgers with zero closing balance are excluded."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[{\"ledger_id\":18,\"ledger_name\":\"canchetooo\",\"class\":\"Asset\",\"class_id\":1,\"sub_class\":\"Current Asset\",\"sub_class_id\":1,\"group\":\"erytderyer\",\"total_debit\":\"611.89\",\"total_credit\":\"0.00\",\"closing_balance\":\"611.89\",\"balance_type\":\"DR\"}],\"summary\":{\"total_dr\":\"611.89\",\"total_cr\":\"0.00\",\"is_balanced\":false}}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Typing Transaction Government Invoices",
+            "description": "\nAPIs for managing Typing Transaction Government Invoices.",
+            "item": [
+                {
+                    "name": "Receive payment for a typing invoice",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/typing-tran-gov-invs\/:id\/receive-payment",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/typing-tran-gov-invs\/:id\/receive-payment",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the typing invoice."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"credit_ledger_id\":10,\"debit_ledger_id\":20,\"amount\":500,\"attachments\":[\"url1\",\"url2\"],\"status\":\"posted\",\"payment_mode\":1}"
+                        },
+                        "description": "Create a receipt voucher for a specific typing invoice and record the payment\nwith proper journal entries. This endpoint creates a ReceiptVoucher linked to\nthe typing invoice via polymorphic relationship and updates the amount_received."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List all items",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/typing-tran-gov-invs",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Number of items per page.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_by",
+                                    "value": "created_at",
+                                    "description": "Field to sort by (id, serial_no, gov_dw_no, created_at, updated_at).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_direction",
+                                    "value": "desc",
+                                    "description": "Sort direction (asc or desc).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "GOV-INV",
+                                    "description": "Search across serial_no and gov_dw_no.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/typing-tran-gov-invs?per_page=20&sort_by=created_at&sort_direction=desc&search=GOV-INV"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get a paginated list of items with optional filtering and sorting."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":36,\"serial_no\":\"GOV-INV-000036\",\"gov_dw_no\":\"DW-12345\",\"gov_inv_attachments\":[],\"maid_id\":1,\"ledger_id\":18,\"ledger\":{\"id\":18,\"name\":\"canchetooo\",\"class\":1,\"sub_class\":1,\"group\":\"erytderyer\",\"spacial\":3,\"type\":\"dr\",\"note\":\"testtttttttttttttttt\",\"created_by\":{\"id\":1,\"name\":null},\"updated_by\":{\"id\":1,\"name\":null},\"created_at\":\"2026-01-08T19:46:57+04:00\",\"updated_at\":\"2026-01-08T19:46:57+04:00\"},\"customer_mobile\":\"0565636222\",\"amount_received\":\"0.00\",\"amount_of_invoice\":\"611.89\",\"services_json\":[{\"dw\":\"DW-001\",\"amount\":611.89,\"quantity\":1,\"total_amount\":611.89,\"invoice_service_id\":11}],\"payment_status\":\"pending\",\"created_at\":\"2026-01-31T14:57:56.000000Z\",\"updated_at\":\"2026-01-31T14:57:56.000000Z\",\"journal\":{\"id\":162,\"posting_date\":\"2026-01-31\",\"status\":1,\"status_label\":\"Posted\",\"source_type\":\"App\\\\Models\\\\TypingTranGovInv\",\"source_id\":36,\"pre_src_type\":\"App\\\\Models\\\\InvoiceService\",\"pre_src_id\":11,\"note\":\"Generated from TypingTranGovInv #GOV-INV-000036\",\"meta_json\":null,\"total_debit\":\"688.03\",\"total_credit\":\"688.03\",\"created_by\":1,\"posted_by\":null,\"posted_at\":null,\"created_at\":\"2026-01-31T14:57:56.000000Z\",\"updated_at\":\"2026-01-31T14:57:56.000000Z\"}}],\"links\":{\"first\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/typing-tran-gov-invs?page=1\",\"last\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/typing-tran-gov-invs?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"active\":false},{\"url\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/typing-tran-gov-invs?page=1\",\"label\":\"1\",\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"active\":false}],\"path\":\"http:\\\/\\\/74.162.89.93\\\/api\\\/typing-tran-gov-invs\",\"per_page\":20,\"to\":1,\"total\":1}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new item",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/typing-tran-gov-invs",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/typing-tran-gov-invs"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"gov_dw_no\":\"DW-12345\",\"gov_inv_attachments\":[\"architecto\"],\"maid_id\":10,\"amount_received\":0,\"ledger_of_account_id\":1,\"services\":[\"architecto\"]}"
+                        },
+                        "description": "Store a newly created item."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get a specific item",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/typing-tran-gov-invs\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/typing-tran-gov-invs\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the item."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Display the details of a specific item."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Origin"
+                                }
+                            ],
+                            "code": 404,
+                            "body": "{\"success\":false,\"message\":\"Item not found\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update an item",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/typing-tran-gov-invs\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/typing-tran-gov-invs\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the item."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"gov_dw_no\":\"DW-12345\",\"gov_inv_attachments\":[\"architecto\"],\"maid_id\":10,\"amount_received\":39,\"ledger_of_account_id\":1,\"services\":[\"architecto\"]}"
+                        },
+                        "description": "Update the details of a specific item."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete an item",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/typing-tran-gov-invs\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/typing-tran-gov-invs\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the item to delete."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Remove a specific item from the database."
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "Authorization",
+                "type": "string"
+            }
+        ]
+    }
+}

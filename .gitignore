@@ -1,0 +1,12 @@
+.cpanel/
+.ssh/
+.mail/
+mail/
+logs/
+access-logs/
+tmp/
+.cache/
+.trash/
+*.tar.gz
+*.zip
+*.log

@@ -1,0 +1,17 @@
+@charset "utf-8";
+/* CSS Document */
+
+.bt_c{
+    background: rgba(0, 0, 0, 0) linear-gradient(to top, #D71E28 0%, #D71E28 100%) repeat scroll 0 0 padding-box;
+    border: medium none;
+    border-radius: 6px;
+    box-shadow: none;
+    color: #ffffff;
+    cursor: pointer;
+    font-family: Helvetica-Neue,Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    height: 40px;
+    outline: 0 none;
+    width: 170px;}
+}

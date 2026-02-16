@@ -1,0 +1,3 @@
+<div class="preloader">
+    <i class="fas fa-spinner fa-spin"></i> Loading...
+</div>

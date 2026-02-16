@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+	<g id="Layer_1">
+		<rect fill="#AE2024" width="24" height="24"/>
+	</g>
+	<g id="menu">
+		<path display="inline" fill="#FFFFFF" d="M0,4h24v3H0V4z"/>
+		<path display="inline" fill="#FFFFFF" d="M0,10.001h24V13H0V10.001z"/>
+		<path display="inline" fill="#FFFFFF" d="M0,16.001h24V19H0V16.001z"/>
+	</g>
+	<g id="home" display="none">
+		<path display="inline" fill="#FFFFFF" d="M3.506,23.79h5.663v-7.044c0,0-0.348-0.612,0.745-0.612c1.092,0,3.874,0,3.874,0 s0.744,0.153,0.744,0.919s0,6.737,0,6.737h5.664V12.459h3.575L11.852,0.21L0.229,12.153h3.278V23.79z"/>
+	</g>
+	<g id="back" display="none">
+		<path fill="#FFFFFF" d="M5.982,13.982l4.985,4.992l-2.492,2.496L0,11.986L8.475,2l2.492,2.496L5.982,9.988h17.945v3.995H5.982"/>
+	</g>
+</svg>

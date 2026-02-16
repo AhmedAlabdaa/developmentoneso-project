@@ -1,0 +1,80 @@
+.avatar-wrapper {
+position: relative;
+  width: 130px;
+  border-radius: 5px;
+  padding: 7px;
+  overflow: hidden;
+
+}
+.avatar-wrapper:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+.avatar-wrapper:hover .profile-pic {
+  opacity: .5;
+}
+.avatar-wrapper .profile-pic {
+  height: 100%;
+  width: 100%;
+  transition: all .3s ease;
+}
+.avatar-wrapper .upload-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+.avatar-wrapper .upload-button .fa-arrow-circle-up {
+  position: absolute;
+  font-size: 234px;
+  left: 0;
+  text-align: center;
+  opacity: 0;
+  transition: all .3s ease;
+  color: #34495e;
+}
+.avatar-wrapper .upload-button:hover .fa-arrow-circle-up {
+  opacity: .9;
+}
+
+
+.avatar-wrapper1 {
+position: relative;
+  width: 130px;
+  border-radius: 5px;
+  padding: 7px;
+  overflow: hidden;
+
+}
+.avatar-wrapper1:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+.avatar-wrapper1:hover .profile-pic1 {
+  opacity: .5;
+}
+.avatar-wrapper1 .profile-pic1 {
+  height: 100%;
+  width: 100%;
+  transition: all .3s ease;
+}
+.avatar-wrapper1 .upload-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+.avatar-wrapper1 .upload-button .fa-arrow-circle-up {
+  position: absolute;
+  font-size: 234px;
+  left: 0;
+  text-align: center;
+  opacity: 0;
+  transition: all .3s ease;
+  color: #34495e;
+}
+.avatar-wrapper1 .upload-button:hover .fa-arrow-circle-up {
+  opacity: .9;
+}

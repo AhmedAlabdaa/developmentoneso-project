@@ -1,0 +1,96 @@
+ 
+/* Wells Fargo Sans */
+ 
+@font-face {
+  font-family: 'Wells Fargo Sans';
+  src: url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargosans-rg.woff2) format('woff2'),
+                url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargosans-rg.woff) format('woff');
+}
+ 
+@font-face {
+  font-family: 'Wells Fargo Sans';
+  src: url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargosans-cd.woff2) format('woff2'),
+                url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargosans-cd.woff) format('woff');
+  font-stretch: condensed;
+}
+ 
+@font-face {
+  font-family: 'Wells Fargo Sans';
+  src: url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargosans-bd.woff2) format('woff2'),
+                url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargosans-bd.woff) format('woff');
+  font-weight: bold;  
+}
+ 
+@font-face {
+  font-family: 'Wells Fargo Sans';
+  src: url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargosans-lt.woff2) format('woff2'),
+                url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargosans-lt.woff) format('woff');
+  font-weight: 300;  
+}
+ 
+@font-face {
+  font-family: 'Wells Fargo Sans';
+  src: url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargosans-it.woff2) format('woff2'),
+                url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargosans-it.woff) format('woff');
+  font-style: italic;
+}
+ 
+@font-face {
+  font-family: 'Wells Fargo Sans';
+  src: url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargosans-sbd.woff2) format('woff2'),
+                url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargosans-sbd.woff) format('woff');
+  font-weight: 600;  
+}
+ 
+@font-face {
+  font-family: 'Wells Fargo Sans';
+  src: url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargosans-bdit.woff2) format('woff2'),
+                url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargosans-bdit.woff) format('woff');
+  font-weight: bold;
+  font-style: italic;
+}
+        
+/* Wells Fargo Serif */
+ 
+@font-face {
+  font-family: 'Wells Fargo Serif';
+  src: url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargoserif-rg.woff2) format('woff2'),
+                url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargoserif-rg.woff) format('woff'); 
+}
+ 
+@font-face {
+  font-family: 'Wells Fargo Serif';
+  src: url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargoserif-bd.woff2) format('woff2'),
+                url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargoserif-bd.woff) format('woff');
+  font-weight: bold;  
+}
+ 
+@font-face {
+  font-family: 'Wells Fargo Serif';
+  src: url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargoserif-sbd.woff2) format('woff2'),
+                url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargoserif-sbd.woff) format('woff');
+  font-weight: 600;  
+}
+ 
+@font-face {
+  font-family: 'Wells Fargo Serif';
+  src: url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargoserif-it.woff2) format('woff2'),
+                url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargoserif-it.woff) format('woff');  
+  font-style: italic;
+}
+ 
+@font-face {
+  font-family: 'Wells Fargo Serif';
+  src: url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargoserif-bdit.woff2) format('woff2'),
+                url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargoserif-bdit.woff) format('woff');
+  font-weight: bold;
+  font-style: italic;
+}
+ 
+@font-face {
+  font-family: 'Wells Fargo Serif';
+  src: url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargoserif-lt.woff2) format('woff2'),
+                url(https://www15.wellsfargomedia.com/wfui/css/fonts/wellsfargoserif-lt.woff) format('woff');
+  font-weight: 300;  
+}
+ 

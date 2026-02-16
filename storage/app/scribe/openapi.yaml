@@ -1,0 +1,3830 @@
+openapi: 3.0.3
+info:
+  title: 'Laravel API Documentation'
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://74.162.89.93'
+tags:
+  -
+    name: 'Bulk Journal Import'
+    description: "\nAPIs for bulk importing journal vouchers via CSV."
+  -
+    name: 'Invoice Services'
+    description: "\nAPIs for managing invoice services."
+  -
+    name: 'Journal Entries'
+    description: "\nAPIs for managing journal entries (headers) with nested transaction lines."
+  -
+    name: 'Journal Transaction Lines'
+    description: "\nAPIs for querying journal transaction lines from posted journal vouchers."
+  -
+    name: 'Ledger of Accounts'
+    description: "\nAPIs for managing ledger accounts with filtering, sorting, and pagination."
+  -
+    name: 'Package One'
+    description: "\nAPIs for creating Package One journal entries (financial impact only).\nInvoices are created separately via InvoiceController."
+  -
+    name: 'Receipt Vouchers'
+    description: "\nAPIs for managing receipt vouchers with automatic journal entry creation."
+  -
+    name: 'Statement of Account'
+    description: "\nAPIs for retrieving statement of account for a ledger."
+  -
+    name: 'Trial Balance'
+    description: "\nAPIs for retrieving trial balance report data."
+  -
+    name: 'Typing Transaction Government Invoices'
+    description: "\nAPIs for managing Typing Transaction Government Invoices."
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'You can retrieve your token by logging in to the application. Use Laravel Sanctum for authentication.'
+security:
+  -
+    default: []
+paths:
+  /api/journals/bulk-import:
+    post:
+      summary: 'Bulk Import Journal Vouchers'
+      operationId: bulkImportJournalVouchers
+      description: "Import multiple journal entries from a CSV file. Each journal entry is grouped by posting_date.\n\nCSV columns:\n- ledger_name (required): Name of the ledger account\n- debit (required): Debit amount (use 0 if credit)\n- credit (required): Credit amount (use 0 if debit)\n- posting_date (required): Date in Y-m-d format\n- candidate_id (optional): Employee/candidate ID\n- note (optional): Transaction note"
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Import completed'
+                  created_journals: 3
+                  total_rows: 10
+                  errors: []
+                properties:
+                  message:
+                    type: string
+                    example: 'Import completed'
+                  created_journals:
+                    type: integer
+                    example: 3
+                  total_rows:
+                    type: integer
+                    example: 10
+                  errors:
+                    type: array
+                    example: []
+      tags:
+        - 'Bulk Journal Import'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 'The CSV file to import.'
+              required:
+                - file
+  /api/invoice-services/lookup:
+    get:
+      summary: 'Lookup Invoice Services'
+      operationId: lookupInvoiceServices
+      description: "Get a simplified list of invoice services for dropdowns, including nested lines.\nReturns format: {id, text, lines: [...]}"
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'Search by name or code.'
+          example: 'Service A'
+          required: false
+          schema:
+            type: string
+            description: 'Search by name or code.'
+            example: 'Service A'
+        -
+          in: query
+          name: type
+          description: 'Filter by service type.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by service type.'
+            example: 1
+        -
+          in: query
+          name: page
+          description: 'Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number.'
+            example: 1
+        -
+          in: query
+          name: per_page
+          description: 'Items per page (max 50).'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Items per page (max 50).'
+            example: 20
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  results: []
+                  pagination:
+                    more: false
+                    current_page: 1
+                    total: 0
+                properties:
+                  results:
+                    type: array
+                    example: []
+                  pagination:
+                    type: object
+                    properties:
+                      more:
+                        type: boolean
+                        example: false
+                      current_page:
+                        type: integer
+                        example: 1
+                      total:
+                        type: integer
+                        example: 0
+      tags:
+        - 'Invoice Services'
+  /api/invoice-services:
+    get:
+      summary: 'List Invoice Services'
+      operationId: listInvoiceServices
+      description: 'Display a listing of the resource.'
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'Number of items per page.'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Number of items per page.'
+            example: 15
+        -
+          in: query
+          name: sort_by
+          description: 'Field to sort by.'
+          example: created_at
+          required: false
+          schema:
+            type: string
+            description: 'Field to sort by.'
+            example: created_at
+        -
+          in: query
+          name: sort_direction
+          description: 'Sort direction.'
+          example: desc
+          required: false
+          schema:
+            type: string
+            description: 'Sort direction.'
+            example: desc
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 11
+                      name: 'Service with cash back'
+                      code: 'n'
+                      note: g
+                      status: false
+                      type: 3
+                      settings: null
+                      created_by: null
+                      updated_by: null
+                      created_by_name: null
+                      updated_by_name: null
+                      total_amount: 0
+                      govt_fee: 0
+                      center_fee: 0
+                      service_charge: 0
+                      tax: 0
+                      is_taxable: false
+                      lines:
+                        -
+                          id: 28
+                          ledger_account_id: 30
+                          ledger_name: 'Mohre Cash back receivable'
+                          invoice_service_id: 11
+                          amount_debit: '76.14'
+                          amount_credit: '0.00'
+                          vatable: false
+                          note: m
+                          source_amount: 2
+                          created_at: '2026-01-31T14:42:18.000000Z'
+                          updated_at: '2026-01-31T14:42:18.000000Z'
+                        -
+                          id: 29
+                          ledger_account_id: 20
+                          ledger_name: 'credit card'
+                          invoice_service_id: 11
+                          amount_debit: '0.00'
+                          amount_credit: '76.14'
+                          vatable: false
+                          note: m
+                          source_amount: 2
+                          created_at: '2026-01-31T14:42:18.000000Z'
+                          updated_at: '2026-01-31T14:42:18.000000Z'
+                        -
+                          id: 30
+                          ledger_account_id: 19
+                          ledger_name: 'typing profit'
+                          invoice_service_id: 11
+                          amount_debit: '0.00'
+                          amount_credit: '72.51'
+                          vatable: false
+                          note: m
+                          source_amount: 2
+                          created_at: '2026-01-31T14:42:18.000000Z'
+                          updated_at: '2026-01-31T14:42:18.000000Z'
+                        -
+                          id: 31
+                          ledger_account_id: 10
+                          ledger_name: VAT
+                          invoice_service_id: 11
+                          amount_debit: '0.00'
+                          amount_credit: '3.63'
+                          vatable: false
+                          note: m
+                          source_amount: 2
+                          created_at: '2026-01-31T14:42:18.000000Z'
+                          updated_at: '2026-01-31T14:42:18.000000Z'
+                        -
+                          id: 32
+                          ledger_account_id: 22
+                          ledger_name: noqodi
+                          invoice_service_id: 11
+                          amount_debit: '0.00'
+                          amount_credit: '535.75'
+                          vatable: false
+                          note: m
+                          source_amount: 2
+                          created_at: '2026-01-31T14:42:18.000000Z'
+                          updated_at: '2026-01-31T14:42:18.000000Z'
+                      created_at: '2026-01-31T14:24:13.000000Z'
+                      updated_at: '2026-01-31T14:42:18.000000Z'
+                  links:
+                    first: 'http://74.162.89.93/api/invoice-services?page=1'
+                    last: 'http://74.162.89.93/api/invoice-services?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: 1
+                    last_page: 1
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        active: false
+                      -
+                        url: 'http://74.162.89.93/api/invoice-services?page=1'
+                        label: '1'
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        active: false
+                    path: 'http://74.162.89.93/api/invoice-services'
+                    per_page: 15
+                    to: 1
+                    total: 1
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 11
+                        name: 'Service with cash back'
+                        code: 'n'
+                        note: g
+                        status: false
+                        type: 3
+                        settings: null
+                        created_by: null
+                        updated_by: null
+                        created_by_name: null
+                        updated_by_name: null
+                        total_amount: 0
+                        govt_fee: 0
+                        center_fee: 0
+                        service_charge: 0
+                        tax: 0
+                        is_taxable: false
+                        lines:
+                          -
+                            id: 28
+                            ledger_account_id: 30
+                            ledger_name: 'Mohre Cash back receivable'
+                            invoice_service_id: 11
+                            amount_debit: '76.14'
+                            amount_credit: '0.00'
+                            vatable: false
+                            note: m
+                            source_amount: 2
+                            created_at: '2026-01-31T14:42:18.000000Z'
+                            updated_at: '2026-01-31T14:42:18.000000Z'
+                          -
+                            id: 29
+                            ledger_account_id: 20
+                            ledger_name: 'credit card'
+                            invoice_service_id: 11
+                            amount_debit: '0.00'
+                            amount_credit: '76.14'
+                            vatable: false
+                            note: m
+                            source_amount: 2
+                            created_at: '2026-01-31T14:42:18.000000Z'
+                            updated_at: '2026-01-31T14:42:18.000000Z'
+                          -
+                            id: 30
+                            ledger_account_id: 19
+                            ledger_name: 'typing profit'
+                            invoice_service_id: 11
+                            amount_debit: '0.00'
+                            amount_credit: '72.51'
+                            vatable: false
+                            note: m
+                            source_amount: 2
+                            created_at: '2026-01-31T14:42:18.000000Z'
+                            updated_at: '2026-01-31T14:42:18.000000Z'
+                          -
+                            id: 31
+                            ledger_account_id: 10
+                            ledger_name: VAT
+                            invoice_service_id: 11
+                            amount_debit: '0.00'
+                            amount_credit: '3.63'
+                            vatable: false
+                            note: m
+                            source_amount: 2
+                            created_at: '2026-01-31T14:42:18.000000Z'
+                            updated_at: '2026-01-31T14:42:18.000000Z'
+                          -
+                            id: 32
+                            ledger_account_id: 22
+                            ledger_name: noqodi
+                            invoice_service_id: 11
+                            amount_debit: '0.00'
+                            amount_credit: '535.75'
+                            vatable: false
+                            note: m
+                            source_amount: 2
+                            created_at: '2026-01-31T14:42:18.000000Z'
+                            updated_at: '2026-01-31T14:42:18.000000Z'
+                        created_at: '2026-01-31T14:24:13.000000Z'
+                        updated_at: '2026-01-31T14:42:18.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 11
+                        name:
+                          type: string
+                          example: 'Service with cash back'
+                        code:
+                          type: string
+                          example: 'n'
+                        note:
+                          type: string
+                          example: g
+                        status:
+                          type: boolean
+                          example: false
+                        type:
+                          type: integer
+                          example: 3
+                        settings:
+                          type: string
+                          example: null
+                        created_by:
+                          type: string
+                          example: null
+                        updated_by:
+                          type: string
+                          example: null
+                        created_by_name:
+                          type: string
+                          example: null
+                        updated_by_name:
+                          type: string
+                          example: null
+                        total_amount:
+                          type: integer
+                          example: 0
+                        govt_fee:
+                          type: integer
+                          example: 0
+                        center_fee:
+                          type: integer
+                          example: 0
+                        service_charge:
+                          type: integer
+                          example: 0
+                        tax:
+                          type: integer
+                          example: 0
+                        is_taxable:
+                          type: boolean
+                          example: false
+                        lines:
+                          type: array
+                          example:
+                            -
+                              id: 28
+                              ledger_account_id: 30
+                              ledger_name: 'Mohre Cash back receivable'
+                              invoice_service_id: 11
+                              amount_debit: '76.14'
+                              amount_credit: '0.00'
+                              vatable: false
+                              note: m
+                              source_amount: 2
+                              created_at: '2026-01-31T14:42:18.000000Z'
+                              updated_at: '2026-01-31T14:42:18.000000Z'
+                            -
+                              id: 29
+                              ledger_account_id: 20
+                              ledger_name: 'credit card'
+                              invoice_service_id: 11
+                              amount_debit: '0.00'
+                              amount_credit: '76.14'
+                              vatable: false
+                              note: m
+                              source_amount: 2
+                              created_at: '2026-01-31T14:42:18.000000Z'
+                              updated_at: '2026-01-31T14:42:18.000000Z'
+                            -
+                              id: 30
+                              ledger_account_id: 19
+                              ledger_name: 'typing profit'
+                              invoice_service_id: 11
+                              amount_debit: '0.00'
+                              amount_credit: '72.51'
+                              vatable: false
+                              note: m
+                              source_amount: 2
+                              created_at: '2026-01-31T14:42:18.000000Z'
+                              updated_at: '2026-01-31T14:42:18.000000Z'
+                            -
+                              id: 31
+                              ledger_account_id: 10
+                              ledger_name: VAT
+                              invoice_service_id: 11
+                              amount_debit: '0.00'
+                              amount_credit: '3.63'
+                              vatable: false
+                              note: m
+                              source_amount: 2
+                              created_at: '2026-01-31T14:42:18.000000Z'
+                              updated_at: '2026-01-31T14:42:18.000000Z'
+                            -
+                              id: 32
+                              ledger_account_id: 22
+                              ledger_name: noqodi
+                              invoice_service_id: 11
+                              amount_debit: '0.00'
+                              amount_credit: '535.75'
+                              vatable: false
+                              note: m
+                              source_amount: 2
+                              created_at: '2026-01-31T14:42:18.000000Z'
+                              updated_at: '2026-01-31T14:42:18.000000Z'
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 28
+                              ledger_account_id:
+                                type: integer
+                                example: 30
+                              ledger_name:
+                                type: string
+                                example: 'Mohre Cash back receivable'
+                              invoice_service_id:
+                                type: integer
+                                example: 11
+                              amount_debit:
+                                type: string
+                                example: '76.14'
+                              amount_credit:
+                                type: string
+                                example: '0.00'
+                              vatable:
+                                type: boolean
+                                example: false
+                              note:
+                                type: string
+                                example: m
+                              source_amount:
+                                type: integer
+                                example: 2
+                              created_at:
+                                type: string
+                                example: '2026-01-31T14:42:18.000000Z'
+                              updated_at:
+                                type: string
+                                example: '2026-01-31T14:42:18.000000Z'
+                        created_at:
+                          type: string
+                          example: '2026-01-31T14:24:13.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2026-01-31T14:42:18.000000Z'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: 'http://74.162.89.93/api/invoice-services?page=1'
+                      last:
+                        type: string
+                        example: 'http://74.162.89.93/api/invoice-services?page=1'
+                      prev:
+                        type: string
+                        example: null
+                      next:
+                        type: string
+                        example: null
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            active: false
+                          -
+                            url: 'http://74.162.89.93/api/invoice-services?page=1'
+                            label: '1'
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            active:
+                              type: boolean
+                              example: false
+                      path:
+                        type: string
+                        example: 'http://74.162.89.93/api/invoice-services'
+                      per_page:
+                        type: integer
+                        example: 15
+                      to:
+                        type: integer
+                        example: 1
+                      total:
+                        type: integer
+                        example: 1
+      tags:
+        - 'Invoice Services'
+    post:
+      summary: 'Create Invoice Service'
+      operationId: createInvoiceService
+      description: 'Store a newly created resource in storage.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Invoice Services'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                code:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'n'
+                note:
+                  type: string
+                  description: 'Must not be greater than 1000 characters.'
+                  example: g
+                  nullable: true
+                status:
+                  type: boolean
+                  description: ''
+                  example: true
+                type:
+                  type: integer
+                  description: ''
+                  example: '1'
+                  enum:
+                    - '1'
+                    - '2'
+                    - '3'
+                settings:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
+                lines:
+                  type: array
+                  description: ''
+                  example: null
+                  items:
+                    type: object
+                    nullable: true
+                    properties:
+                      ledger_account_id:
+                        type: integer
+                        description: 'The <code>id</code> of an existing record in the ledger_of_accounts table.'
+                        example: 16
+                      amount_debit:
+                        type: number
+                        description: 'Must be at least 0.'
+                        example: 39
+                        nullable: true
+                      amount_credit:
+                        type: number
+                        description: 'Must be at least 0.'
+                        example: 84
+                        nullable: true
+                      vatable:
+                        type: boolean
+                        description: ''
+                        example: true
+                      note:
+                        type: string
+                        description: 'Must not be greater than 255 characters.'
+                        example: z
+                        nullable: true
+                      source_amount:
+                        type: integer
+                        description: ''
+                        example: '2'
+                        enum:
+                          - '1'
+                          - '2'
+                    required:
+                      - ledger_account_id
+                      - source_amount
+              required:
+                - name
+                - code
+                - type
+  '/api/invoice-services/{id}':
+    get:
+      summary: 'Get Invoice Service'
+      operationId: getInvoiceService
+      description: 'Display the specified resource.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: 11
+                    name: 'Service with cash back'
+                    code: 'n'
+                    note: g
+                    status: false
+                    type: 3
+                    settings: null
+                    created_by: null
+                    updated_by: null
+                    created_by_name: null
+                    updated_by_name: null
+                    total_amount: 0
+                    govt_fee: 0
+                    center_fee: 0
+                    service_charge: 0
+                    tax: 0
+                    is_taxable: false
+                    lines:
+                      -
+                        id: 28
+                        ledger_account_id: 30
+                        ledger_name: 'Mohre Cash back receivable'
+                        invoice_service_id: 11
+                        amount_debit: '76.14'
+                        amount_credit: '0.00'
+                        vatable: false
+                        note: m
+                        source_amount: 2
+                        created_at: '2026-01-31T14:42:18.000000Z'
+                        updated_at: '2026-01-31T14:42:18.000000Z'
+                      -
+                        id: 29
+                        ledger_account_id: 20
+                        ledger_name: 'credit card'
+                        invoice_service_id: 11
+                        amount_debit: '0.00'
+                        amount_credit: '76.14'
+                        vatable: false
+                        note: m
+                        source_amount: 2
+                        created_at: '2026-01-31T14:42:18.000000Z'
+                        updated_at: '2026-01-31T14:42:18.000000Z'
+                      -
+                        id: 30
+                        ledger_account_id: 19
+                        ledger_name: 'typing profit'
+                        invoice_service_id: 11
+                        amount_debit: '0.00'
+                        amount_credit: '72.51'
+                        vatable: false
+                        note: m
+                        source_amount: 2
+                        created_at: '2026-01-31T14:42:18.000000Z'
+                        updated_at: '2026-01-31T14:42:18.000000Z'
+                      -
+                        id: 31
+                        ledger_account_id: 10
+                        ledger_name: VAT
+                        invoice_service_id: 11
+                        amount_debit: '0.00'
+                        amount_credit: '3.63'
+                        vatable: false
+                        note: m
+                        source_amount: 2
+                        created_at: '2026-01-31T14:42:18.000000Z'
+                        updated_at: '2026-01-31T14:42:18.000000Z'
+                      -
+                        id: 32
+                        ledger_account_id: 22
+                        ledger_name: noqodi
+                        invoice_service_id: 11
+                        amount_debit: '0.00'
+                        amount_credit: '535.75'
+                        vatable: false
+                        note: m
+                        source_amount: 2
+                        created_at: '2026-01-31T14:42:18.000000Z'
+                        updated_at: '2026-01-31T14:42:18.000000Z'
+                    created_at: '2026-01-31T14:24:13.000000Z'
+                    updated_at: '2026-01-31T14:42:18.000000Z'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 11
+                      name:
+                        type: string
+                        example: 'Service with cash back'
+                      code:
+                        type: string
+                        example: 'n'
+                      note:
+                        type: string
+                        example: g
+                      status:
+                        type: boolean
+                        example: false
+                      type:
+                        type: integer
+                        example: 3
+                      settings:
+                        type: string
+                        example: null
+                      created_by:
+                        type: string
+                        example: null
+                      updated_by:
+                        type: string
+                        example: null
+                      created_by_name:
+                        type: string
+                        example: null
+                      updated_by_name:
+                        type: string
+                        example: null
+                      total_amount:
+                        type: integer
+                        example: 0
+                      govt_fee:
+                        type: integer
+                        example: 0
+                      center_fee:
+                        type: integer
+                        example: 0
+                      service_charge:
+                        type: integer
+                        example: 0
+                      tax:
+                        type: integer
+                        example: 0
+                      is_taxable:
+                        type: boolean
+                        example: false
+                      lines:
+                        type: array
+                        example:
+                          -
+                            id: 28
+                            ledger_account_id: 30
+                            ledger_name: 'Mohre Cash back receivable'
+                            invoice_service_id: 11
+                            amount_debit: '76.14'
+                            amount_credit: '0.00'
+                            vatable: false
+                            note: m
+                            source_amount: 2
+                            created_at: '2026-01-31T14:42:18.000000Z'
+                            updated_at: '2026-01-31T14:42:18.000000Z'
+                          -
+                            id: 29
+                            ledger_account_id: 20
+                            ledger_name: 'credit card'
+                            invoice_service_id: 11
+                            amount_debit: '0.00'
+                            amount_credit: '76.14'
+                            vatable: false
+                            note: m
+                            source_amount: 2
+                            created_at: '2026-01-31T14:42:18.000000Z'
+                            updated_at: '2026-01-31T14:42:18.000000Z'
+                          -
+                            id: 30
+                            ledger_account_id: 19
+                            ledger_name: 'typing profit'
+                            invoice_service_id: 11
+                            amount_debit: '0.00'
+                            amount_credit: '72.51'
+                            vatable: false
+                            note: m
+                            source_amount: 2
+                            created_at: '2026-01-31T14:42:18.000000Z'
+                            updated_at: '2026-01-31T14:42:18.000000Z'
+                          -
+                            id: 31
+                            ledger_account_id: 10
+                            ledger_name: VAT
+                            invoice_service_id: 11
+                            amount_debit: '0.00'
+                            amount_credit: '3.63'
+                            vatable: false
+                            note: m
+                            source_amount: 2
+                            created_at: '2026-01-31T14:42:18.000000Z'
+                            updated_at: '2026-01-31T14:42:18.000000Z'
+                          -
+                            id: 32
+                            ledger_account_id: 22
+                            ledger_name: noqodi
+                            invoice_service_id: 11
+                            amount_debit: '0.00'
+                            amount_credit: '535.75'
+                            vatable: false
+                            note: m
+                            source_amount: 2
+                            created_at: '2026-01-31T14:42:18.000000Z'
+                            updated_at: '2026-01-31T14:42:18.000000Z'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 28
+                            ledger_account_id:
+                              type: integer
+                              example: 30
+                            ledger_name:
+                              type: string
+                              example: 'Mohre Cash back receivable'
+                            invoice_service_id:
+                              type: integer
+                              example: 11
+                            amount_debit:
+                              type: string
+                              example: '76.14'
+                            amount_credit:
+                              type: string
+                              example: '0.00'
+                            vatable:
+                              type: boolean
+                              example: false
+                            note:
+                              type: string
+                              example: m
+                            source_amount:
+                              type: integer
+                              example: 2
+                            created_at:
+                              type: string
+                              example: '2026-01-31T14:42:18.000000Z'
+                            updated_at:
+                              type: string
+                              example: '2026-01-31T14:42:18.000000Z'
+                      created_at:
+                        type: string
+                        example: '2026-01-31T14:24:13.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2026-01-31T14:42:18.000000Z'
+      tags:
+        - 'Invoice Services'
+    put:
+      summary: 'Update Invoice Service'
+      operationId: updateInvoiceService
+      description: 'Update the specified resource in storage.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Invoice Services'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                code:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'n'
+                note:
+                  type: string
+                  description: 'Must not be greater than 1000 characters.'
+                  example: g
+                  nullable: true
+                status:
+                  type: boolean
+                  description: ''
+                  example: true
+                type:
+                  type: integer
+                  description: ''
+                  example: '2'
+                  enum:
+                    - '1'
+                    - '2'
+                    - '3'
+                settings:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
+                lines:
+                  type: array
+                  description: ''
+                  example: null
+                  items:
+                    type: object
+                    nullable: true
+                    properties:
+                      id:
+                        type: string
+                        description: 'The <code>id</code> of an existing record in the invoice_service_lines table.'
+                        example: null
+                        nullable: true
+                      ledger_account_id:
+                        type: integer
+                        description: 'The <code>id</code> of an existing record in the ledger_of_accounts table.'
+                        example: 16
+                      amount_debit:
+                        type: number
+                        description: 'Must be at least 0.'
+                        example: 39
+                        nullable: true
+                      amount_credit:
+                        type: number
+                        description: 'Must be at least 0.'
+                        example: 84
+                        nullable: true
+                      vatable:
+                        type: boolean
+                        description: ''
+                        example: true
+                      note:
+                        type: string
+                        description: 'Must not be greater than 255 characters.'
+                        example: z
+                        nullable: true
+                      source_amount:
+                        type: integer
+                        description: ''
+                        example: '2'
+                        enum:
+                          - '1'
+                          - '2'
+                    required:
+                      - ledger_account_id
+    delete:
+      summary: 'Delete Invoice Service'
+      operationId: deleteInvoiceService
+      description: 'Remove the specified resource from storage.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Invoice Services'
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the invoice service.'
+        example: 11
+        required: true
+        schema:
+          type: integer
+  /api/journals:
+    get:
+      summary: 'List all journal entries'
+      operationId: listAllJournalEntries
+      description: 'Get a paginated list of journal entries with optional filtering and sorting.'
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'Number of items per page.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Number of items per page.'
+            example: 20
+        -
+          in: query
+          name: sort_by
+          description: 'Field to sort by (id, posting_date, status, total_debit, total_credit, created_at, updated_at, posted_at).'
+          example: posting_date
+          required: false
+          schema:
+            type: string
+            description: 'Field to sort by (id, posting_date, status, total_debit, total_credit, created_at, updated_at, posted_at).'
+            example: posting_date
+        -
+          in: query
+          name: sort_direction
+          description: 'Sort direction (asc or desc).'
+          example: desc
+          required: false
+          schema:
+            type: string
+            description: 'Sort direction (asc or desc).'
+            example: desc
+        -
+          in: query
+          name: status
+          description: 'Filter by status.'
+          example: DRAFT
+          required: false
+          schema:
+            type: string
+            description: 'Filter by status.'
+            example: DRAFT
+        -
+          in: query
+          name: posting_date_from
+          description: 'date Filter from posting date (Y-m-d).'
+          example: '2026-01-01'
+          required: false
+          schema:
+            type: string
+            description: 'date Filter from posting date (Y-m-d).'
+            example: '2026-01-01'
+        -
+          in: query
+          name: posting_date_to
+          description: 'date Filter to posting date (Y-m-d).'
+          example: '2026-01-31'
+          required: false
+          schema:
+            type: string
+            description: 'date Filter to posting date (Y-m-d).'
+            example: '2026-01-31'
+        -
+          in: query
+          name: source_type
+          description: 'Filter by source type.'
+          example: App\Models\Invoice
+          required: false
+          schema:
+            type: string
+            description: 'Filter by source type.'
+            example: App\Models\Invoice
+        -
+          in: query
+          name: source_id
+          description: 'Filter by source ID.'
+          example: 123
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by source ID.'
+            example: 123
+        -
+          in: query
+          name: created_by
+          description: 'Filter by creator user ID.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by creator user ID.'
+            example: 1
+        -
+          in: query
+          name: posted_by
+          description: 'Filter by poster user ID.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by poster user ID.'
+            example: 1
+        -
+          in: query
+          name: created_from
+          description: 'date Filter from created date (Y-m-d).'
+          example: '2026-01-01'
+          required: false
+          schema:
+            type: string
+            description: 'date Filter from created date (Y-m-d).'
+            example: '2026-01-01'
+        -
+          in: query
+          name: created_to
+          description: 'date Filter to created date (Y-m-d).'
+          example: '2026-01-31'
+          required: false
+          schema:
+            type: string
+            description: 'date Filter to created date (Y-m-d).'
+            example: '2026-01-31'
+        -
+          in: query
+          name: search
+          description: 'Search across notes.'
+          example: payment
+          required: false
+          schema:
+            type: string
+            description: 'Search across notes.'
+            example: payment
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data: []
+                  links:
+                    first: 'http://74.162.89.93/api/journals?page=1'
+                    last: 'http://74.162.89.93/api/journals?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: null
+                    last_page: 1
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        active: false
+                      -
+                        url: 'http://74.162.89.93/api/journals?page=1'
+                        label: '1'
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        active: false
+                    path: 'http://74.162.89.93/api/journals'
+                    per_page: 20
+                    to: null
+                    total: 0
+                properties:
+                  data:
+                    type: array
+                    example: []
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: 'http://74.162.89.93/api/journals?page=1'
+                      last:
+                        type: string
+                        example: 'http://74.162.89.93/api/journals?page=1'
+                      prev:
+                        type: string
+                        example: null
+                      next:
+                        type: string
+                        example: null
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: string
+                        example: null
+                      last_page:
+                        type: integer
+                        example: 1
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            active: false
+                          -
+                            url: 'http://74.162.89.93/api/journals?page=1'
+                            label: '1'
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            active:
+                              type: boolean
+                              example: false
+                      path:
+                        type: string
+                        example: 'http://74.162.89.93/api/journals'
+                      per_page:
+                        type: integer
+                        example: 20
+                      to:
+                        type: string
+                        example: null
+                      total:
+                        type: integer
+                        example: 0
+      tags:
+        - 'Journal Entries'
+    post:
+      summary: 'Create a new journal entry'
+      operationId: createANewJournalEntry
+      description: 'Store a newly created journal entry with nested transaction lines.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Journal Entries'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                posting_date:
+                  type: date
+                  description: 'The posting date.'
+                  example: '2026-01-07'
+                status:
+                  type: integer
+                  description: 'The status: 0=Draft, 1=Posted, 2=Void.'
+                  example: 0
+                source_type:
+                  type: string
+                  description: 'optional Source model type.'
+                  example: App\Models\Invoice
+                  nullable: true
+                source_id:
+                  type: integer
+                  description: 'optional Source model ID.'
+                  example: 123
+                  nullable: true
+                pre_src_type:
+                  type: string
+                  description: 'optional Previous source type.'
+                  example: App\Models\Order
+                  nullable: true
+                pre_src_id:
+                  type: integer
+                  description: 'optional Previous source ID.'
+                  example: 456
+                  nullable: true
+                note:
+                  type: string
+                  description: 'optional Journal notes.'
+                  example: 'Monthly payment entry'
+                  nullable: true
+                meta_json:
+                  type: object
+                  description: 'optional Additional metadata.'
+                  example:
+                    reference: PAY-001
+                  properties: {  }
+                  nullable: true
+                created_by:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the users table.'
+                  example: 16
+                lines:
+                  type: array
+                  description: 'Array of transaction lines (minimum 2). Total debits must equal total credits.'
+                  example:
+                    - architecto
+                  items:
+                    type: string
+              required:
+                - posting_date
+                - status
+                - created_by
+                - lines
+  '/api/journals/{id}':
+    get:
+      summary: 'Get a specific journal entry'
+      operationId: getASpecificJournalEntry
+      description: 'Display the details of a specific journal entry with nested lines.'
+      parameters: []
+      responses:
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Journal entry not found'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Journal entry not found'
+      tags:
+        - 'Journal Entries'
+    put:
+      summary: 'Update a journal entry'
+      operationId: updateAJournalEntry
+      description: 'Update the details of a specific journal entry and its nested lines.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Journal Entries'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                posting_date:
+                  type: date
+                  description: 'optional The posting date.'
+                  example: '2026-01-08'
+                status:
+                  type: integer
+                  description: 'optional The status: 0=Draft, 1=Posted, 2=Void.'
+                  example: 1
+                source_type:
+                  type: string
+                  description: 'Source model type. Must not be greater than 255 characters.'
+                  example: App\Models\Invoice
+                  nullable: true
+                source_id:
+                  type: integer
+                  description: 'Source model ID.'
+                  example: 123
+                  nullable: true
+                pre_src_type:
+                  type: string
+                  description: 'Previous source type. Must not be greater than 255 characters.'
+                  example: App\Models\Order
+                  nullable: true
+                pre_src_id:
+                  type: integer
+                  description: 'Previous source ID.'
+                  example: 456
+                  nullable: true
+                note:
+                  type: string
+                  description: 'optional Journal notes.'
+                  example: 'Updated entry'
+                  nullable: true
+                meta_json:
+                  type: object
+                  description: 'Additional metadata.'
+                  example:
+                    reference: PAY-001
+                  properties: {  }
+                  nullable: true
+                lines:
+                  type: array
+                  description: "optional Array of transaction lines. Include 'id' to update existing lines, omit to create new ones."
+                  example:
+                    - architecto
+                  items:
+                    type: string
+    delete:
+      summary: 'Delete a journal entry'
+      operationId: deleteAJournalEntry
+      description: 'Remove a specific journal entry and its transaction lines from the database.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Journal Entries'
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the journal entry.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/journal-tran-lines:
+    get:
+      summary: 'List journal transaction lines'
+      operationId: listJournalTransactionLines
+      description: "Get a paginated list of journal transaction lines with optional filtering.\nBy default, returns lines from posted journal vouchers."
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'Number of items per page.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Number of items per page.'
+            example: 20
+        -
+          in: query
+          name: sort_by
+          description: 'Field to sort by (id, journal_header_id, ledger_id, debit, credit, created_at, updated_at).'
+          example: created_at
+          required: false
+          schema:
+            type: string
+            description: 'Field to sort by (id, journal_header_id, ledger_id, debit, credit, created_at, updated_at).'
+            example: created_at
+        -
+          in: query
+          name: sort_direction
+          description: 'Sort direction (asc or desc).'
+          example: desc
+          required: false
+          schema:
+            type: string
+            description: 'Sort direction (asc or desc).'
+            example: desc
+        -
+          in: query
+          name: journal_header_id
+          description: 'Filter by journal header ID.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by journal header ID.'
+            example: 1
+        -
+          in: query
+          name: ledger_id
+          description: 'Filter by ledger account ID.'
+          example: 5
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by ledger account ID.'
+            example: 5
+        -
+          in: query
+          name: candidate_id
+          description: 'Filter by candidate/employee ID.'
+          example: 10
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by candidate/employee ID.'
+            example: 10
+        -
+          in: query
+          name: status
+          description: 'Filter by journal header status (0=Draft, 1=Posted, 2=Void).'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by journal header status (0=Draft, 1=Posted, 2=Void).'
+            example: 1
+        -
+          in: query
+          name: only_posted
+          description: 'Filter to only include posted journal entries.'
+          example: true
+          required: false
+          schema:
+            type: boolean
+            description: 'Filter to only include posted journal entries.'
+            example: true
+        -
+          in: query
+          name: posting_date_from
+          description: 'date Filter from posting date (Y-m-d).'
+          example: '2026-01-01'
+          required: false
+          schema:
+            type: string
+            description: 'date Filter from posting date (Y-m-d).'
+            example: '2026-01-01'
+        -
+          in: query
+          name: posting_date_to
+          description: 'date Filter to posting date (Y-m-d).'
+          example: '2026-01-31'
+          required: false
+          schema:
+            type: string
+            description: 'date Filter to posting date (Y-m-d).'
+            example: '2026-01-31'
+        -
+          in: query
+          name: type
+          description: 'Filter by transaction type (debit or credit).'
+          example: debit
+          required: false
+          schema:
+            type: string
+            description: 'Filter by transaction type (debit or credit).'
+            example: debit
+        -
+          in: query
+          name: search
+          description: 'Search across notes and ledger names.'
+          example: payment
+          required: false
+          schema:
+            type: string
+            description: 'Search across notes and ledger names.'
+            example: payment
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data: []
+                  links:
+                    first: 'http://74.162.89.93/api/journal-tran-lines?page=1'
+                    last: 'http://74.162.89.93/api/journal-tran-lines?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: null
+                    last_page: 1
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        active: false
+                      -
+                        url: 'http://74.162.89.93/api/journal-tran-lines?page=1'
+                        label: '1'
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        active: false
+                    path: 'http://74.162.89.93/api/journal-tran-lines'
+                    per_page: 20
+                    to: null
+                    total: 0
+                properties:
+                  data:
+                    type: array
+                    example: []
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: 'http://74.162.89.93/api/journal-tran-lines?page=1'
+                      last:
+                        type: string
+                        example: 'http://74.162.89.93/api/journal-tran-lines?page=1'
+                      prev:
+                        type: string
+                        example: null
+                      next:
+                        type: string
+                        example: null
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: string
+                        example: null
+                      last_page:
+                        type: integer
+                        example: 1
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            active: false
+                          -
+                            url: 'http://74.162.89.93/api/journal-tran-lines?page=1'
+                            label: '1'
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            active:
+                              type: boolean
+                              example: false
+                      path:
+                        type: string
+                        example: 'http://74.162.89.93/api/journal-tran-lines'
+                      per_page:
+                        type: integer
+                        example: 20
+                      to:
+                        type: string
+                        example: null
+                      total:
+                        type: integer
+                        example: 0
+      tags:
+        - 'Journal Transaction Lines'
+  /api/ledgers/lookup:
+    get:
+      summary: 'Lookup ledger accounts for dropdowns'
+      operationId: lookupLedgerAccountsForDropdowns
+      description: "Get a simplified list of ledger accounts optimized for Select2/dropdown menus.\nReturns format: {id, text, type, group}"
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'Search by account name.'
+          example: Cash
+          required: false
+          schema:
+            type: string
+            description: 'Search by account name.'
+            example: Cash
+        -
+          in: query
+          name: type
+          description: 'Filter by type (dr or cr).'
+          example: dr
+          required: false
+          schema:
+            type: string
+            description: 'Filter by type (dr or cr).'
+            example: dr
+        -
+          in: query
+          name: group
+          description: 'Filter by group.'
+          example: Assets
+          required: false
+          schema:
+            type: string
+            description: 'Filter by group.'
+            example: Assets
+        -
+          in: query
+          name: spacial
+          description: 'Filter by spacial.'
+          example: 3
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by spacial.'
+            example: 3
+        -
+          in: query
+          name: customer
+          description: 'Filter for customers (spacial=3).'
+          example: true
+          required: false
+          schema:
+            type: boolean
+            description: 'Filter for customers (spacial=3).'
+            example: true
+        -
+          in: query
+          name: page
+          description: 'Page number for pagination.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number for pagination.'
+            example: 1
+        -
+          in: query
+          name: per_page
+          description: 'Items per page (max 50).'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Items per page (max 50).'
+            example: 20
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  results: []
+                  pagination:
+                    more: false
+                    current_page: 1
+                    total: 0
+                properties:
+                  results:
+                    type: array
+                    example: []
+                  pagination:
+                    type: object
+                    properties:
+                      more:
+                        type: boolean
+                        example: false
+                      current_page:
+                        type: integer
+                        example: 1
+                      total:
+                        type: integer
+                        example: 0
+      tags:
+        - 'Ledger of Accounts'
+  /api/ledgers/lookup-customers:
+    get:
+      summary: 'Lookup customers with CRM search'
+      operationId: lookupCustomersWithCRMSearch
+      description: 'Specialized lookup for customers that searches in CRM fields (mobile, etc).'
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'Search by name, mobile, CL number.'
+          example: '0501234567'
+          required: false
+          schema:
+            type: string
+            description: 'Search by name, mobile, CL number.'
+            example: '0501234567'
+        -
+          in: query
+          name: page
+          description: 'Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number.'
+            example: 1
+        -
+          in: query
+          name: per_page
+          description: 'Items per page.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Items per page.'
+            example: 20
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  results: []
+                  pagination:
+                    more: false
+                    current_page: 1
+                    total: 0
+                properties:
+                  results:
+                    type: array
+                    example: []
+                  pagination:
+                    type: object
+                    properties:
+                      more:
+                        type: boolean
+                        example: false
+                      current_page:
+                        type: integer
+                        example: 1
+                      total:
+                        type: integer
+                        example: 0
+      tags:
+        - 'Ledger of Accounts'
+  /api/ledgers:
+    get:
+      summary: 'List all ledger accounts'
+      operationId: listAllLedgerAccounts
+      description: 'Get a paginated list of ledger accounts with optional filtering and sorting.'
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'Number of items per page.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Number of items per page.'
+            example: 20
+        -
+          in: query
+          name: sort_by
+          description: 'Field to sort by.'
+          example: name
+          required: false
+          schema:
+            type: string
+            description: 'Field to sort by.'
+            example: name
+        -
+          in: query
+          name: sort_direction
+          description: 'Sort direction (asc or desc).'
+          example: asc
+          required: false
+          schema:
+            type: string
+            description: 'Sort direction (asc or desc).'
+            example: asc
+        -
+          in: query
+          name: name
+          description: 'Filter by name (partial match).'
+          example: Cash
+          required: false
+          schema:
+            type: string
+            description: 'Filter by name (partial match).'
+            example: Cash
+        -
+          in: query
+          name: class
+          description: 'Filter by class.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by class.'
+            example: 1
+        -
+          in: query
+          name: sub_class
+          description: 'Filter by sub-class.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by sub-class.'
+            example: 1
+        -
+          in: query
+          name: group
+          description: 'Filter by group.'
+          example: Assets
+          required: false
+          schema:
+            type: string
+            description: 'Filter by group.'
+            example: Assets
+        -
+          in: query
+          name: spacial
+          description: 'Filter by spacial.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by spacial.'
+            example: 1
+        -
+          in: query
+          name: type
+          description: 'Filter by type (dr or cr).'
+          example: dr
+          required: false
+          schema:
+            type: string
+            description: 'Filter by type (dr or cr).'
+            example: dr
+        -
+          in: query
+          name: created_by
+          description: 'Filter by creator user ID.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by creator user ID.'
+            example: 1
+        -
+          in: query
+          name: created_from
+          description: 'date Filter from date (Y-m-d).'
+          example: '2025-01-01'
+          required: false
+          schema:
+            type: string
+            description: 'date Filter from date (Y-m-d).'
+            example: '2025-01-01'
+        -
+          in: query
+          name: created_to
+          description: 'date Filter to date (Y-m-d).'
+          example: '2026-01-31'
+          required: false
+          schema:
+            type: string
+            description: 'date Filter to date (Y-m-d).'
+            example: '2026-01-31'
+        -
+          in: query
+          name: search
+          description: 'Search across name, group, and note.'
+          example: cash
+          required: false
+          schema:
+            type: string
+            description: 'Search across name, group, and note.'
+            example: cash
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data: []
+                  links:
+                    first: 'http://74.162.89.93/api/ledgers?page=1'
+                    last: 'http://74.162.89.93/api/ledgers?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: null
+                    last_page: 1
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        active: false
+                      -
+                        url: 'http://74.162.89.93/api/ledgers?page=1'
+                        label: '1'
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        active: false
+                    path: 'http://74.162.89.93/api/ledgers'
+                    per_page: 20
+                    to: null
+                    total: 0
+                properties:
+                  data:
+                    type: array
+                    example: []
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: 'http://74.162.89.93/api/ledgers?page=1'
+                      last:
+                        type: string
+                        example: 'http://74.162.89.93/api/ledgers?page=1'
+                      prev:
+                        type: string
+                        example: null
+                      next:
+                        type: string
+                        example: null
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: string
+                        example: null
+                      last_page:
+                        type: integer
+                        example: 1
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            active: false
+                          -
+                            url: 'http://74.162.89.93/api/ledgers?page=1'
+                            label: '1'
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            active:
+                              type: boolean
+                              example: false
+                      path:
+                        type: string
+                        example: 'http://74.162.89.93/api/ledgers'
+                      per_page:
+                        type: integer
+                        example: 20
+                      to:
+                        type: string
+                        example: null
+                      total:
+                        type: integer
+                        example: 0
+      tags:
+        - 'Ledger of Accounts'
+    post:
+      summary: 'Create a new ledger account'
+      operationId: createANewLedgerAccount
+      description: 'Store a newly created ledger account in the database.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Ledger of Accounts'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'The name of the ledger account.'
+                  example: 'Cash Account'
+                class:
+                  type: integer
+                  description: 'The class of the ledger account.'
+                  example: 1
+                sub_class:
+                  type: integer
+                  description: 'The sub-class of the ledger account.'
+                  example: 0
+                group:
+                  type: string
+                  description: 'optional The group.'
+                  example: Assets
+                  nullable: true
+                spacial:
+                  type: integer
+                  description: 'Spacial value.'
+                  example: 0
+                type:
+                  type: string
+                  description: 'The type (dr or cr).'
+                  example: dr
+                note:
+                  type: string
+                  description: 'optional Additional notes.'
+                  example: 'Main cash account'
+                  nullable: true
+                created_by:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the users table.'
+                  example: 16
+                updated_by:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the users table.'
+                  example: 16
+              required:
+                - name
+                - class
+                - sub_class
+                - spacial
+                - type
+                - created_by
+                - updated_by
+  '/api/ledgers/{id}':
+    get:
+      summary: 'Get a specific ledger account'
+      operationId: getASpecificLedgerAccount
+      description: 'Display the details of a specific ledger account.'
+      parameters: []
+      responses:
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Ledger account not found'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Ledger account not found'
+      tags:
+        - 'Ledger of Accounts'
+    put:
+      summary: 'Update a ledger account'
+      operationId: updateALedgerAccount
+      description: 'Update the details of a specific ledger account.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Ledger of Accounts'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'The name of the ledger account.'
+                  example: 'Updated Cash Account'
+                class:
+                  type: integer
+                  description: 'The class of the ledger account.'
+                  example: 1
+                sub_class:
+                  type: integer
+                  description: 'The sub-class of the ledger account.'
+                  example: 0
+                group:
+                  type: string
+                  description: 'optional The group.'
+                  example: Assets
+                  nullable: true
+                spacial:
+                  type: integer
+                  description: 'Spacial value.'
+                  example: 0
+                type:
+                  type: string
+                  description: 'The type (dr or cr).'
+                  example: dr
+                note:
+                  type: string
+                  description: 'optional Additional notes.'
+                  example: 'Updated notes'
+                  nullable: true
+                created_by:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the users table.'
+                  example: 16
+                updated_by:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the users table.'
+                  example: 16
+              required:
+                - name
+                - class
+                - sub_class
+                - spacial
+                - type
+                - created_by
+                - updated_by
+    delete:
+      summary: 'Delete a ledger account'
+      operationId: deleteALedgerAccount
+      description: 'Remove a specific ledger account from the database.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Ledger of Accounts'
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the ledger account.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/package-one/received-voucher:
+    post:
+      summary: 'Create Received Voucher for Package One'
+      operationId: createReceivedVoucherForPackageOne
+      description: "Create a receipt voucher for Package One, linked to an Invoice as source.\nThe customer's ledger account is used as the credit side, and the provided\ndebit_ledger_id is used as the debit side (e.g., Cash/Bank)."
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Package One'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                invoice_id:
+                  type: integer
+                  description: 'The ID of the Invoice to link the receipt voucher to (source). The <code>invoice_id</code> of an existing record in the invoices table.'
+                  example: 1
+                customer_id:
+                  type: integer
+                  description: 'The customer ID from CRM. The service will find the associated ledger account (credit side). The <code>id</code> of an existing record in the crm table.'
+                  example: 5
+                debit_ledger_id:
+                  type: integer
+                  description: 'The debit ledger account ID for the receipt voucher (e.g., Cash/Bank). The <code>id</code> of an existing record in the ledger_of_accounts table.'
+                  example: 2
+                amount:
+                  type: number
+                  description: 'Amount received from customer. Must be at least 0.01.'
+                  example: 500.0
+                method_mode:
+                  type: integer
+                  description: 'Payment method mode (optional).'
+                  example: 1
+                  nullable: true
+                note:
+                  type: string
+                  description: 'Note for the receipt voucher (optional). Must not be greater than 500 characters.'
+                  example: 'Payment received for Package One'
+                  nullable: true
+              required:
+                - invoice_id
+                - customer_id
+                - debit_ledger_id
+                - amount
+  /api/package-one/credit-note:
+    post:
+      summary: 'Create Credit Note for Package One'
+      operationId: createCreditNoteForPackageOne
+      description: "Create a credit note that reverses the original journal entries for an invoice.\nThe original debit becomes credit and vice versa. The invoice will be marked as refunded."
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Package One'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                invoice_id:
+                  type: integer
+                  description: 'The ID of the Invoice to create a credit note for. This will reverse the journal entries. The <code>invoice_id</code> of an existing record in the invoices table.'
+                  example: 1
+              required:
+                - invoice_id
+  /api/package-one/charging:
+    post:
+      summary: 'Create Charging Entry for Package One'
+      operationId: createChargingEntryForPackageOne
+      description: "Create a charging journal entry with custom lines (ledger_id with debit/credit amounts).\nThe invoice is referenced as the source."
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Package One'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                invoice_id:
+                  type: integer
+                  description: 'The ID of the Invoice to reference as source. The <code>invoice_id</code> of an existing record in the invoices table.'
+                  example: 1
+                customer_id:
+                  type: integer
+                  description: 'The customer ID from CRM. The service will find the associated ledger account for the debit side. The <code>id</code> of an existing record in the crm table.'
+                  example: 5
+                note:
+                  type: string
+                  description: 'Note for the journal header (optional). Must not be greater than 500 characters.'
+                  example: 'Additional charges for services'
+                  nullable: true
+                lines:
+                  type: array
+                  description: 'Array of credit ledger lines with ledger_id and amount. Must have at least 1 items.'
+                  example:
+                    -
+                      ledger_id: 10
+                      amount: 100
+                      note: 'Service charge'
+                    -
+                      ledger_id: 11
+                      amount: 50
+                      note: 'Processing fee'
+                  items:
+                    type: object
+                    properties:
+                      ledger_id:
+                        type: integer
+                        description: 'The ledger account ID for the credit side. The <code>id</code> of an existing record in the ledger_of_accounts table.'
+                        example: 10
+                      amount:
+                        type: number
+                        description: 'Amount to credit to this ledger. Must be at least 0.01.'
+                        example: 100.0
+                      note:
+                        type: string
+                        description: 'Note for this specific line (optional). Must not be greater than 255 characters.'
+                        example: 'Service charge'
+                        nullable: true
+                    required:
+                      - ledger_id
+                      - amount
+              required:
+                - invoice_id
+                - customer_id
+                - lines
+  /api/package-one:
+    get:
+      summary: 'List Package One Journal Entries'
+      operationId: listPackageOneJournalEntries
+      description: 'Get a paginated list of Package One journal entries.'
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'Number of items per page.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Number of items per page.'
+            example: 20
+        -
+          in: query
+          name: sort_by
+          description: 'Field to sort by.'
+          example: id
+          required: false
+          schema:
+            type: string
+            description: 'Field to sort by.'
+            example: id
+        -
+          in: query
+          name: sort_direction
+          description: 'Sort direction (asc or desc).'
+          example: desc
+          required: false
+          schema:
+            type: string
+            description: 'Sort direction (asc or desc).'
+            example: desc
+        -
+          in: query
+          name: cn_number
+          description: 'Filter by CN Number.'
+          example: CN-2026
+          required: false
+          schema:
+            type: string
+            description: 'Filter by CN Number.'
+            example: CN-2026
+        -
+          in: query
+          name: search
+          description: 'Search in note or CN_Number.'
+          example: PKG
+          required: false
+          schema:
+            type: string
+            description: 'Search in note or CN_Number.'
+            example: PKG
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data: []
+                  links:
+                    first: 'http://74.162.89.93/api/package-one?page=1'
+                    last: 'http://74.162.89.93/api/package-one?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: null
+                    last_page: 1
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        active: false
+                      -
+                        url: 'http://74.162.89.93/api/package-one?page=1'
+                        label: '1'
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        active: false
+                    path: 'http://74.162.89.93/api/package-one'
+                    per_page: 20
+                    to: null
+                    total: 0
+                properties:
+                  data:
+                    type: array
+                    example: []
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: 'http://74.162.89.93/api/package-one?page=1'
+                      last:
+                        type: string
+                        example: 'http://74.162.89.93/api/package-one?page=1'
+                      prev:
+                        type: string
+                        example: null
+                      next:
+                        type: string
+                        example: null
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: string
+                        example: null
+                      last_page:
+                        type: integer
+                        example: 1
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            active: false
+                          -
+                            url: 'http://74.162.89.93/api/package-one?page=1'
+                            label: '1'
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            active:
+                              type: boolean
+                              example: false
+                      path:
+                        type: string
+                        example: 'http://74.162.89.93/api/package-one'
+                      per_page:
+                        type: integer
+                        example: 20
+                      to:
+                        type: string
+                        example: null
+                      total:
+                        type: integer
+                        example: 0
+      tags:
+        - 'Package One'
+    post:
+      summary: 'Create Package One Journal Entry'
+      operationId: createPackageOneJournalEntry
+      description: "Create journal entries for Package One (financial impact only).\nThe cn_number will be stored in all journal transaction lines.\nInvoice creation is handled separately via InvoiceController."
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Package One'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                invoice_id:
+                  type: integer
+                  description: 'The ID of the invoice to link the journal entry to. The <code>invoice_id</code> of an existing record in the invoices table.'
+                  example: 1
+                cn_number:
+                  type: string
+                  description: 'The CN Number from the package. Must not be greater than 255 characters.'
+                  example: CN-2026-001
+                customer_id:
+                  type: integer
+                  description: 'The customer ID from CRM. The service will find the associated ledger account. The <code>id</code> of an existing record in the crm table.'
+                  example: 5
+                invoice_service_id:
+                  type: integer
+                  description: 'The invoice service ID to use. If not provided, uses first active Package One type (type=1) service. The <code>id</code> of an existing record in the invoice_services table.'
+                  example: 1
+                  nullable: true
+                amount_received:
+                  type: number
+                  description: 'Amount received from customer. If > 0, creates a receipt voucher. Must be at least 0.'
+                  example: 500.0
+                  nullable: true
+                debit_ledger_id:
+                  type: integer
+                  description: 'The debit ledger account ID for the receipt voucher (e.g., Cash/Bank). Required if amount_received > 0. This field is required when <code>amount_received</code> is <code>></code> or <code>0</code>. The <code>id</code> of an existing record in the ledger_of_accounts table.'
+                  example: 2
+                  nullable: true
+              required:
+                - invoice_id
+                - cn_number
+                - customer_id
+  '/api/package-one/{id}':
+    get:
+      summary: 'Get Package One Journal Entry'
+      operationId: getPackageOneJournalEntry
+      description: 'Display a specific Package One journal entry.'
+      parameters: []
+      responses:
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Journal entry not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Journal entry not found'
+      tags:
+        - 'Package One'
+    delete:
+      summary: 'Delete Package One Journal Entry'
+      operationId: deletePackageOneJournalEntry
+      description: 'Delete a Package One journal entry and its lines.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Package One'
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The journal ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/receipt-vouchers:
+    get:
+      summary: 'List all receipt vouchers'
+      operationId: listAllReceiptVouchers
+      description: 'Get a paginated list of receipt vouchers with optional filtering and sorting.'
+      parameters:
+        -
+          in: query
+          name: limit
+          description: 'Number of items per page.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Number of items per page.'
+            example: 20
+        -
+          in: query
+          name: sort_by
+          description: 'Field to sort by (id, serial_number, status, payment_mode, created_at, updated_at).'
+          example: created_at
+          required: false
+          schema:
+            type: string
+            description: 'Field to sort by (id, serial_number, status, payment_mode, created_at, updated_at).'
+            example: created_at
+        -
+          in: query
+          name: sort_desc
+          description: 'Sort in descending order (true or false).'
+          example: 'true'
+          required: false
+          schema:
+            type: string
+            description: 'Sort in descending order (true or false).'
+            example: 'true'
+        -
+          in: query
+          name: search
+          description: 'Search by serial number.'
+          example: RV-000001
+          required: false
+          schema:
+            type: string
+            description: 'Search by serial number.'
+            example: RV-000001
+        -
+          in: query
+          name: status
+          description: 'Filter by status (draft, posted, void).'
+          example: posted
+          required: false
+          schema:
+            type: string
+            description: 'Filter by status (draft, posted, void).'
+            example: posted
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data: []
+                  links:
+                    first: 'http://74.162.89.93/api/receipt-vouchers?page=1'
+                    last: 'http://74.162.89.93/api/receipt-vouchers?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: null
+                    last_page: 1
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        active: false
+                      -
+                        url: 'http://74.162.89.93/api/receipt-vouchers?page=1'
+                        label: '1'
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        active: false
+                    path: 'http://74.162.89.93/api/receipt-vouchers'
+                    per_page: 20
+                    to: null
+                    total: 0
+                properties:
+                  data:
+                    type: array
+                    example: []
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: 'http://74.162.89.93/api/receipt-vouchers?page=1'
+                      last:
+                        type: string
+                        example: 'http://74.162.89.93/api/receipt-vouchers?page=1'
+                      prev:
+                        type: string
+                        example: null
+                      next:
+                        type: string
+                        example: null
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: string
+                        example: null
+                      last_page:
+                        type: integer
+                        example: 1
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            active: false
+                          -
+                            url: 'http://74.162.89.93/api/receipt-vouchers?page=1'
+                            label: '1'
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            active:
+                              type: boolean
+                              example: false
+                      path:
+                        type: string
+                        example: 'http://74.162.89.93/api/receipt-vouchers'
+                      per_page:
+                        type: integer
+                        example: 20
+                      to:
+                        type: string
+                        example: null
+                      total:
+                        type: integer
+                        example: 0
+      tags:
+        - 'Receipt Vouchers'
+    post:
+      summary: 'Create a new receipt voucher'
+      operationId: createANewReceiptVoucher
+      description: "Store a newly created receipt voucher with automatic journal entry creation.\nThe journal entry will be created with a debit to the specified debit_ledger_id\nand a credit to the credit_ledger_id for the specified amount."
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Receipt Vouchers'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source_type:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                candidate_id:
+                  type: integer
+                  description: 'optional Link to a candidate.'
+                  example: 5
+                  nullable: true
+                credit_ledger_id:
+                  type: integer
+                  description: 'Ledger account to credit.'
+                  example: 10
+                debit_ledger_id:
+                  type: integer
+                  description: 'Ledger account to debit.'
+                  example: 20
+                source_id:
+                  type: integer
+                  description: ''
+                  example: 16
+                  nullable: true
+                attachments:
+                  type: array
+                  description: 'optional Array of attachment URLs.'
+                  example:
+                    - url1
+                    - url2
+                  items:
+                    type: string
+                    nullable: true
+                status:
+                  type: string
+                  description: 'optional Voucher status (draft, posted, void). Defaults to draft.'
+                  example: posted
+                  nullable: true
+                amount:
+                  type: number
+                  description: 'Receipt amount.'
+                  example: 1500.0
+                payment_mode:
+                  type: integer
+                  description: 'optional Payment mode code.'
+                  example: 1
+                  nullable: true
+              required:
+                - credit_ledger_id
+                - debit_ledger_id
+                - amount
+  '/api/receipt-vouchers/{id}':
+    get:
+      summary: 'Get a specific receipt voucher'
+      operationId: getASpecificReceiptVoucher
+      description: 'Display the details of a specific receipt voucher with its source and journal entry.'
+      parameters: []
+      responses:
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Receipt voucher not found'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Receipt voucher not found'
+      tags:
+        - 'Receipt Vouchers'
+    put:
+      summary: 'Update a receipt voucher'
+      operationId: updateAReceiptVoucher
+      description: 'Update the details of a specific receipt voucher and its associated journal entry.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Receipt Vouchers'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                serial_number:
+                  type: string
+                  description: 'Must not be greater than 10 characters.'
+                  example: bngzmi
+                source_type:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                source_id:
+                  type: integer
+                  description: ''
+                  example: 16
+                  nullable: true
+                attachments:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
+                status:
+                  type: string
+                  description: 'optional Voucher status (draft, posted, void).'
+                  example: posted
+                  nullable: true
+                amount:
+                  type: number
+                  description: 'optional Receipt amount.'
+                  example: 2000.0
+                payment_mode:
+                  type: integer
+                  description: 'optional Payment mode code.'
+                  example: 2
+                  nullable: true
+                candidate_id:
+                  type: integer
+                  description: 'optional Link to a candidate.'
+                  example: 5
+                  nullable: true
+                credit_ledger_id:
+                  type: integer
+                  description: 'optional Ledger account to credit.'
+                  example: 10
+                debit_ledger_id:
+                  type: integer
+                  description: 'optional Ledger account to debit.'
+                  example: 20
+    delete:
+      summary: 'Delete a receipt voucher'
+      operationId: deleteAReceiptVoucher
+      description: 'Remove a specific receipt voucher and its associated journal entry from the database.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Receipt Vouchers'
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the receipt voucher.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/statement-of-account/{ledger_id}':
+    get:
+      summary: 'Get Statement of Account'
+      operationId: getStatementOfAccount
+      description: "Retrieve the statement of account for a specific ledger. Returns all posted\njournal transaction lines with debit, credit, running balance, notes, and source type."
+      parameters: []
+      responses:
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Ledger not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Ledger not found'
+      tags:
+        - 'Statement of Account'
+    parameters:
+      -
+        in: path
+        name: ledger_id
+        description: 'The ID of the ledger.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/trial-balance:
+    get:
+      summary: 'Get Trial Balance'
+      operationId: getTrialBalance
+      description: "Retrieve a trial balance report with ledger accounts organized by class, group, and sub-class.\nEach ledger shows total debits, total credits, closing balance, and balance type (DR/CR).\nLedgers with zero closing balance are excluded."
+      parameters:
+        -
+          in: query
+          name: posting_date_from
+          description: 'date Filter from posting date (Y-m-d).'
+          example: '2026-01-01'
+          required: false
+          schema:
+            type: string
+            description: 'date Filter from posting date (Y-m-d).'
+            example: '2026-01-01'
+        -
+          in: query
+          name: posting_date_to
+          description: 'date Filter to posting date (Y-m-d).'
+          example: '2026-01-31'
+          required: false
+          schema:
+            type: string
+            description: 'date Filter to posting date (Y-m-d).'
+            example: '2026-01-31'
+        -
+          in: query
+          name: spacial
+          description: 'Filter by spacial type (e.g., 3 for Customer).'
+          example: 3
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by spacial type (e.g., 3 for Customer).'
+            example: 3
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      ledger_id: 18
+                      ledger_name: canchetooo
+                      class: Asset
+                      class_id: 1
+                      sub_class: 'Current Asset'
+                      sub_class_id: 1
+                      group: erytderyer
+                      total_debit: '611.89'
+                      total_credit: '0.00'
+                      closing_balance: '611.89'
+                      balance_type: DR
+                  summary:
+                    total_dr: '611.89'
+                    total_cr: '0.00'
+                    is_balanced: false
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        ledger_id: 18
+                        ledger_name: canchetooo
+                        class: Asset
+                        class_id: 1
+                        sub_class: 'Current Asset'
+                        sub_class_id: 1
+                        group: erytderyer
+                        total_debit: '611.89'
+                        total_credit: '0.00'
+                        closing_balance: '611.89'
+                        balance_type: DR
+                    items:
+                      type: object
+                      properties:
+                        ledger_id:
+                          type: integer
+                          example: 18
+                        ledger_name:
+                          type: string
+                          example: canchetooo
+                        class:
+                          type: string
+                          example: Asset
+                        class_id:
+                          type: integer
+                          example: 1
+                        sub_class:
+                          type: string
+                          example: 'Current Asset'
+                        sub_class_id:
+                          type: integer
+                          example: 1
+                        group:
+                          type: string
+                          example: erytderyer
+                        total_debit:
+                          type: string
+                          example: '611.89'
+                        total_credit:
+                          type: string
+                          example: '0.00'
+                        closing_balance:
+                          type: string
+                          example: '611.89'
+                        balance_type:
+                          type: string
+                          example: DR
+                  summary:
+                    type: object
+                    properties:
+                      total_dr:
+                        type: string
+                        example: '611.89'
+                      total_cr:
+                        type: string
+                        example: '0.00'
+                      is_balanced:
+                        type: boolean
+                        example: false
+      tags:
+        - 'Trial Balance'
+  '/api/typing-tran-gov-invs/{id}/receive-payment':
+    post:
+      summary: 'Receive payment for a typing invoice'
+      operationId: receivePaymentForATypingInvoice
+      description: "Create a receipt voucher for a specific typing invoice and record the payment\nwith proper journal entries. This endpoint creates a ReceiptVoucher linked to\nthe typing invoice via polymorphic relationship and updates the amount_received."
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Typing Transaction Government Invoices'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                credit_ledger_id:
+                  type: integer
+                  description: 'Ledger account to credit (usually the customer account).'
+                  example: 10
+                debit_ledger_id:
+                  type: integer
+                  description: 'Ledger account to debit (usually cash/bank account).'
+                  example: 20
+                amount:
+                  type: number
+                  description: 'Payment amount received.'
+                  example: 500.0
+                attachments:
+                  type: array
+                  description: 'optional Array of attachment URLs.'
+                  example:
+                    - url1
+                    - url2
+                  items:
+                    type: string
+                    nullable: true
+                status:
+                  type: string
+                  description: 'optional Voucher status (draft, posted, void). Defaults to posted.'
+                  example: posted
+                  nullable: true
+                payment_mode:
+                  type: integer
+                  description: 'optional Payment mode code.'
+                  example: 1
+                  nullable: true
+              required:
+                - credit_ledger_id
+                - debit_ledger_id
+                - amount
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the typing invoice.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/typing-tran-gov-invs:
+    get:
+      summary: 'List all items'
+      operationId: listAllItems
+      description: 'Get a paginated list of items with optional filtering and sorting.'
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'Number of items per page.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Number of items per page.'
+            example: 20
+        -
+          in: query
+          name: sort_by
+          description: 'Field to sort by (id, serial_no, gov_dw_no, created_at, updated_at).'
+          example: created_at
+          required: false
+          schema:
+            type: string
+            description: 'Field to sort by (id, serial_no, gov_dw_no, created_at, updated_at).'
+            example: created_at
+        -
+          in: query
+          name: sort_direction
+          description: 'Sort direction (asc or desc).'
+          example: desc
+          required: false
+          schema:
+            type: string
+            description: 'Sort direction (asc or desc).'
+            example: desc
+        -
+          in: query
+          name: search
+          description: 'Search across serial_no and gov_dw_no.'
+          example: GOV-INV
+          required: false
+          schema:
+            type: string
+            description: 'Search across serial_no and gov_dw_no.'
+            example: GOV-INV
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 36
+                      serial_no: GOV-INV-000036
+                      gov_dw_no: DW-12345
+                      gov_inv_attachments: []
+                      maid_id: 1
+                      ledger_id: 18
+                      ledger:
+                        id: 18
+                        name: canchetooo
+                        class: 1
+                        sub_class: 1
+                        group: erytderyer
+                        spacial: 3
+                        type: dr
+                        note: testtttttttttttttttt
+                        created_by:
+                          id: 1
+                          name: null
+                        updated_by:
+                          id: 1
+                          name: null
+                        created_at: '2026-01-08T19:46:57+04:00'
+                        updated_at: '2026-01-08T19:46:57+04:00'
+                      customer_mobile: '0565636222'
+                      amount_received: '0.00'
+                      amount_of_invoice: '611.89'
+                      services_json:
+                        -
+                          dw: DW-001
+                          amount: 611.89
+                          quantity: 1
+                          total_amount: 611.89
+                          invoice_service_id: 11
+                      payment_status: pending
+                      created_at: '2026-01-31T14:57:56.000000Z'
+                      updated_at: '2026-01-31T14:57:56.000000Z'
+                      journal:
+                        id: 162
+                        posting_date: '2026-01-31'
+                        status: 1
+                        status_label: Posted
+                        source_type: App\Models\TypingTranGovInv
+                        source_id: 36
+                        pre_src_type: App\Models\InvoiceService
+                        pre_src_id: 11
+                        note: 'Generated from TypingTranGovInv #GOV-INV-000036'
+                        meta_json: null
+                        total_debit: '688.03'
+                        total_credit: '688.03'
+                        created_by: 1
+                        posted_by: null
+                        posted_at: null
+                        created_at: '2026-01-31T14:57:56.000000Z'
+                        updated_at: '2026-01-31T14:57:56.000000Z'
+                  links:
+                    first: 'http://74.162.89.93/api/typing-tran-gov-invs?page=1'
+                    last: 'http://74.162.89.93/api/typing-tran-gov-invs?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: 1
+                    last_page: 1
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        active: false
+                      -
+                        url: 'http://74.162.89.93/api/typing-tran-gov-invs?page=1'
+                        label: '1'
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        active: false
+                    path: 'http://74.162.89.93/api/typing-tran-gov-invs'
+                    per_page: 20
+                    to: 1
+                    total: 1
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 36
+                        serial_no: GOV-INV-000036
+                        gov_dw_no: DW-12345
+                        gov_inv_attachments: []
+                        maid_id: 1
+                        ledger_id: 18
+                        ledger:
+                          id: 18
+                          name: canchetooo
+                          class: 1
+                          sub_class: 1
+                          group: erytderyer
+                          spacial: 3
+                          type: dr
+                          note: testtttttttttttttttt
+                          created_by:
+                            id: 1
+                            name: null
+                          updated_by:
+                            id: 1
+                            name: null
+                          created_at: '2026-01-08T19:46:57+04:00'
+                          updated_at: '2026-01-08T19:46:57+04:00'
+                        customer_mobile: '0565636222'
+                        amount_received: '0.00'
+                        amount_of_invoice: '611.89'
+                        services_json:
+                          -
+                            dw: DW-001
+                            amount: 611.89
+                            quantity: 1
+                            total_amount: 611.89
+                            invoice_service_id: 11
+                        payment_status: pending
+                        created_at: '2026-01-31T14:57:56.000000Z'
+                        updated_at: '2026-01-31T14:57:56.000000Z'
+                        journal:
+                          id: 162
+                          posting_date: '2026-01-31'
+                          status: 1
+                          status_label: Posted
+                          source_type: App\Models\TypingTranGovInv
+                          source_id: 36
+                          pre_src_type: App\Models\InvoiceService
+                          pre_src_id: 11
+                          note: 'Generated from TypingTranGovInv #GOV-INV-000036'
+                          meta_json: null
+                          total_debit: '688.03'
+                          total_credit: '688.03'
+                          created_by: 1
+                          posted_by: null
+                          posted_at: null
+                          created_at: '2026-01-31T14:57:56.000000Z'
+                          updated_at: '2026-01-31T14:57:56.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 36
+                        serial_no:
+                          type: string
+                          example: GOV-INV-000036
+                        gov_dw_no:
+                          type: string
+                          example: DW-12345
+                        gov_inv_attachments:
+                          type: array
+                          example: []
+                        maid_id:
+                          type: integer
+                          example: 1
+                        ledger_id:
+                          type: integer
+                          example: 18
+                        ledger:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 18
+                            name:
+                              type: string
+                              example: canchetooo
+                            class:
+                              type: integer
+                              example: 1
+                            sub_class:
+                              type: integer
+                              example: 1
+                            group:
+                              type: string
+                              example: erytderyer
+                            spacial:
+                              type: integer
+                              example: 3
+                            type:
+                              type: string
+                              example: dr
+                            note:
+                              type: string
+                              example: testtttttttttttttttt
+                            created_by:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                name:
+                                  type: string
+                                  example: null
+                            updated_by:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                name:
+                                  type: string
+                                  example: null
+                            created_at:
+                              type: string
+                              example: '2026-01-08T19:46:57+04:00'
+                            updated_at:
+                              type: string
+                              example: '2026-01-08T19:46:57+04:00'
+                        customer_mobile:
+                          type: string
+                          example: '0565636222'
+                        amount_received:
+                          type: string
+                          example: '0.00'
+                        amount_of_invoice:
+                          type: string
+                          example: '611.89'
+                        services_json:
+                          type: array
+                          example:
+                            -
+                              dw: DW-001
+                              amount: 611.89
+                              quantity: 1
+                              total_amount: 611.89
+                              invoice_service_id: 11
+                          items:
+                            type: object
+                            properties:
+                              dw:
+                                type: string
+                                example: DW-001
+                              amount:
+                                type: number
+                                example: 611.89
+                              quantity:
+                                type: integer
+                                example: 1
+                              total_amount:
+                                type: number
+                                example: 611.89
+                              invoice_service_id:
+                                type: integer
+                                example: 11
+                        payment_status:
+                          type: string
+                          example: pending
+                        created_at:
+                          type: string
+                          example: '2026-01-31T14:57:56.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2026-01-31T14:57:56.000000Z'
+                        journal:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 162
+                            posting_date:
+                              type: string
+                              example: '2026-01-31'
+                            status:
+                              type: integer
+                              example: 1
+                            status_label:
+                              type: string
+                              example: Posted
+                            source_type:
+                              type: string
+                              example: App\Models\TypingTranGovInv
+                            source_id:
+                              type: integer
+                              example: 36
+                            pre_src_type:
+                              type: string
+                              example: App\Models\InvoiceService
+                            pre_src_id:
+                              type: integer
+                              example: 11
+                            note:
+                              type: string
+                              example: 'Generated from TypingTranGovInv #GOV-INV-000036'
+                            meta_json:
+                              type: string
+                              example: null
+                            total_debit:
+                              type: string
+                              example: '688.03'
+                            total_credit:
+                              type: string
+                              example: '688.03'
+                            created_by:
+                              type: integer
+                              example: 1
+                            posted_by:
+                              type: string
+                              example: null
+                            posted_at:
+                              type: string
+                              example: null
+                            created_at:
+                              type: string
+                              example: '2026-01-31T14:57:56.000000Z'
+                            updated_at:
+                              type: string
+                              example: '2026-01-31T14:57:56.000000Z'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: 'http://74.162.89.93/api/typing-tran-gov-invs?page=1'
+                      last:
+                        type: string
+                        example: 'http://74.162.89.93/api/typing-tran-gov-invs?page=1'
+                      prev:
+                        type: string
+                        example: null
+                      next:
+                        type: string
+                        example: null
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            active: false
+                          -
+                            url: 'http://74.162.89.93/api/typing-tran-gov-invs?page=1'
+                            label: '1'
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            active:
+                              type: boolean
+                              example: false
+                      path:
+                        type: string
+                        example: 'http://74.162.89.93/api/typing-tran-gov-invs'
+                      per_page:
+                        type: integer
+                        example: 20
+                      to:
+                        type: integer
+                        example: 1
+                      total:
+                        type: integer
+                        example: 1
+      tags:
+        - 'Typing Transaction Government Invoices'
+    post:
+      summary: 'Create a new item'
+      operationId: createANewItem
+      description: 'Store a newly created item.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Typing Transaction Government Invoices'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gov_dw_no:
+                  type: string
+                  description: 'optional Government D/W Number (deprecated, use services.*.dw instead).'
+                  example: DW-12345
+                  nullable: true
+                gov_inv_attachments:
+                  type: array
+                  description: 'optional Array of attachment paths or objects.'
+                  example:
+                    - architecto
+                  items:
+                    type: string
+                    nullable: true
+                maid_id:
+                  type: integer
+                  description: 'optional Maid ID.'
+                  example: 10
+                  nullable: true
+                amount_received:
+                  type: number
+                  description: 'Initial amount received (if any). Must be at least 0.'
+                  example: 0.0
+                  nullable: true
+                ledger_of_account_id:
+                  type: integer
+                  description: 'Ledger/Customer ID.'
+                  example: 1
+                services:
+                  type: array
+                  description: 'Array of services to include in the invoice.'
+                  example:
+                    - architecto
+                  items:
+                    type: string
+              required:
+                - ledger_of_account_id
+                - services
+  '/api/typing-tran-gov-invs/{id}':
+    get:
+      summary: 'Get a specific item'
+      operationId: getASpecificItem
+      description: 'Display the details of a specific item.'
+      parameters: []
+      responses:
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Item not found'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Item not found'
+      tags:
+        - 'Typing Transaction Government Invoices'
+    put:
+      summary: 'Update an item'
+      operationId: updateAnItem
+      description: 'Update the details of a specific item.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Typing Transaction Government Invoices'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gov_dw_no:
+                  type: string
+                  description: 'optional Government D/W Number (deprecated, use services.*.dw instead).'
+                  example: DW-12345
+                  nullable: true
+                gov_inv_attachments:
+                  type: array
+                  description: 'optional Array of attachment paths or objects.'
+                  example:
+                    - architecto
+                  items:
+                    type: string
+                    nullable: true
+                maid_id:
+                  type: integer
+                  description: 'optional Maid ID.'
+                  example: 10
+                  nullable: true
+                amount_received:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 39
+                  nullable: true
+                ledger_of_account_id:
+                  type: integer
+                  description: 'optional Ledger/Customer ID.'
+                  example: 1
+                services:
+                  type: array
+                  description: 'optional Array of services to include in the invoice.'
+                  example:
+                    - architecto
+                  items:
+                    type: string
+    delete:
+      summary: 'Delete an item'
+      operationId: deleteAnItem
+      description: 'Remove a specific item from the database.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Typing Transaction Government Invoices'
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the item.'
+        example: 1
+        required: true
+        schema:
+          type: integer

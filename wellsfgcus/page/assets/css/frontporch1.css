@@ -1,0 +1,179 @@
+
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#body .primary-ft {
+  font-family: "Wells Fargo Sans" !important;
+  font-weight: 600 !important;
+}
+
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+html,
+i,
+iframe,
+img,
+ins,
+kbd,
+label,
+legend,
+li,
+mark,
+menu,
+nav,
+object,
+ol,
+output,
+p,
+pre,
+q,
+ruby,
+s,
+samp,
+section,
+small,
+span,
+strike,
+sub,
+summary,
+sup,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+time,
+tr,
+tt,
+u,
+ul,
+var,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:after,
+blockquote:before,
+q:after,
+q:before {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+#body[theme=ssep] {
+  color: #fff;
+  background-color: #44464A;
+}
+#body[theme=ssep] p {
+  font-family: Verdana;
+  font-size: 13px;
+  line-height: 16px;
+}
+#body[theme=ssep] div,
+#body[theme=ssep] span {
+  font-family: Verdana;
+  font-size: 13px;
+}
+#body[theme=ssep] h1 {
+  font-family: Georgia;
+  font-size: 36px;
+  font-weight: normal;
+  margin: 0;
+}
+#body[theme=ssep] a {
+  text-decoration: none;
+  color: #fff;
+}
+#body[theme=ssep] main {
+  text-align: center;
+  background-color: #44464A;
+}
+#body[theme=ssep][lob='tpb'] main {
+  text-align: center;
+  background-color: #fff;
+}
+#body[theme=ssep] .font-normal {
+  font-weight: 400;
+}
+#body[theme=ssep] .element-invisible {
+  position: absolute!important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+}
+#body[theme=ssep][control="forms:label"] {
+  font-family: Verdana;
+  font-weight: 700;
+  font-size: 13px;
+  color: #44464a;
+}
+#body[theme=ssep][control="forms:dropdown"] {
+  font-family: Verdana;
+  font-size: 14px;
+  color: #44464a;
+  max-width: 350px;
+  margin: 10px 8px 10px 0;
+  border: 1px solid #cfd1d7;
+  border-radius: 2px;
+  display: inline-block;
+  position: relative;
+}
+#body[theme=ssep][control="forms:dropdown"] img {
+  position: absolute;
+  right: 12px;
+  top: 15px;
+}
+
+#notnotmay li {
+  text-align: left;
+}
+
+#notnotmay strong {
+  text-align: left;
+}
+
+#notnotmay {
+  display: flex;
+}

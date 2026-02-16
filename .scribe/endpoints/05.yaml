@@ -1,0 +1,90 @@
+name: 'Trial Balance'
+description: |-
+
+  APIs for retrieving trial balance report data.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/trial-balance
+    metadata:
+      custom: []
+      groupName: 'Trial Balance'
+      groupDescription: |-
+
+        APIs for retrieving trial balance report data.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Trial Balance'
+      description: |-
+        Retrieve a trial balance report with ledger accounts organized by class, group, and sub-class.
+        Each ledger shows total debits, total credits, closing balance, and balance type (DR/CR).
+        Ledgers with zero closing balance are excluded.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      posting_date_from:
+        custom: []
+        name: posting_date_from
+        description: 'date Filter from posting date (Y-m-d).'
+        required: false
+        example: '2026-01-01'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      posting_date_to:
+        custom: []
+        name: posting_date_to
+        description: 'date Filter to posting date (Y-m-d).'
+        required: false
+        example: '2026-01-31'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      spacial:
+        custom: []
+        name: spacial
+        description: 'Filter by spacial type (e.g., 3 for Customer).'
+        required: false
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      posting_date_from: '2026-01-01'
+      posting_date_to: '2026-01-31'
+      spacial: 3
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":[{"ledger_id":18,"ledger_name":"canchetooo","class":"Asset","class_id":1,"sub_class":"Current Asset","sub_class_id":1,"group":"erytderyer","total_debit":"611.89","total_credit":"0.00","closing_balance":"611.89","balance_type":"DR"}],"summary":{"total_dr":"611.89","total_cr":"0.00","is_balanced":false}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
