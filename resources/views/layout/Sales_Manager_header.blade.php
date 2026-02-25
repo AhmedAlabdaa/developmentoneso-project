@@ -216,6 +216,12 @@
                 href="{{ route('employees.inside', ['package' => 'PKG-3']) }}"
               >
                 <i class="bi bi-briefcase-fill display-6"></i>
+                <span class="d-block">PKG 3 Legacy</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-center {{ request()->is('monthly-contract*') ? 'active' : '' }}" href="{{ url('monthly-contract') }}">
+                <i class="bi bi-briefcase display-6"></i>
                 <span class="d-block">PKG 3</span>
               </a>
             </li>
@@ -359,14 +365,22 @@
                     <span class="d-block">Pacakge 1</span>
                   </a>
                 </li>
-                @php $pkgs = ['PKG-2', 'PKG-3', 'PKG-4']; @endphp
+                @php $pkgs = ['PKG-2', 'PKG-3 Legacy', 'PKG-3', 'PKG-4']; @endphp
                 @foreach ($pkgs as $pkg)
                   <li class="nav-item">
-                    <a href="{{ url('employee-with-information') . '?package=' . $pkg }}"
-                       class="nav-link {{ request()->is('employee-with-information') && request('package') === $pkg ? 'active' : '' }}">
+                    @if($pkg === 'PKG-3')
+                    <a href="{{ url('monthly-contract') }}"
+                       class="nav-link {{ request()->is('monthly-contract*') ? 'active' : '' }}">
+                      <i class="bi bi-briefcase"></i>
+                      <span>{{ $pkg }}</span>
+                    </a>
+                    @else
+                    <a href="{{ url('employee-with-information') . '?package=' . str_replace(' Legacy', '', $pkg) }}"
+                       class="nav-link {{ request()->is('employee-with-information') && request('package') === str_replace(' Legacy', '', $pkg) ? 'active' : '' }}">
                       <i class="bi bi-person-badge"></i>
                       <span>{{ $pkg }}</span>
                     </a>
+                    @endif
                   </li>
                 @endforeach
                 <li class="nav-item">

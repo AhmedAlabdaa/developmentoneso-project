@@ -17,7 +17,8 @@ class JournalTranLineResource extends JsonResource
         return [
             'id' => $this->id,
             'journal_header_id' => $this->journal_header_id,
-            'candidate_id' => $this->candidate_id,
+            'employee_id' => $this->employee_id,
+            'candidate_id' => $this->employee_id,
             'ledger_id' => $this->ledger_id,
             'debit' => $this->debit,
             'credit' => $this->credit,

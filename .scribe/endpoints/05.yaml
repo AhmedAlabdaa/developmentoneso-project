@@ -1,90 +1,471 @@
-name: 'Trial Balance'
+name: 'Typing Transaction Government Invoices'
 description: |-
 
-  APIs for retrieving trial balance report data.
+  APIs for managing Typing Transaction Government Invoices.
 endpoints:
   -
     custom: []
     httpMethods:
-      - GET
-    uri: api/trial-balance
+      - POST
+    uri: 'api/typing-tran-gov-invs/{id}/receive-payment'
     metadata:
       custom: []
-      groupName: 'Trial Balance'
+      groupName: 'Typing Transaction Government Invoices'
       groupDescription: |-
 
-        APIs for retrieving trial balance report data.
+        APIs for managing Typing Transaction Government Invoices.
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get Trial Balance'
+      title: 'Receive payment for a typing invoice'
       description: |-
-        Retrieve a trial balance report with ledger accounts organized by class, group, and sub-class.
-        Each ledger shows total debits, total credits, closing balance, and balance type (DR/CR).
-        Ledgers with zero closing balance are excluded.
-      authenticated: true
+        Create a receipt voucher for a specific typing invoice and record the payment
+        with proper journal entries. This endpoint creates a ReceiptVoucher linked to
+        the typing invoice via polymorphic relationship and updates the amount_received.
+      authenticated: false
       deprecated: false
     headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters:
-      posting_date_from:
+    urlParameters:
+      id:
         custom: []
-        name: posting_date_from
-        description: 'date Filter from posting date (Y-m-d).'
-        required: false
-        example: '2026-01-01'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      posting_date_to:
-        custom: []
-        name: posting_date_to
-        description: 'date Filter to posting date (Y-m-d).'
-        required: false
-        example: '2026-01-31'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      spacial:
-        custom: []
-        name: spacial
-        description: 'Filter by spacial type (e.g., 3 for Customer).'
-        required: false
-        example: 3
+        name: id
+        description: 'The ID of the typing invoice.'
+        required: true
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
-    cleanQueryParameters:
-      posting_date_from: '2026-01-01'
-      posting_date_to: '2026-01-31'
-      spacial: 3
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      credit_ledger_id:
+        custom: []
+        name: credit_ledger_id
+        description: 'Ledger account to credit (usually the customer account).'
+        required: true
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      debit_ledger_id:
+        custom: []
+        name: debit_ledger_id
+        description: 'Ledger account to debit (usually cash/bank account).'
+        required: true
+        example: 20
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      amount:
+        custom: []
+        name: amount
+        description: 'Payment amount received.'
+        required: true
+        example: 500.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      attachments:
+        custom: []
+        name: attachments
+        description: 'optional Array of attachment URLs.'
+        required: false
+        example:
+          - url1
+          - url2
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      status:
+        custom: []
+        name: status
+        description: 'optional Voucher status (draft, posted, void). Defaults to posted.'
+        required: false
+        example: posted
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      payment_mode:
+        custom: []
+        name: payment_mode
+        description: 'optional Payment mode code.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      credit_ledger_id: 10
+      debit_ledger_id: 20
+      amount: 500.0
+      attachments:
+        - url1
+        - url2
+      status: posted
+      payment_mode: 1
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/typing-tran-gov-invs
+    metadata:
+      custom: []
+      groupName: 'Typing Transaction Government Invoices'
+      groupDescription: |-
+
+        APIs for managing Typing Transaction Government Invoices.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Create a new item'
+      description: 'Store a newly created item.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      gov_dw_no:
+        custom: []
+        name: gov_dw_no
+        description: 'optional Government D/W Number (deprecated, use services.*.dw instead).'
+        required: false
+        example: DW-12345
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      gov_inv_attachments:
+        custom: []
+        name: gov_inv_attachments
+        description: 'optional Array of attachment paths or objects.'
+        required: false
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      maid_id:
+        custom: []
+        name: maid_id
+        description: 'optional Maid ID.'
+        required: false
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      amount_received:
+        custom: []
+        name: amount_received
+        description: 'Initial amount received (if any). Must be at least 0.'
+        required: false
+        example: 0.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      ledger_of_account_id:
+        custom: []
+        name: ledger_of_account_id
+        description: 'Ledger/Customer ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      services:
+        custom: []
+        name: services
+        description: 'Array of services to include in the invoice.'
+        required: true
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'services[].invoice_service_id':
+        custom: []
+        name: 'services[].invoice_service_id'
+        description: 'Invoice Service ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'services[].quantity':
+        custom: []
+        name: 'services[].quantity'
+        description: 'Quantity for this service.'
+        required: true
+        example: 2.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'services[].dw':
+        custom: []
+        name: 'services[].dw'
+        description: 'optional D/W number for this service line.'
+        required: false
+        example: DW-001
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      gov_dw_no: DW-12345
+      gov_inv_attachments:
+        - architecto
+      maid_id: 10
+      amount_received: 0.0
+      ledger_of_account_id: 1
+      services:
+        - architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/typing-tran-gov-invs/{id}'
+    metadata:
+      custom: []
+      groupName: 'Typing Transaction Government Invoices'
+      groupDescription: |-
+
+        APIs for managing Typing Transaction Government Invoices.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update an item'
+      description: 'Update the details of a specific item.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the item.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      gov_dw_no:
+        custom: []
+        name: gov_dw_no
+        description: 'optional Government D/W Number (deprecated, use services.*.dw instead).'
+        required: false
+        example: DW-12345
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      gov_inv_attachments:
+        custom: []
+        name: gov_inv_attachments
+        description: 'optional Array of attachment paths or objects.'
+        required: false
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      maid_id:
+        custom: []
+        name: maid_id
+        description: 'optional Maid ID.'
+        required: false
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      amount_received:
+        custom: []
+        name: amount_received
+        description: 'Must be at least 0.'
+        required: false
+        example: 39
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      ledger_of_account_id:
+        custom: []
+        name: ledger_of_account_id
+        description: 'optional Ledger/Customer ID.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      services:
+        custom: []
+        name: services
+        description: 'optional Array of services to include in the invoice.'
+        required: false
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'services[].invoice_service_id':
+        custom: []
+        name: 'services[].invoice_service_id'
+        description: 'Invoice Service ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'services[].quantity':
+        custom: []
+        name: 'services[].quantity'
+        description: 'Quantity for this service.'
+        required: true
+        example: 2.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'services[].dw':
+        custom: []
+        name: 'services[].dw'
+        description: 'optional D/W number for this service line.'
+        required: false
+        example: DW-001
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      gov_dw_no: DW-12345
+      gov_inv_attachments:
+        - architecto
+      maid_id: 10
+      amount_received: 39
+      ledger_of_account_id: 1
+      services:
+        - architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/typing-tran-gov-invs/{id}'
+    metadata:
+      custom: []
+      groupName: 'Typing Transaction Government Invoices'
+      groupDescription: |-
+
+        APIs for managing Typing Transaction Government Invoices.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete an item'
+      description: 'Remove a specific item from the database.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the item to delete.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '{"data":[{"ledger_id":18,"ledger_name":"canchetooo","class":"Asset","class_id":1,"sub_class":"Current Asset","sub_class_id":1,"group":"erytderyer","total_debit":"611.89","total_credit":"0.00","closing_balance":"611.89","balance_type":"DR"}],"summary":{"total_dr":"611.89","total_cr":"0.00","is_balanced":false}}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          vary: Origin
-        description: null
+    responses: []
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
     controller: null
     method: null
     route: null

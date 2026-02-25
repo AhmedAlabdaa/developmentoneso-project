@@ -477,6 +477,7 @@
             return view('receipt_vouchers.index', compact('now'));
         })->name('receipt-vouchers.index');
         Route::get('gov-transactions', [TypingTranGovInvController::class, 'viewIndex'])->name('typing-tran-gov-invs.index');
+        Route::get('monthly-contract', [\App\Http\Controllers\MonthlyContractPageController::class, 'index'])->name('monthly-contract.index');
     });
 
     Route::prefix('reports')->name('reports.')->group(function () {

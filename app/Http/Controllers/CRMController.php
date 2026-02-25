@@ -240,6 +240,10 @@ class CRMController extends Controller
             'source'                   => 'nullable|string|max:255',
             'passport_copy'            => 'required|file|mimes:pdf,jpg,png,jpeg|max:10000',
             'id_copy'                  => 'required|file|mimes:pdf,jpg,png,jpeg|max:10000',
+            'payment_methods'          => 'nullable|array',
+            'payment_methods.*.iban'   => 'nullable|string|max:50',
+            'payment_methods.*.bank'   => 'nullable|string|max:100',
+            'payment_methods.*.note'   => 'nullable|string|max:255',
         ]);
 
         $data['passport_copy'] = $request->file('passport_copy')->store('passport_copies', 'public');
@@ -305,6 +309,10 @@ class CRMController extends Controller
             'id_copy'                  => 'nullable|file|mimes:pdf,jpg,png,jpeg|max:10000',
             'emergency_contact_person' => 'nullable|string|max:255',
             'source'                   => 'nullable|string|max:255',
+            'payment_methods'          => 'nullable|array',
+            'payment_methods.*.iban'   => 'nullable|string|max:50',
+            'payment_methods.*.bank'   => 'nullable|string|max:100',
+            'payment_methods.*.note'   => 'nullable|string|max:255',
         ]);
 
         if ($request->hasFile('passport_copy')) {

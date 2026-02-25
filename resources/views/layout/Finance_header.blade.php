@@ -194,7 +194,8 @@
             $pkgs = [
                 'PKG-1' => url('candidates/inside'),
                 'PKG-2' => url('employee-with-information') . '?package=PKG-2',
-                'PKG-3' => url('employee-with-information') . '?package=PKG-3',
+                'PKG-3 Legacy' => url('employee-with-information') . '?package=PKG-3',
+                'PKG-3' => url('monthly-contract'),
                 'PKG-4' => url('employee-with-information') . '?package=PKG-4',
             ];
 
@@ -260,9 +261,13 @@
                     @foreach ($pkgs as $label => $href)
                         @php
                             $isPkg1 = $label === 'PKG-1';
-                            $isActive =
-                                ($isPkg1 && request()->is('candidates/inside')) ||
-                                (!$isPkg1 && request()->is('employee-with-information') && request('package') === $label);
+                            if ($label === 'PKG-3') {
+                                $isActive = request()->is('monthly-contract*');
+                            } else {
+                                $isActive =
+                                    ($isPkg1 && request()->is('candidates/inside')) ||
+                                    (!$isPkg1 && request()->is('employee-with-information') && request('package') === str_replace(' Legacy', '', $label));
+                            }
                         @endphp
                         <li>
                             <a href="{{ $href }}" class="{{ $isActive ? 'active' : '' }}">
@@ -458,6 +463,15 @@
                     href="{{ route('employees.inside', ['package' => 'PKG-3']) }}"
                   >
                     <i class="bi bi-briefcase-fill display-6"></i>
+                    <span class="d-block">PKG 3 Legacy</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link text-center {{ request()->is('monthly-contract*') ? 'active' : '' }}"
+                    href="{{ url('monthly-contract') }}"
+                  >
+                    <i class="bi bi-briefcase display-6"></i>
                     <span class="d-block">PKG 3</span>
                   </a>
                 </li>

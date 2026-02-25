@@ -25,7 +25,8 @@ class JournalTranLineController extends Controller
      * @queryParam sort_direction string Sort direction (asc or desc). Example: desc
      * @queryParam journal_header_id integer Filter by journal header ID. Example: 1
      * @queryParam ledger_id integer Filter by ledger account ID. Example: 5
-     * @queryParam candidate_id integer Filter by candidate/employee ID. Example: 10
+     * @queryParam employee_id integer Filter by employee ID. Example: 10
+     * @queryParam candidate_id integer Legacy alias for employee_id. Example: 10
      * @queryParam status integer Filter by journal header status (0=Draft, 1=Posted, 2=Void). Example: 1
      * @queryParam only_posted boolean Filter to only include posted journal entries. Example: true
      * @queryParam posting_date_from date Filter from posting date (Y-m-d). Example: 2026-01-01
@@ -40,7 +41,7 @@ class JournalTranLineController extends Controller
     {
         // Extract query parameters
         $filters = $request->only([
-            'journal_header_id', 'ledger_id', 'candidate_id',
+            'journal_header_id', 'ledger_id', 'employee_id', 'candidate_id',
             'status', 'only_posted', 'posting_date_from', 'posting_date_to',
             'type', 'search'
         ]);

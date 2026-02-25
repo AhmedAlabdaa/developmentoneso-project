@@ -16,6 +16,23 @@ class UpdateJournalHeaderRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $lines = collect($this->input('lines', []))
+            ->map(function ($line) {
+                if (is_array($line) && !array_key_exists('employee_id', $line) && array_key_exists('candidate_id', $line)) {
+                    $line['employee_id'] = $line['candidate_id'];
+                }
+
+                return $line;
+            })
+            ->toArray();
+
+        $this->merge([
+            'lines' => $lines,
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      */
@@ -35,7 +52,7 @@ class UpdateJournalHeaderRequest extends FormRequest
             // Lines - nested validation
             'lines' => 'sometimes|required|array|min:2',
             'lines.*.id' => 'nullable|integer|exists:journal_tran_lines,id',
-            'lines.*.candidate_id' => 'nullable|integer|exists:employees,id',
+            'lines.*.employee_id' => 'nullable|integer|exists:employees,id',
             'lines.*.ledger_id' => 'required|integer|exists:ledger_of_accounts,id',
             'lines.*.debit' => 'required|numeric|min:0',
             'lines.*.credit' => 'required|numeric|min:0',
@@ -92,14 +109,14 @@ class UpdateJournalHeaderRequest extends FormRequest
                         'debit' => 1500.00,
                         'credit' => 0.00,
                         'note' => 'Updated debit entry',
-                        'candidate_id' => null,
+                        'employee_id' => null,
                     ],
                     [
                         'ledger_id' => 3,
                         'debit' => 0.00,
                         'credit' => 1500.00,
                         'note' => 'New credit entry',
-                        'candidate_id' => null,
+                        'employee_id' => null,
                     ],
                 ],
             ],
@@ -107,7 +124,7 @@ class UpdateJournalHeaderRequest extends FormRequest
                 'description' => 'Line ID (include to update existing line).',
                 'example' => 1,
             ],
-            'lines[].candidate_id' => [
+            'lines[].employee_id' => [
                 'description' => 'Employee ID.',
                 'example' => 5,
             ],

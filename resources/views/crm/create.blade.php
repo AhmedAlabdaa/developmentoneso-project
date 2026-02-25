@@ -236,6 +236,60 @@
                 </div>
               </div>
 
+              {{-- ─── Payment Methods ─── --}}
+              <div class="col-12">
+                <hr>
+                <h6 class="mb-3"><i class="fas fa-credit-card me-1"></i> Payment Methods</h6>
+                <div id="paymentMethodsContainer">
+                  {{-- First row is always visible --}}
+                  <div class="row g-2 mb-2 payment-method-row">
+                    <div class="col-md-4">
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-text"><i class="fas fa-university"></i></span>
+                        <input type="text"
+                               name="payment_methods[0][iban]"
+                               class="form-control"
+                               placeholder="IBAN"
+                               value="{{ old('payment_methods.0.iban') }}">
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-text"><i class="fas fa-building"></i></span>
+                        <input type="text"
+                               name="payment_methods[0][bank]"
+                               class="form-control"
+                               placeholder="Bank Name"
+                               value="{{ old('payment_methods.0.bank') }}">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-text"><i class="fas fa-sticky-note"></i></span>
+                        <input type="text"
+                               name="payment_methods[0][note]"
+                               class="form-control"
+                               placeholder="Note"
+                               value="{{ old('payment_methods.0.note') }}">
+                      </div>
+                    </div>
+                    <div class="col-md-1 d-flex align-items-center">
+                      <button type="button"
+                              class="btn btn-outline-danger btn-sm remove-payment-method"
+                              title="Remove"
+                              style="display:none;">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <button type="button"
+                        class="btn btn-outline-primary btn-sm mt-1"
+                        id="addPaymentMethod">
+                  <i class="fas fa-plus me-1"></i> Add Payment Method
+                </button>
+              </div>
+
               <div class="col-12">
                 <button type="submit"
                         class="btn btn-primary"
@@ -281,5 +335,50 @@
         : $('#emiratesIdError').show();
       // $('#submitButton').prop('disabled', !checkAll());
     });
+
+    /* ── Payment Methods dynamic rows ── */
+    let pmIndex = 1;
+
+    $('#addPaymentMethod').on('click', function(){
+      const row = `
+        <div class="row g-2 mb-2 payment-method-row">
+          <div class="col-md-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text"><i class="fas fa-university"></i></span>
+              <input type="text" name="payment_methods[${pmIndex}][iban]" class="form-control" placeholder="IBAN">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text"><i class="fas fa-building"></i></span>
+              <input type="text" name="payment_methods[${pmIndex}][bank]" class="form-control" placeholder="Bank Name">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text"><i class="fas fa-sticky-note"></i></span>
+              <input type="text" name="payment_methods[${pmIndex}][note]" class="form-control" placeholder="Note">
+            </div>
+          </div>
+          <div class="col-md-1 d-flex align-items-center">
+            <button type="button" class="btn btn-outline-danger btn-sm remove-payment-method" title="Remove">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>`;
+      $('#paymentMethodsContainer').append(row);
+      pmIndex++;
+      toggleRemoveButtons();
+    });
+
+    $(document).on('click', '.remove-payment-method', function(){
+      $(this).closest('.payment-method-row').remove();
+      toggleRemoveButtons();
+    });
+
+    function toggleRemoveButtons(){
+      const rows = $('.payment-method-row');
+      rows.find('.remove-payment-method').toggle(rows.length > 1);
+    }
   });
 </script>

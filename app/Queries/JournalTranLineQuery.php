@@ -60,10 +60,10 @@ class JournalTranLineQuery
     /**
      * Filter by candidate/employee ID
      */
-    public function filterByCandidateId($candidateId): self
+    public function filterByEmployeeId($employeeId): self
     {
-        if ($candidateId !== null) {
-            $this->query->where('candidate_id', $candidateId);
+        if ($employeeId !== null) {
+            $this->query->where('employee_id', $employeeId);
         }
 
         return $this;
@@ -176,7 +176,7 @@ class JournalTranLineQuery
     {
         $this->filterByJournalHeaderId($filters['journal_header_id'] ?? null)
             ->filterByLedgerId($filters['ledger_id'] ?? null)
-            ->filterByCandidateId($filters['candidate_id'] ?? null)
+            ->filterByEmployeeId($filters['employee_id'] ?? ($filters['candidate_id'] ?? null))
             ->filterByHeaderStatus($filters['status'] ?? null)
             ->filterByPostingDateRange($filters['posting_date_from'] ?? null, $filters['posting_date_to'] ?? null)
             ->filterByType($filters['type'] ?? null)

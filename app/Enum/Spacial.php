@@ -8,6 +8,8 @@ enum Spacial: int
     case MAID_ASSETS = 1;
     case payment_method = 2;
     case customer = 3;
+    case maidSalary = 4;
+    case p3Profit = 5;
    
 
     public function label(): string
@@ -17,6 +19,8 @@ enum Spacial: int
             self::MAID_ASSETS => 'MAID Assets',
             self::payment_method => 'Payment Method',
             self::customer => 'Customer',
+            self::maidSalary => 'Maid Salary',
+            self::p3Profit => 'P3 Profit',
           
        
         };

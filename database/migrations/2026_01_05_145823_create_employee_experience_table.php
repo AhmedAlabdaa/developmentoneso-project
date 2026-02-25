@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('employee_experience', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('employee_id')->index('candidate_id');
+            $table->unsignedBigInteger('employee_id')->index();
             $table->string('country');
             $table->integer('experience_years');
             $table->integer('experience_months')->nullable()->default(0);

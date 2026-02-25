@@ -11,7 +11,7 @@ class JournalTranLine extends Model
 
     protected $fillable = [
         'journal_header_id',
-        'candidate_id',
+        'employee_id',
         'cn_number',
         'ledger_id',
         'debit',
@@ -32,7 +32,7 @@ class JournalTranLine extends Model
 
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(Employee::class, 'candidate_id');
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
 
     public function ledger(): BelongsTo

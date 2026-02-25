@@ -21,8 +21,19 @@ class StoreJournalHeaderRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
+        $lines = collect($this->input('lines', []))
+            ->map(function ($line) {
+                if (is_array($line) && !array_key_exists('employee_id', $line) && array_key_exists('candidate_id', $line)) {
+                    $line['employee_id'] = $line['candidate_id'];
+                }
+
+                return $line;
+            })
+            ->toArray();
+
         $this->merge([
             'created_by' => \Auth::id() ?? 1,
+            'lines' => $lines,
         ]);
     }
 
@@ -45,7 +56,7 @@ class StoreJournalHeaderRequest extends FormRequest
 
             // Lines - nested validation
             'lines' => 'required|array|min:2',
-            'lines.*.candidate_id' => 'nullable|integer|exists:employees,id',
+            'lines.*.employee_id' => 'nullable|integer|exists:employees,id',
             'lines.*.ledger_id' => 'required|integer|exists:ledger_of_accounts,id',
             'lines.*.debit' => 'required|numeric|min:0',
             'lines.*.credit' => 'required|numeric|min:0',

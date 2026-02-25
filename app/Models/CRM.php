@@ -27,6 +27,11 @@ class CRM extends Model
         'passport_copy',
         'id_copy',
         'ledger_id',
+        'payment_methods',
+    ];
+
+    protected $casts = [
+        'payment_methods' => 'array',
     ];
 
     public function ledger()    

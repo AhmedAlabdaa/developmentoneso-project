@@ -12,10 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('countries', function (Blueprint $table) {
-            $table->bigIncrements('ID')->unique('id');
+            $table->bigIncrements('ID');
             $table->string('NAME', 100)->unique('name');
-
-            $table->primary(['ID']);
         });
     }
 

@@ -84,7 +84,7 @@ class JournalHeaderController extends Controller
      * @bodyParam meta_json object optional Additional metadata. Example: {"reference": "PAY-001"}
      * @bodyParam lines array required Array of transaction lines (minimum 2). Total debits must equal total credits.
      * @bodyParam lines[].ledger_id integer required Ledger account ID. Example: 1
-     * @bodyParam lines[].candidate_id integer optional Employee ID. Example: 5
+     * @bodyParam lines[].employee_id integer optional Employee ID. Example: 5
      * @bodyParam lines[].debit number required Debit amount (use 0 if credit entry). Example: 1000.00
      * @bodyParam lines[].credit number required Credit amount (use 0 if debit entry). Example: 0.00
      * @bodyParam lines[].note string optional Line note. Example: Payment received
