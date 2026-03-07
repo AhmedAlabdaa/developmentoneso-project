@@ -89,7 +89,7 @@ class AmMonthlyContractsImport implements ToCollection, WithHeadingRow
             $firstDate = $firstInstallmentDate->copy();
 
             // Number of installments is based on (end month - first installment month).
-            $monthsCount = (($end->year * 12 + $end->month) - ($firstDate->year * 12 + $firstDate->month));
+            $monthsCount = (($end->year * 12 + $end->month) - ($firstDate->year * 12 + $firstDate->month)) + 1;
 
             if ($monthsCount < 0) {
                 throw new \Exception('End date must be after or equal to date_of_installment.');
