@@ -60,8 +60,8 @@ class AmMonthlyContractsImport implements ToCollection, WithHeadingRow
         $amountRaw = $row['amount'] ?? null;
         $firstInstallmentDateRaw = trim((string) ($row['date_of_installment'] ?? ''));
 
-        if ($customerRaw === '' || $maidRaw === '' || $startRaw === '' || $amountRaw === null || $firstInstallmentDateRaw === '') {
-            throw new \Exception('Required columns: customer, maid, start, amount, date_of_installment.');
+        if ($customerRaw === '' || $maidRaw === '' || $startRaw === '' || $amountRaw === null) {
+            throw new \Exception('Required columns: customer, maid, start, amount.');
         }
 
         $customer = $this->resolveCustomer($customerRaw);
@@ -76,7 +76,6 @@ class AmMonthlyContractsImport implements ToCollection, WithHeadingRow
 
         $startDate = $this->parseExcelDate($startRaw)->format('Y-m-d');
         $endedDate = $endRaw !== '' ? $this->parseExcelDate($endRaw)->endOfMonth()->format('Y-m-d') : null;
-        $firstInstallmentDate = $this->parseExcelDate($firstInstallmentDateRaw);
         $amount = (float) $amountRaw;
 
         if ($amount < 0) {
@@ -84,31 +83,36 @@ class AmMonthlyContractsImport implements ToCollection, WithHeadingRow
         }
 
         $installments = [];
+        $hasInstallmentDate = $firstInstallmentDateRaw !== '';
 
-        if ($endedDate) {
-            $end = Carbon::parse($endedDate);
-            $firstDate = $firstInstallmentDate->copy();
+        if ($hasInstallmentDate) {
+            $firstInstallmentDate = $this->parseExcelDate($firstInstallmentDateRaw);
 
-            // Number of installments is based on (end month - first installment month).
-            $monthsCount = (($end->year * 12 + $end->month) - ($firstDate->year * 12 + $firstDate->month)) + 1;
+            if ($endedDate) {
+                $end = Carbon::parse($endedDate);
+                $firstDate = $firstInstallmentDate->copy();
 
-            if ($monthsCount < 0) {
-                throw new \Exception('End date must be after or equal to date_of_installment.');
-            }
+                // Number of installments is based on (end month - first installment month).
+                $monthsCount = (($end->year * 12 + $end->month) - ($firstDate->year * 12 + $firstDate->month)) + 1;
 
-            for ($m = 0; $m < $monthsCount; $m++) {
+                if ($monthsCount < 0) {
+                    throw new \Exception('End date must be after or equal to date_of_installment.');
+                }
+
+                for ($m = 0; $m < $monthsCount; $m++) {
+                    $installments[] = [
+                        'date' => $firstInstallmentDate->copy()->addMonths($m)->format('Y-m-d'),
+                        'amount' => $amount,
+                        'note' => 'Imported from Excel',
+                    ];
+                }
+            } else {
                 $installments[] = [
-                    'date' => $firstInstallmentDate->copy()->addMonths($m)->format('Y-m-d'),
+                    'date' => $firstInstallmentDate->format('Y-m-d'),
                     'amount' => $amount,
                     'note' => 'Imported from Excel',
                 ];
             }
-        } else {
-            $installments[] = [
-                'date' => $firstInstallmentDate->format('Y-m-d'),
-                'amount' => $amount,
-                'note' => 'Imported from Excel',
-            ];
         }
 
         return [
