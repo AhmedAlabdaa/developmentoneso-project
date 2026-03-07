@@ -20,6 +20,7 @@ use App\Http\Controllers\AmInstallmentController;
 use App\Http\Controllers\AmIncidentController;
 use App\Http\Controllers\Amp3ActionNotifyController;
 use App\Http\Controllers\DeductionPayrollController;
+use App\Http\Controllers\AmMaidPayRollHistoryController;
 
 Route::get('candidates/getOutsideCandidatesAPI', [CandidateController::class, 'getOutsideCandidatesAPI'])
     ->name('candidates.list');
@@ -56,10 +57,13 @@ Route::get('candidates/getCandidateBySlug', [CandidateController::class, 'getCan
     Route::get('am-monthly-contracts/lookup-customers', [AmMonthlyContractController::class, 'lookupCustomer'])->name('api.am-monthly-contracts.lookup-customers');
     Route::get('am-monthly-contracts/employees', [AmMonthlyContractController::class, 'employees'])->name('api.am-monthly-contracts.employees');
     Route::get('am-monthly-contracts/all-employees', [AmMonthlyContractController::class, 'allEmployees'])->name('api.am-monthly-contracts.all-employees');
+    Route::post('am-monthly-contracts/import-excel', [AmMonthlyContractController::class, 'importExcel'])->name('api.am-monthly-contracts.import-excel');
     Route::post('am-monthly-contracts/{id}/return', [AmReturnMaidController::class, 'returnContract'])->name('api.am-monthly-contracts.return');
     Route::apiResource('am-incidents', AmIncidentController::class)->names('api.am-incidents');
     Route::apiResource('amp3-action-notifies', Amp3ActionNotifyController::class)->names('api.amp3-action-notifies');
     Route::apiResource('deduction-payrolls', DeductionPayrollController::class)->names('api.deduction-payrolls');
+    Route::get('am-maid-payroll-histories/export/excel', [AmMaidPayRollHistoryController::class, 'export'])->name('api.am-maid-payroll-histories.export');
+    Route::apiResource('am-maid-payroll-histories', AmMaidPayRollHistoryController::class)->names('api.am-maid-payroll-histories');
     Route::apiResource('am-monthly-contracts', AmMonthlyContractController::class);
     // Dedicated contract-movement, installment, and return-maid CRUD routes
     Route::apiResource('am-contract-movements', AmContractMovementController::class)->except(['store'])->names('api.am-contract-movements');

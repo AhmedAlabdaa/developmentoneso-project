@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\EnumMaidStatus;
+use App\Imports\AmMonthlyContractsImport;
 use App\Services\AmMonthlyContractService;
 use App\Queries\AmMonthlyContractQuery;
 use App\Http\Requests\StoreAmMonthlyContractRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Exception;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * @group Package 3 Modular
@@ -311,10 +315,17 @@ class AmMonthlyContractController extends Controller
     /**
      * List all employees (maids).
      *
-     * Returns a paginated list of employees filtered by name only.
+     * Returns a paginated list of employees with optional filters.
      *
      * @queryParam per_page integer Number of items per page. Default: 15. Example: 20
      * @queryParam name string Filter by employee name. Example: maria
+     * @queryParam inside_status integer Filter by maid status enum:
+     * 0 = Pending, 1 = Office, 2 = Hired, 3 = Incidented. Example: 1
+     * @queryParam nationality string Filter by nationality. Example: Philippines
+     * @queryParam payment_type string Filter by payment type. Example: bank
+     * @queryParam passport_no string Filter by passport number (partial match). Example: P12345
+     * @queryParam emirates_id string Filter by Emirates ID (partial match). Example: 784-
+     * @queryParam reference_no string Filter by reference number (partial match). Example: EMP-0001
      *
      * @response 200 {
      *   "current_page": 1,
@@ -331,8 +342,32 @@ class AmMonthlyContractController extends Controller
      */
     public function allEmployees(Request $request)
     {
+        $allowedStatuses = array_map(
+            static fn (EnumMaidStatus $status) => $status->value,
+            EnumMaidStatus::cases()
+        );
+
+        $request->validate([
+            'name' => 'nullable|string',
+            'inside_status' => ['nullable', 'integer', Rule::in($allowedStatuses)],
+            'nationality' => 'nullable|string|max:100',
+            'payment_type' => 'nullable|string|max:50',
+            'passport_no' => 'nullable|string|max:100',
+            'emirates_id' => 'nullable|string|max:100',
+            'reference_no' => 'nullable|string|max:100',
+            'per_page' => 'nullable|integer|min:1|max:200',
+        ]);
+
         $employees = $this->query->getallEmployees(
-            $request->only(['name']),
+            $request->only([
+                'name',
+                'inside_status',
+                'nationality',
+                'payment_type',
+                'passport_no',
+                'emirates_id',
+                'reference_no',
+            ]),
             $request->input('per_page', 15)
         );
 
@@ -366,6 +401,54 @@ class AmMonthlyContractController extends Controller
         );
 
         return response()->json($employees);
+    }
+
+    /**
+     * Import monthly contracts from Excel.
+     *
+     * Expected heading columns:
+     * - customer (CL_Number from CRM table)
+     * - maid
+     * - start
+     * - end
+     * - amount
+     * - date_of_installment
+     *
+     * Validation:
+     * - customer CL_Number must exist in CRM table
+     * - maid must exist in Employees table
+     *
+     * Creates:
+     * 1) am_primary_contracts
+     * 2) am_contract_movments
+     * 3) am_installments
+     *
+     * @bodyParam file file required Excel file (.xlsx/.xls/.csv) with heading row.
+     *
+     * @response 200 {
+     *   "message": "Import completed",
+     *   "contracts_created": 3,
+     *   "row_failures_count": 1,
+     *   "row_errors": [
+     *     {"row": 4, "error": "Customer not found: Unknown"}
+     *   ]
+     * }
+     */
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv,txt|max:10240',
+        ]);
+
+        $import = new AmMonthlyContractsImport($this->service);
+        Excel::import($import, $request->file('file'));
+
+        return response()->json([
+            'message' => 'Import completed',
+            'contracts_created' => $import->getContractsCreated(),
+            'row_failures_count' => count($import->getErrors()),
+            'row_errors' => $import->getErrors(),
+        ]);
     }
 
     /**

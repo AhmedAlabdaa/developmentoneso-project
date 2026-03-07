@@ -140,9 +140,9 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-      'lines[].candidate_id':
+      'lines[].employee_id':
         custom: []
-        name: 'lines[].candidate_id'
+        name: 'lines[].employee_id'
         description: 'optional Employee ID.'
         required: false
         example: 5
@@ -365,9 +365,9 @@ endpoints:
         exampleWasSpecified: false
         nullable: true
         deprecated: false
-      'lines[].candidate_id':
+      'lines[].employee_id':
         custom: []
-        name: 'lines[].candidate_id'
+        name: 'lines[].employee_id'
         description: 'The <code>id</code> of an existing record in the employees table.'
         required: false
         example: 16

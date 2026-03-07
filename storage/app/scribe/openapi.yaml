@@ -154,7 +154,7 @@ paths:
                       vatable:
                         type: boolean
                         description: ''
-                        example: false
+                        example: true
                       note:
                         type: string
                         description: 'Must not be greater than 255 characters.'
@@ -163,7 +163,7 @@ paths:
                       source_amount:
                         type: integer
                         description: ''
-                        example: 1
+                        example: 2
                         enum:
                           - 1
                           - 2
@@ -211,7 +211,7 @@ paths:
                 type:
                   type: integer
                   description: ''
-                  example: 2
+                  example: 1
                   enum:
                     - 1
                     - 2
@@ -252,7 +252,7 @@ paths:
                       vatable:
                         type: boolean
                         description: ''
-                        example: false
+                        example: true
                       note:
                         type: string
                         description: 'Must not be greater than 255 characters.'
@@ -261,7 +261,7 @@ paths:
                       source_amount:
                         type: integer
                         description: ''
-                        example: 1
+                        example: 2
                         enum:
                           - 1
                           - 2
@@ -467,7 +467,7 @@ paths:
                 status:
                   type: integer
                   description: ''
-                  example: 1
+                  example: 0
                   enum:
                     - 0
                     - 1
@@ -928,7 +928,7 @@ paths:
     get:
       summary: 'List all employees (maids).'
       operationId: listAllEmployeesmaids
-      description: 'Returns a paginated list of employees filtered by name only.'
+      description: 'Returns a paginated list of employees with optional filters.'
       parameters:
         -
           in: query
@@ -950,6 +950,66 @@ paths:
             type: string
             description: 'Filter by employee name.'
             example: maria
+        -
+          in: query
+          name: inside_status
+          description: "Filter by maid status enum:\n0 = Pending, 1 = Office, 2 = Hired, 3 = Incidented."
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: "Filter by maid status enum:\n0 = Pending, 1 = Office, 2 = Hired, 3 = Incidented."
+            example: 1
+        -
+          in: query
+          name: nationality
+          description: 'Filter by nationality.'
+          example: Philippines
+          required: false
+          schema:
+            type: string
+            description: 'Filter by nationality.'
+            example: Philippines
+        -
+          in: query
+          name: payment_type
+          description: 'Filter by payment type.'
+          example: bank
+          required: false
+          schema:
+            type: string
+            description: 'Filter by payment type.'
+            example: bank
+        -
+          in: query
+          name: passport_no
+          description: 'Filter by passport number (partial match).'
+          example: P12345
+          required: false
+          schema:
+            type: string
+            description: 'Filter by passport number (partial match).'
+            example: P12345
+        -
+          in: query
+          name: emirates_id
+          description: 'Filter by Emirates ID (partial match).'
+          example: 784-
+          required: false
+          schema:
+            type: string
+            description: 'Filter by Emirates ID (partial match).'
+            example: 784-
+        -
+          in: query
+          name: reference_no
+          description: 'Filter by reference number (partial match).'
+          example: EMP-0001
+          required: false
+          schema:
+            type: string
+            description: 'Filter by reference number (partial match).'
+            example: EMP-0001
       responses:
         200:
           description: ''
@@ -996,6 +1056,115 @@ paths:
                     example: 1
       tags:
         - 'Package 3 Modular'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                inside_status:
+                  type: integer
+                  description: ''
+                  example: 16
+                  nullable: true
+                nationality:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
+                  nullable: true
+                payment_type:
+                  type: string
+                  description: 'Must not be greater than 50 characters.'
+                  example: g
+                  nullable: true
+                passport_no:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: z
+                  nullable: true
+                emirates_id:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: m
+                  nullable: true
+                reference_no:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: i
+                  nullable: true
+                per_page:
+                  type: integer
+                  description: 'Must be at least 1. Must not be greater than 200.'
+                  example: 8
+                  nullable: true
+      security: []
+  /api/am-monthly-contracts/import-excel:
+    post:
+      summary: 'Import monthly contracts from Excel.'
+      operationId: importMonthlyContractsFromExcel
+      description: "Expected heading columns:\n- customer\n- maid\n- start\n- end\n- amount\n- date_of_installment\n\nValidation:\n- customer must exist in CRM table\n- maid must exist in Employees table\n\nCreates:\n1) am_primary_contracts\n2) am_contract_movments\n3) am_installments"
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Import completed'
+                  contracts_created: 3
+                  row_failures_count: 1
+                  row_errors:
+                    -
+                      row: 4
+                      error: 'Customer not found: Unknown'
+                properties:
+                  message:
+                    type: string
+                    example: 'Import completed'
+                  contracts_created:
+                    type: integer
+                    example: 3
+                  row_failures_count:
+                    type: integer
+                    example: 1
+                  row_errors:
+                    type: array
+                    example:
+                      -
+                        row: 4
+                        error: 'Customer not found: Unknown'
+                    items:
+                      type: object
+                      properties:
+                        row:
+                          type: integer
+                          example: 4
+                        error:
+                          type: string
+                          example: 'Customer not found: Unknown'
+      tags:
+        - 'Package 3 Modular'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 'Excel file (.xlsx/.xls/.csv) with heading row.'
+              required:
+                - file
       security: []
   '/api/am-monthly-contracts/{id}/return':
     post:
@@ -1218,7 +1387,7 @@ paths:
                 date:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-02-22T23:11:35'
+                  example: '2026-03-04T21:09:06'
                 am_movment_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the am_contract_movments table.'
@@ -1239,7 +1408,7 @@ paths:
                 action:
                   type: integer
                   description: ''
-                  example: 3
+                  example: 1
                   enum:
                     - 1
                     - 2
@@ -1270,7 +1439,7 @@ paths:
                 date:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-02-22T23:11:35'
+                  example: '2026-03-04T21:09:06'
                 note:
                   type: string
                   description: ''
@@ -1279,7 +1448,7 @@ paths:
                 status:
                   type: integer
                   description: ''
-                  example: 4
+                  example: 2
                   enum:
                     - 2
                     - 3
@@ -1529,6 +1698,485 @@ paths:
         in: path
         name: id
         description: 'Deduction payroll ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/am-maid-payroll-histories/export/excel:
+    get:
+      summary: 'Export payroll histories to Excel.'
+      operationId: exportPayrollHistoriesToExcel
+      description: ''
+      parameters:
+        -
+          in: query
+          name: year
+          description: 'Payroll year.'
+          example: 2026
+          required: true
+          schema:
+            type: integer
+            description: 'Payroll year.'
+            example: 2026
+        -
+          in: query
+          name: month
+          description: 'Payroll month (1-12).'
+          example: 2
+          required: true
+          schema:
+            type: integer
+            description: 'Payroll month (1-12).'
+            example: 2
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Excel file download started'
+                properties:
+                  message:
+                    type: string
+                    example: 'Excel file download started'
+      tags:
+        - 'Package 3 Modular'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                year:
+                  type: integer
+                  description: 'Must be at least 2020. Must not be greater than 2099.'
+                  example: 1
+                month:
+                  type: integer
+                  description: 'Must be at least 1. Must not be greater than 12.'
+                  example: 4
+              required:
+                - year
+                - month
+      security: []
+  /api/am-maid-payroll-histories:
+    get:
+      summary: 'List payroll histories.'
+      operationId: listPayrollHistories
+      description: ''
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'Number of items per page.'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Number of items per page.'
+            example: 15
+        -
+          in: query
+          name: employee_id
+          description: 'Filter by employee ID.'
+          example: 10
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by employee ID.'
+            example: 10
+        -
+          in: query
+          name: year
+          description: 'Filter by payroll year.'
+          example: 2026
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by payroll year.'
+            example: 2026
+        -
+          in: query
+          name: month
+          description: 'Filter by payroll month (1-12).'
+          example: 2
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by payroll month (1-12).'
+            example: 2
+        -
+          in: query
+          name: status
+          description: 'Filter by status.'
+          example: paid
+          required: false
+          schema:
+            type: string
+            description: 'Filter by status.'
+            example: paid
+        -
+          in: query
+          name: payment_method
+          description: 'Filter by payment method.'
+          example: cash
+          required: false
+          schema:
+            type: string
+            description: 'Filter by payment method.'
+            example: cash
+        -
+          in: query
+          name: search
+          description: 'Search in note field.'
+          example: bonus
+          required: false
+          schema:
+            type: string
+            description: 'Search in note field.'
+            example: bonus
+        -
+          in: query
+          name: sort_by
+          description: 'Sort field.'
+          example: created_at
+          required: false
+          schema:
+            type: string
+            description: 'Sort field.'
+            example: created_at
+        -
+          in: query
+          name: sort_direction
+          description: 'Sort direction (`asc` or `desc`).'
+          example: desc
+          required: false
+          schema:
+            type: string
+            description: 'Sort direction (`asc` or `desc`).'
+            example: desc
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  current_page: 1
+                  data:
+                    -
+                      id: 1
+                      employee_id: 10
+                      year: 2026
+                      month: 2
+                      payment_method: bank
+                      basic_salary: '1500.00'
+                      deduction: '200.00'
+                      allowance: '100.00'
+                      net: '1400.00'
+                      note: 'February payroll'
+                      status: paid
+                      created_at: '2026-02-28T10:00:00.000000Z'
+                      updated_at: '2026-02-28T10:00:00.000000Z'
+                  last_page: 1
+                  per_page: 15
+                  total: 1
+                properties:
+                  current_page:
+                    type: integer
+                    example: 1
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        employee_id: 10
+                        year: 2026
+                        month: 2
+                        payment_method: bank
+                        basic_salary: '1500.00'
+                        deduction: '200.00'
+                        allowance: '100.00'
+                        net: '1400.00'
+                        note: 'February payroll'
+                        status: paid
+                        created_at: '2026-02-28T10:00:00.000000Z'
+                        updated_at: '2026-02-28T10:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        employee_id:
+                          type: integer
+                          example: 10
+                        year:
+                          type: integer
+                          example: 2026
+                        month:
+                          type: integer
+                          example: 2
+                        payment_method:
+                          type: string
+                          example: bank
+                        basic_salary:
+                          type: string
+                          example: '1500.00'
+                        deduction:
+                          type: string
+                          example: '200.00'
+                        allowance:
+                          type: string
+                          example: '100.00'
+                        net:
+                          type: string
+                          example: '1400.00'
+                        note:
+                          type: string
+                          example: 'February payroll'
+                        status:
+                          type: string
+                          example: paid
+                        created_at:
+                          type: string
+                          example: '2026-02-28T10:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2026-02-28T10:00:00.000000Z'
+                  last_page:
+                    type: integer
+                    example: 1
+                  per_page:
+                    type: integer
+                    example: 15
+                  total:
+                    type: integer
+                    example: 1
+      tags:
+        - 'Package 3 Modular'
+      security: []
+    post:
+      summary: 'Store payroll history record(s).'
+      operationId: storePayrollHistoryRecords
+      description: 'Creates payroll history rows in bulk with per-employee values.'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Package 3 Modular'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                year:
+                  type: integer
+                  description: 'Payroll year for all rows.'
+                  example: 2026
+                month:
+                  type: integer
+                  description: 'Payroll month (1-12) for all rows.'
+                  example: 2
+                note:
+                  type: string
+                  description: 'Optional note applied to all rows.'
+                  example: 'February payroll'
+                  nullable: true
+                rows:
+                  type: array
+                  description: 'Payroll rows.'
+                  example:
+                    -
+                      employee_id: 10
+                      payment_method: bank
+                      basic_salary: 1500
+                      deduction: 200
+                      allowance: 100
+                      net: 1400
+                      paid_at: '2026-02-28 10:00:00'
+                      status: paid
+                    -
+                      employee_id: 11
+                      payment_method: cash
+                      basic_salary: 1800
+                      deduction: 50
+                      allowance: 0
+                      net: 1750
+                      paid_at: '2026-02-28 10:00:00'
+                      status: paid
+                  items:
+                    type: string
+              required:
+                - year
+                - month
+                - rows
+      security: []
+  '/api/am-maid-payroll-histories/{id}':
+    get:
+      summary: 'Show payroll history record.'
+      operationId: showPayrollHistoryRecord
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  employee_id: 10
+                  year: 2026
+                  month: 2
+                  payment_method: bank
+                  basic_salary: '1500.00'
+                  deduction: '200.00'
+                  allowance: '100.00'
+                  net: '1400.00'
+                  note: 'February payroll'
+                  status: paid
+                  created_at: '2026-02-28T10:00:00.000000Z'
+                  updated_at: '2026-02-28T10:00:00.000000Z'
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  employee_id:
+                    type: integer
+                    example: 10
+                  year:
+                    type: integer
+                    example: 2026
+                  month:
+                    type: integer
+                    example: 2
+                  payment_method:
+                    type: string
+                    example: bank
+                  basic_salary:
+                    type: string
+                    example: '1500.00'
+                  deduction:
+                    type: string
+                    example: '200.00'
+                  allowance:
+                    type: string
+                    example: '100.00'
+                  net:
+                    type: string
+                    example: '1400.00'
+                  note:
+                    type: string
+                    example: 'February payroll'
+                  status:
+                    type: string
+                    example: paid
+                  created_at:
+                    type: string
+                    example: '2026-02-28T10:00:00.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2026-02-28T10:00:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Payroll history not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Payroll history not found'
+      tags:
+        - 'Package 3 Modular'
+      security: []
+    put:
+      summary: 'Update payroll history record.'
+      operationId: updatePayrollHistoryRecord
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Package 3 Modular'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                employee_id:
+                  type: integer
+                  description: 'Employee ID.'
+                  example: 10
+                year:
+                  type: integer
+                  description: 'Payroll year.'
+                  example: 2026
+                month:
+                  type: integer
+                  description: 'Payroll month (1-12).'
+                  example: 2
+                payment_method:
+                  type: string
+                  description: 'Payment method.'
+                  example: bank
+                  nullable: true
+                basic_salary:
+                  type: number
+                  description: 'Basic salary.'
+                  example: 1500.0
+                deduction:
+                  type: number
+                  description: 'Deduction amount.'
+                  example: 200.0
+                allowance:
+                  type: number
+                  description: 'Allowance amount.'
+                  example: 100.0
+                net:
+                  type: number
+                  description: 'Net amount.'
+                  example: 1400.0
+                note:
+                  type: string
+                  description: 'Optional note.'
+                  example: 'Updated note'
+                  nullable: true
+                paid_at:
+                  type: date
+                  description: 'Optional paid date/time.'
+                  example: '2026-02-28 10:00:00'
+                  nullable: true
+                status:
+                  type: string
+                  description: Status.
+                  example: paid
+                  nullable: true
+      security: []
+    delete:
+      summary: 'Delete payroll history record.'
+      operationId: deletePayrollHistoryRecord
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Package 3 Modular'
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'Payroll history ID.'
         example: 1
         required: true
         schema:
@@ -3113,7 +3761,7 @@ paths:
                 refund_date:
                   type: string
                   description: 'This field is required when <code>action</code> is <code>3</code>. Must be a valid date.'
-                  example: '2026-02-22T23:11:35'
+                  example: '2026-03-04T21:09:06'
                 note:
                   type: string
                   description: 'This field is required when <code>action</code> is <code>3</code>.'
@@ -3659,6 +4307,8 @@ paths:
                       last_contract_id: 12
                       last_customer_name: 'John Doe'
                       working_days: 28
+                      payroll_status: paid
+                      payroll_note: 'Salary paid via bank'
                   last_page: 1
                   per_page: 50
                   total: 1
@@ -3676,6 +4326,8 @@ paths:
                         last_contract_id: 12
                         last_customer_name: 'John Doe'
                         working_days: 28
+                        payroll_status: paid
+                        payroll_note: 'Salary paid via bank'
                     items:
                       type: object
                       properties:
@@ -3697,6 +4349,12 @@ paths:
                         working_days:
                           type: integer
                           example: 28
+                        payroll_status:
+                          type: string
+                          example: paid
+                        payroll_note:
+                          type: string
+                          example: 'Salary paid via bank'
                   last_page:
                     type: integer
                     example: 1

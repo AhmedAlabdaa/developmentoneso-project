@@ -49,7 +49,7 @@ class AmReturnActionController extends Controller
         ]);
 
         try {
-            $updatedReturn = $this->service->raiseRefundByReturnMaidId((int) $id, (int) $validated['action'], $validated);
+            $updatedReturn = $this->service->raiseRefund($validated, (int) $id);
 
             return response()->json([
                 'message' => 'Action updated successfully',

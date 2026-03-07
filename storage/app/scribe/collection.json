@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "5e28e422-5bb2-4e26-bede-c2eb0c964c31",
+        "_postman_id": "9797bfcc-6c31-44e6-bd4b-320c7d0d1caa",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -91,7 +91,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"n\",\"note\":\"g\",\"status\":false,\"type\":3,\"lines\":[{\"ledger_account_id\":16,\"amount_debit\":39,\"amount_credit\":84,\"vatable\":false,\"note\":\"z\",\"source_amount\":1}]}"
+                            "raw": "{\"name\":\"b\",\"code\":\"n\",\"note\":\"g\",\"status\":false,\"type\":3,\"lines\":[{\"ledger_account_id\":16,\"amount_debit\":39,\"amount_credit\":84,\"vatable\":true,\"note\":\"z\",\"source_amount\":2}]}"
                         },
                         "description": "Store a newly created resource in storage.",
                         "auth": {
@@ -130,7 +130,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"n\",\"note\":\"g\",\"status\":false,\"type\":2,\"lines\":[{\"ledger_account_id\":16,\"amount_debit\":39,\"amount_credit\":84,\"vatable\":false,\"note\":\"z\",\"source_amount\":1}]}"
+                            "raw": "{\"name\":\"b\",\"code\":\"n\",\"note\":\"g\",\"status\":false,\"type\":1,\"lines\":[{\"ledger_account_id\":16,\"amount_debit\":39,\"amount_credit\":84,\"vatable\":true,\"note\":\"z\",\"source_amount\":2}]}"
                         },
                         "description": "Update the specified resource in storage.",
                         "auth": {
@@ -315,7 +315,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"ids\":[16],\"status\":1}"
+                            "raw": "{\"ids\":[16],\"status\":0}"
                         },
                         "description": "Update the status of multiple journal headers by their IDs.",
                         "auth": {
@@ -668,9 +668,45 @@
                                             "value": "maria",
                                             "description": "Filter by employee name.",
                                             "disabled": false
+                                        },
+                                        {
+                                            "key": "inside_status",
+                                            "value": "1",
+                                            "description": "Filter by maid status enum:\n0 = Pending, 1 = Office, 2 = Hired, 3 = Incidented.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "nationality",
+                                            "value": "Philippines",
+                                            "description": "Filter by nationality.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "payment_type",
+                                            "value": "bank",
+                                            "description": "Filter by payment type.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "passport_no",
+                                            "value": "P12345",
+                                            "description": "Filter by passport number (partial match).",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "emirates_id",
+                                            "value": "784-",
+                                            "description": "Filter by Emirates ID (partial match).",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "reference_no",
+                                            "value": "EMP-0001",
+                                            "description": "Filter by reference number (partial match).",
+                                            "disabled": false
                                         }
                                     ],
-                                    "raw": "{{baseUrl}}\/api\/am-monthly-contracts\/all-employees?per_page=20&name=maria"
+                                    "raw": "{{baseUrl}}\/api\/am-monthly-contracts\/all-employees?per_page=20&name=maria&inside_status=1&nationality=Philippines&payment_type=bank&passport_no=P12345&emirates_id=784-&reference_no=EMP-0001"
                                 },
                                 "method": "GET",
                                 "header": [
@@ -683,8 +719,11 @@
                                         "value": "application\/json"
                                     }
                                 ],
-                                "body": null,
-                                "description": "Returns a paginated list of employees filtered by name only.",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name\":\"architecto\",\"inside_status\":16,\"nationality\":\"n\",\"payment_type\":\"g\",\"passport_no\":\"z\",\"emirates_id\":\"m\",\"reference_no\":\"i\",\"per_page\":8}"
+                                },
+                                "description": "Returns a paginated list of employees with optional filters.",
                                 "auth": {
                                     "type": "noauth"
                                 }
@@ -694,6 +733,50 @@
                                     "header": [],
                                     "code": 200,
                                     "body": "{\n  \"current_page\": 1,\n  \"data\": [\n    {\n      \"id\": 5,\n      \"name\": \"Maria Santos\"\n    }\n  ],\n  \"last_page\": 1,\n  \"per_page\": 15,\n  \"total\": 1\n}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Import monthly contracts from Excel.",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/am-monthly-contracts\/import-excel",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/am-monthly-contracts\/import-excel"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "multipart\/form-data"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {
+                                            "key": "file",
+                                            "src": [],
+                                            "type": "file"
+                                        }
+                                    ]
+                                },
+                                "description": "Expected heading columns:\n- customer\n- maid\n- start\n- end\n- amount\n- date_of_installment\n\nValidation:\n- customer must exist in CRM table\n- maid must exist in Employees table\n\nCreates:\n1) am_primary_contracts\n2) am_contract_movments\n3) am_installments",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\n  \"message\": \"Import completed\",\n  \"contracts_created\": 3,\n  \"row_failures_count\": 1,\n  \"row_errors\": [\n    {\"row\": 4, \"error\": \"Customer not found: Unknown\"}\n  ]\n}",
                                     "name": ""
                                 }
                             ]
@@ -1450,7 +1533,7 @@
                                 ],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\"date\":\"2026-02-22T23:11:35\",\"am_movment_id\":\"architecto\",\"note\":\"architecto\",\"status\":3,\"action\":3}"
+                                    "raw": "{\"date\":\"2026-03-04T21:09:06\",\"am_movment_id\":\"architecto\",\"note\":\"architecto\",\"status\":3,\"action\":1}"
                                 },
                                 "description": "",
                                 "auth": {
@@ -1496,7 +1579,7 @@
                                 ],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\"date\":\"2026-02-22T23:11:35\",\"note\":\"architecto\",\"status\":4,\"action\":4}"
+                                    "raw": "{\"date\":\"2026-03-04T21:09:06\",\"note\":\"architecto\",\"status\":2,\"action\":4}"
                                 },
                                 "description": "",
                                 "auth": {
@@ -1743,6 +1826,308 @@
                                             "key": "id",
                                             "value": "1",
                                             "description": "Deduction payroll ID."
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Maid Payroll History\n\nAPIs for managing maid payroll history records.",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Export payroll histories to Excel.",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/am-maid-payroll-histories\/export\/excel",
+                                    "query": [
+                                        {
+                                            "key": "year",
+                                            "value": "2026",
+                                            "description": "Payroll year.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "month",
+                                            "value": "2",
+                                            "description": "Payroll month (1-12).",
+                                            "disabled": false
+                                        }
+                                    ],
+                                    "raw": "{{baseUrl}}\/api\/am-maid-payroll-histories\/export\/excel?year=2026&month=2"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"year\":1,\"month\":4}"
+                                },
+                                "description": "",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\n  \"message\": \"Excel file download started\"\n}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "List payroll histories.",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/am-maid-payroll-histories",
+                                    "query": [
+                                        {
+                                            "key": "per_page",
+                                            "value": "15",
+                                            "description": "Number of items per page.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "employee_id",
+                                            "value": "10",
+                                            "description": "Filter by employee ID.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "year",
+                                            "value": "2026",
+                                            "description": "Filter by payroll year.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "month",
+                                            "value": "2",
+                                            "description": "Filter by payroll month (1-12).",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "status",
+                                            "value": "paid",
+                                            "description": "Filter by status.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "payment_method",
+                                            "value": "cash",
+                                            "description": "Filter by payment method.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "search",
+                                            "value": "bonus",
+                                            "description": "Search in note field.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "sort_by",
+                                            "value": "created_at",
+                                            "description": "Sort field.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "sort_direction",
+                                            "value": "desc",
+                                            "description": "Sort direction (`asc` or `desc`).",
+                                            "disabled": false
+                                        }
+                                    ],
+                                    "raw": "{{baseUrl}}\/api\/am-maid-payroll-histories?per_page=15&employee_id=10&year=2026&month=2&status=paid&payment_method=cash&search=bonus&sort_by=created_at&sort_direction=desc"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\n  \"current_page\": 1,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"employee_id\": 10,\n      \"year\": 2026,\n      \"month\": 2,\n      \"payment_method\": \"bank\",\n      \"basic_salary\": \"1500.00\",\n      \"deduction\": \"200.00\",\n      \"allowance\": \"100.00\",\n      \"net\": \"1400.00\",\n      \"note\": \"February payroll\",\n      \"status\": \"paid\",\n      \"created_at\": \"2026-02-28T10:00:00.000000Z\",\n      \"updated_at\": \"2026-02-28T10:00:00.000000Z\"\n    }\n  ],\n  \"last_page\": 1,\n  \"per_page\": 15,\n  \"total\": 1\n}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Store payroll history record(s).",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/am-maid-payroll-histories",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/am-maid-payroll-histories"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"year\":2026,\"month\":2,\"note\":\"February payroll\",\"rows\":[{\"employee_id\":10,\"payment_method\":\"bank\",\"basic_salary\":1500,\"deduction\":200,\"allowance\":100,\"net\":1400,\"paid_at\":\"2026-02-28 10:00:00\",\"status\":\"paid\"},{\"employee_id\":11,\"payment_method\":\"cash\",\"basic_salary\":1800,\"deduction\":50,\"allowance\":0,\"net\":1750,\"paid_at\":\"2026-02-28 10:00:00\",\"status\":\"paid\"}]}"
+                                },
+                                "description": "Creates payroll history rows in bulk with per-employee values.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Show payroll history record.",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/am-maid-payroll-histories\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/am-maid-payroll-histories\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": "1",
+                                            "description": "Payroll history ID."
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\n  \"id\": 1,\n  \"employee_id\": 10,\n  \"year\": 2026,\n  \"month\": 2,\n  \"payment_method\": \"bank\",\n  \"basic_salary\": \"1500.00\",\n  \"deduction\": \"200.00\",\n  \"allowance\": \"100.00\",\n  \"net\": \"1400.00\",\n  \"note\": \"February payroll\",\n  \"status\": \"paid\",\n  \"created_at\": \"2026-02-28T10:00:00.000000Z\",\n  \"updated_at\": \"2026-02-28T10:00:00.000000Z\"\n}",
+                                    "name": ""
+                                },
+                                {
+                                    "header": [],
+                                    "code": 404,
+                                    "body": "{\n  \"message\": \"Payroll history not found\"\n}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Update payroll history record.",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/am-maid-payroll-histories\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/am-maid-payroll-histories\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": "1",
+                                            "description": "Payroll history ID."
+                                        }
+                                    ]
+                                },
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"employee_id\":10,\"year\":2026,\"month\":2,\"payment_method\":\"bank\",\"basic_salary\":1500,\"deduction\":200,\"allowance\":100,\"net\":1400,\"note\":\"Updated note\",\"paid_at\":\"2026-02-28 10:00:00\",\"status\":\"paid\"}"
+                                },
+                                "description": "",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Delete payroll history record.",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/am-maid-payroll-histories\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/am-maid-payroll-histories\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": "1",
+                                            "description": "Payroll history ID."
                                         }
                                     ]
                                 },
@@ -2197,7 +2582,7 @@
                                 ],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\"action\":2,\"amount\":27,\"refund_date\":\"2026-02-22T23:11:35\",\"note\":\"architecto\"}"
+                                    "raw": "{\"action\":2,\"amount\":27,\"refund_date\":\"2026-03-04T21:09:06\",\"note\":\"architecto\"}"
                                 },
                                 "description": "",
                                 "auth": {
@@ -2665,7 +3050,7 @@
                                 {
                                     "header": [],
                                     "code": 200,
-                                    "body": "{\n  \"current_page\": 1,\n  \"data\": [\n    {\n      \"employee_id\": 5,\n      \"maid_name\": \"Maria Santos\",\n      \"maid_salary\": \"1500.00\",\n      \"last_contract_id\": 12,\n      \"last_customer_name\": \"John Doe\",\n      \"working_days\": 28\n    }\n  ],\n  \"last_page\": 1,\n  \"per_page\": 50,\n  \"total\": 1\n}",
+                                    "body": "{\n  \"current_page\": 1,\n  \"data\": [\n    {\n      \"employee_id\": 5,\n      \"maid_name\": \"Maria Santos\",\n      \"maid_salary\": \"1500.00\",\n      \"last_contract_id\": 12,\n      \"last_customer_name\": \"John Doe\",\n      \"working_days\": 28,\n      \"payroll_status\": \"paid\",\n      \"payroll_note\": \"Salary paid via bank\"\n    }\n  ],\n  \"last_page\": 1,\n  \"per_page\": 50,\n  \"total\": 1\n}",
                                     "name": ""
                                 },
                                 {

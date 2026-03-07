@@ -2,6 +2,7 @@
 
 namespace App\Queries;
 
+use App\Enum\EnumMaidStatus;
 use App\Models\AmPrimaryContract;
 use App\Models\AmContractMovment;
 use App\Models\AmInstallment;
@@ -157,6 +158,55 @@ class AmMonthlyContractQuery
 
         if (isset($filters['inside_status']) && $filters['inside_status'] !== '') {
             $query->where('inside_status', $filters['inside_status']);
+        }
+
+        return $query->orderBy('name')->paginate($perPage);
+    }
+
+    /**
+     * Get all employees with optional filters and pagination.
+     *
+     * @param array $filters
+     * @param int $perPage
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getallEmployees(array $filters = [], int $perPage = 15)
+    {
+        $query = Employee::query();
+
+        if (!empty($filters['name'])) {
+            $query->where('name', 'like', "%{$filters['name']}%");
+        }
+
+        if (!empty($filters['nationality'])) {
+            $query->where('nationality', 'like', "%{$filters['nationality']}%");
+        }
+
+        if (!empty($filters['payment_type'])) {
+            $query->where('payment_type', 'like', "%{$filters['payment_type']}%");
+        }
+
+        if (!empty($filters['passport_no'])) {
+            $query->where('passport_no', 'like', "%{$filters['passport_no']}%");
+        }
+
+        if (!empty($filters['emirates_id'])) {
+            $query->where('emirates_id', 'like', "%{$filters['emirates_id']}%");
+        }
+
+        if (!empty($filters['reference_no'])) {
+            $query->where('reference_no', 'like', "%{$filters['reference_no']}%");
+        }
+
+        if (isset($filters['inside_status']) && $filters['inside_status'] !== '') {
+            $allowed = array_map(
+                static fn (EnumMaidStatus $status) => $status->value,
+                EnumMaidStatus::cases()
+            );
+
+            if (in_array((int) $filters['inside_status'], $allowed, true)) {
+                $query->where('inside_status', (int) $filters['inside_status']);
+            }
         }
 
         return $query->orderBy('name')->paginate($perPage);

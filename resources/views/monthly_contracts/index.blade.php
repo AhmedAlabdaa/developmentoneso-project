@@ -44,6 +44,7 @@ body{background:linear-gradient(to right,#e0f7fa,#e1bee7);font-family:Arial,sans
         {{-- Toolbar --}}
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
           <ul class="nav nav-tabs" id="mainTabs">
+            <li class="nav-item"><a class="nav-link" id="maids-tab" data-bs-toggle="tab" href="#tab-maids"><i class="fas fa-users me-1"></i>Maids</a></li>
             <li class="nav-item"><a class="nav-link active" id="contracts-tab" data-bs-toggle="tab" href="#tab-contracts"><i class="fas fa-file-contract me-1"></i>Primary Contracts</a></li>
             <li class="nav-item"><a class="nav-link" id="movements-tab" data-bs-toggle="tab" href="#tab-movements"><i class="fas fa-exchange-alt me-1"></i>Movement Contracts</a></li>
             <li class="nav-item"><a class="nav-link" id="installments-tab" data-bs-toggle="tab" href="#tab-installments"><i class="fas fa-money-check-alt me-1"></i>Installments</a></li>
@@ -53,11 +54,39 @@ body{background:linear-gradient(to right,#e0f7fa,#e1bee7);font-family:Arial,sans
             <li class="nav-item"><a class="nav-link" id="refund-requests-tab" data-bs-toggle="tab" href="#tab-refund-requests"><i class="fas fa-hand-holding-usd me-1"></i>Refund Requests</a></li>
             <li class="nav-item"><a class="nav-link" id="deductions-tab" data-bs-toggle="tab" href="#tab-deductions"><i class="fas fa-file-invoice me-1"></i>Deduct / Add</a></li>
             <li class="nav-item"><a class="nav-link" id="payroll-tab" data-bs-toggle="tab" href="#tab-payroll"><i class="fas fa-wallet me-1"></i>Maids Payroll</a></li>
+            <li class="nav-item"><a class="nav-link" id="payroll-history-tab" data-bs-toggle="tab" href="#tab-payroll-history"><i class="fas fa-history me-1"></i>Payroll History</a></li>
           </ul>
         </div>
 
         {{-- Tab Content --}}
         <div class="tab-content">
+          <div class="tab-pane fade" id="tab-maids">
+            <div class="d-flex justify-content-between align-items-center bg-light rounded border p-3 mb-3 full-width">
+              <h5 class="mb-0 fw-bold text-secondary text-nowrap me-3"><i class="fas fa-users me-2"></i>Maids Directory</h5>
+              <div class="d-flex align-items-center gap-2 mb-0 flex-wrap justify-content-end">
+                <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="maids_filter_name" placeholder="Name" style="width:120px">
+                <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="maids_filter_ref" placeholder="Ref No" style="width:100px">
+                <select class="form-select form-select-sm border-secondary border-opacity-50" id="maids_filter_inside_status" style="width:120px">
+                  <option value="">Status</option>
+                  <option value="0">Pending</option>
+                  <option value="1">Office</option>
+                  <option value="2">Hired</option>
+                  <option value="3">Incidented</option>
+                </select>
+                <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="maids_filter_nationality" placeholder="Nationality" style="width:120px">
+                <select class="form-select form-select-sm border-secondary border-opacity-50" id="maids_filter_payment_type" style="width:120px">
+                  <option value="">Payment</option>
+                  <option value="cash">Cash</option>
+                  <option value="bank">Bank</option>
+                  <option value="exchange">Exchange</option>
+                </select>
+                <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="maids_filter_passport" placeholder="Passport" style="width:100px">
+                <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="maids_filter_eid" placeholder="Emirates ID" style="width:110px">
+                <button class="btn btn-primary btn-sm ms-2" onclick="loadMaids()"><i class="fas fa-filter me-1"></i>Filter</button>
+              </div>
+            </div>
+            <div class="table-responsive" id="maids_table"></div>
+          </div>
           <div class="tab-pane fade show active" id="tab-contracts">
             <div class="d-flex justify-content-between align-items-center bg-light rounded border p-3 mb-3 full-width">
               <h5 class="mb-0 fw-bold text-secondary"><i class="fas fa-file-contract me-2"></i>Primary Contracts Overview</h5>
@@ -65,7 +94,13 @@ body{background:linear-gradient(to right,#e0f7fa,#e1bee7);font-family:Arial,sans
             </div>
             <div class="table-responsive" id="contracts_table"></div>
           </div>
-          <div class="tab-pane fade" id="tab-movements"><div class="table-responsive" id="movements_table"></div></div>
+          <div class="tab-pane fade" id="tab-movements">
+            <div class="d-flex justify-content-between align-items-center bg-light rounded border p-3 mb-3 full-width">
+              <h5 class="mb-0 fw-bold text-secondary"><i class="fas fa-file-import me-2"></i>Movement Contracts Overview</h5>
+              <button class="btn btn-success btn-sm" onclick="openImportModal()"><i class="fas fa-file-excel me-1"></i>Import Contracts</button>
+            </div>
+            <div class="table-responsive" id="movements_table"></div>
+          </div>
           <div class="tab-pane fade" id="tab-installments"><div class="table-responsive" id="installments_table"></div></div>
           <div class="tab-pane fade" id="tab-invoices"><div class="table-responsive" id="invoices_table"></div></div>
           <div class="tab-pane fade" id="tab-returns"><div class="table-responsive" id="returns_table"></div></div>
@@ -82,19 +117,40 @@ body{background:linear-gradient(to right,#e0f7fa,#e1bee7);font-family:Arial,sans
             <div class="d-flex justify-content-between align-items-center bg-light rounded border p-3 mb-3 full-width">
               <h5 class="mb-0 fw-bold text-secondary text-nowrap me-3"><i class="fas fa-wallet me-2"></i>Maids Payroll</h5>
               <div class="d-flex align-items-center gap-2 mb-0 flex-wrap justify-content-end">
-                <label class="form-label mb-0 fw-bold">Year:</label>
-                <input type="number" class="form-control form-control-sm" id="payroll_year" style="width:100px" min="2020" max="2099">
+                <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="bulk_payroll_note" placeholder="Batch Note (Required)" style="width:160px" required>
+                <button class="btn btn-dark btn-sm me-3" onclick="submitBulkPayroll()"><i class="fas fa-layer-group me-1"></i>Bulk Payroll</button>
+                <div class="vr border-secondary mx-1"></div>
+                <label class="form-label mb-0 fw-bold ms-1">Year:</label>
+                <input type="number" class="form-control form-control-sm border-primary" id="payroll_year" style="width:80px" min="2020" max="2099">
                 <label class="form-label mb-0 fw-bold ms-1">Month:</label>
-                <select class="form-select form-select-sm" id="payroll_month" style="width:130px">
-                  <option value="1">January</option><option value="2">February</option><option value="3">March</option>
-                  <option value="4">April</option><option value="5">May</option><option value="6">June</option>
-                  <option value="7">July</option><option value="8">August</option><option value="9">September</option>
-                  <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+                <select class="form-select form-select-sm border-primary" id="payroll_month" style="width:110px">
+                  <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+                  <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+                  <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
+                  <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
                 </select>
                 <button class="btn btn-primary btn-sm ms-2" onclick="loadPayroll()"><i class="fas fa-search me-1"></i>Load</button>
               </div>
             </div>
             <div class="table-responsive" id="payroll_table"></div>
+          </div>
+          <div class="tab-pane fade" id="tab-payroll-history">
+            <div class="d-flex justify-content-between align-items-center bg-light rounded border p-3 mb-3 full-width">
+              <h5 class="mb-0 fw-bold text-secondary text-nowrap me-3"><i class="fas fa-history me-2"></i>Payroll History</h5>
+              <div class="d-flex align-items-center gap-2 mb-0 flex-wrap justify-content-end">
+                <input type="number" class="form-control form-control-sm border-secondary border-opacity-50" id="hist_filter_year" placeholder="Year" style="width:70px">
+                <input type="number" class="form-control form-control-sm border-secondary border-opacity-50" id="hist_filter_month" placeholder="Month" style="width:70px" min="1" max="12">
+                <select class="form-select form-select-sm border-secondary border-opacity-50" id="hist_filter_method" style="width:100px">
+                  <option value="">Method</option>
+                  <option value="cash">Cash</option>
+                  <option value="bank">Bank</option>
+                </select>
+                <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="hist_filter_search" placeholder="Search..." style="width:150px">
+                <button class="btn btn-primary btn-sm ms-2" onclick="loadPayrollHistory()"><i class="fas fa-filter me-1"></i>Filter</button>
+                <button class="btn btn-success btn-sm ms-2" onclick="exportPayrollHistory()"><i class="fas fa-file-excel me-1"></i>Export Excel</button>
+              </div>
+            </div>
+            <div class="table-responsive" id="payroll_history_table"></div>
           </div>
         </div>
 
@@ -102,6 +158,47 @@ body{background:linear-gradient(to right,#e0f7fa,#e1bee7);font-family:Arial,sans
     </div>
   </section>
 </main>
+
+{{-- Import Contracts Modal --}}
+<div class="modal fade" id="importContractsModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      <div class="modal-header border-bottom-0 pb-0" style="background:linear-gradient(45deg,#28a745,#20c997);color:#fff">
+        <h5 class="modal-title fw-bold"><i class="fas fa-file-excel me-2"></i>Import Monthly Contracts</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4 bg-light">
+        <div class="alert alert-info border-info shadow-sm mb-4">
+          <h6 class="fw-bold mb-2"><i class="fas fa-info-circle me-1"></i>Required Excel Format (.xlsx, .xls, .csv)</h6>
+          <p class="mb-2">Your file must include a header row exactly matching these column names:</p>
+          <ul class="mb-0">
+            <li><code>customer</code> (Must match the CL_Number or ID in the CRM table)</li>
+            <li><code>maid</code> (Must map exactly to an existing Employee)</li>
+            <li><code>start</code> (Format: YYYY-MM-DD)</li>
+            <li><code>end</code> (Format: YYYY-MM-DD)</li>
+            <li><code>amount</code> (Numeric value)</li>
+            <li><code>date_of_installment</code> (Format: YYYY-MM-DD)</li>
+          </ul>
+        </div>
+        
+        <form id="importContractsForm">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Select File <span class="text-danger">*</span></label>
+            <input type="file" class="form-control" id="import_excel_file" accept=".xlsx,.xls,.csv" required>
+          </div>
+        </form>
+
+        <div id="importResults" class="mt-4" style="display:none;"></div>
+      </div>
+      <div class="modal-footer border-top-0 pt-0 bg-light rounded-bottom-3 pb-3 px-4">
+        <button type="button" class="btn btn-secondary px-4 fw-bold shadow-sm" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success px-4 fw-bold shadow-sm" id="btnSubmitImport" onclick="submitImportContracts()">
+          <i class="fas fa-cloud-upload-alt me-1"></i>Start Import
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {{-- Create / Edit Contract Modal --}}
 <div class="modal fade" id="contractModal" tabindex="-1" aria-hidden="true">
@@ -677,7 +774,7 @@ function renderContractsTable(res){
     return;
   }
   let html = '<table class="table table-hover table-bordered mb-0"><thead><tr>';
-  html += '<th>#</th><th>Date</th><th>Customer</th><th>Note</th><th>End Date</th><th>Status</th><th style="width:160px">Actions</th>';
+  html += '<th>#</th><th>Serial No</th><th>Date</th><th>Customer</th><th>Note</th><th>End Date</th><th>Status</th><th style="width:160px">Actions</th>';
   html += '</tr></thead><tbody>';
 
   data.forEach(function(c, i){
@@ -692,6 +789,7 @@ function renderContractsTable(res){
 
     html += '<tr>';
     html += '<td class="text-center">' + idx + '</td>';
+    html += '<td class="text-center fw-bold">' + (c.serial_no || '-') + '</td>';
     html += '<td>' + (c.date || '-') + '</td>';
     html += '<td>' + customerName.trim() + ' <small class="text-muted">' + (crm.CL_Number || '') + '</small></td>';
     html += '<td>' + (c.note || '-') + '</td>';
@@ -708,6 +806,89 @@ function renderContractsTable(res){
   html += '</tbody></table>';
   html += renderPagination(res);
   $('#contracts_table').html(html);
+}
+
+/* ========== MAIDS DIRECTORY ========== */
+function loadMaids(page){
+  page = page || 1;
+  showPreloader();
+  
+  const params = {
+    page: page,
+    per_page: 25,
+    name: $('#maids_filter_name').val(),
+    reference_no: $('#maids_filter_ref').val(),
+    inside_status: $('#maids_filter_inside_status').val(),
+    nationality: $('#maids_filter_nationality').val(),
+    payment_type: $('#maids_filter_payment_type').val(),
+    passport_no: $('#maids_filter_passport').val(),
+    emirates_id: $('#maids_filter_eid').val()
+  };
+
+  $.getJSON('/api/am-monthly-contracts/all-employees', params)
+    .done(function(res){ renderMaidsTable(res); })
+    .fail(function(xhr){
+      $('#maids_table').html('<div class="p-3 text-center text-danger">Failed to load maids.</div>');
+    })
+    .always(hidePreloader);
+}
+
+function renderMaidsTable(res){
+  const data = res.data || [];
+  if(!data.length){
+    $('#maids_table').html('<div class="p-3 text-center text-muted"><i class="fas fa-folder-open mb-2 text-secondary fs-4 d-block"></i>No maids found matching your criteria.</div>');
+    return;
+  }
+
+  let html = '<div class="table-responsive">';
+  html += '<table class="table table-hover table-bordered mb-0" style="font-size: 0.85rem">';
+  html += '<thead class="table-light"><tr>';
+  html += '<th class="text-center" style="width: 5%">ID</th>';
+  html += '<th style="width: 25%">Name / Reference No</th>';
+  html += '<th class="text-center" style="width: 15%">Nationality</th>';
+  html += '<th class="text-center" style="width: 15%">Inside Status</th>';
+  html += '<th class="text-center" style="width: 15%">Payment Type</th>';
+  html += '<th style="width: 25%">Passport / Emirates ID</th>';
+  html += '</tr></thead><tbody>';
+
+  data.forEach(function(row){
+    // Inside Status Mapping
+    let statusBadge = '<span class="badge bg-secondary">Unknown</span>';
+    const statusVal = parseInt(row.inside_status);
+    if(statusVal === 0) statusBadge = '<span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 text-dark px-2 py-1 shadow-sm">Pending</span>';
+    else if(statusVal === 1) statusBadge = '<span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-2 py-1 shadow-sm">Office</span>';
+    else if(statusVal === 2) statusBadge = '<span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1 shadow-sm">Hired</span>';
+    else if(statusVal === 3) statusBadge = '<span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-1 shadow-sm">Incidented</span>';
+
+    // Payment Type
+    let payStr = (row.payment_type || '-').toLowerCase();
+    let paymentBadge = `<span class="badge bg-light border text-secondary">${payStr.charAt(0).toUpperCase() + payStr.slice(1)}</span>`;
+
+    html += '<tr>';
+    html += `<td class="text-center align-middle">${row.id}</td>`;
+    html += `<td class="align-middle fw-bold text-dark">${row.name || '-'}<br><small class="text-muted fw-normal">${row.reference_no || ''}</small></td>`;
+    html += `<td class="text-center align-middle">${row.nationality || '-'}</td>`;
+    html += `<td class="text-center align-middle">${statusBadge}</td>`;
+    html += `<td class="text-center align-middle">${paymentBadge}</td>`;
+    html += `<td class="align-middle">
+               <div class="small"><span class="text-muted">Pass:</span> ${row.passport_no || '-'}</div>
+               <div class="small"><span class="text-muted">EID:</span> ${row.emirates_id || '-'}</div>
+             </td>`;
+    html += '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+  
+  const meta = res.meta || res;
+  const paginationObj = {
+    data: data,
+    total: meta.total || 0,
+    current_page: meta.current_page || 1,
+    last_page: meta.last_page || 1
+  };
+  html += '<div class="mt-3">' + renderPagination(paginationObj) + '</div>';
+
+  $('#maids_table').html(html);
 }
 
 /* ========== MOVEMENTS TABLE ========== */
@@ -735,7 +916,7 @@ function renderMovementsTable(res){
     return;
   }
   let html = '<table class="table table-hover table-bordered mb-0"><thead><tr>';
-  html += '<th>#</th><th>Date</th><th>Customer</th><th>Maid</th><th>Return Date</th><th>Status</th><th style="width:160px">Actions</th>';
+  html += '<th>#</th><th>Serial No</th><th>Date</th><th>Customer</th><th>Maid</th><th>Return Date</th><th>Status</th><th style="width:160px">Actions</th>';
   html += '</tr></thead><tbody>';
 
   data.forEach(function(m, i){
@@ -759,6 +940,7 @@ function renderMovementsTable(res){
 
     html += '<tr>';
     html += '<td class="text-center">' + idx + '</td>';
+    html += '<td class="text-center fw-bold">' + (m.serial_no || '-') + '</td>';
     html += '<td>' + (m.date || '-') + '</td>';
     html += '<td>' + customerName.trim() + ' <small class="text-muted">' + (crm.CL_Number || '') + '</small></td>';
     html += '<td>' + (emp.name || '-') + '</td>';
@@ -1416,26 +1598,111 @@ function renderDeductionsTable(res){
 
 /* ========== PAGINATION ========== */
 function renderPagination(res){
-  if(res.last_page <= 1) return '';
-  let html = '<div class="pagination-container"><small class="text-muted">Showing ' + res.data.length + ' of ' + res.total + '</small><nav><ul class="pagination">';
+  let html = '<div class="pagination-container"><small class="text-muted">Showing ' + (res.data ? res.data.length : 0) + ' of ' + (res.total || 0) + '</small>';
+  
+  if (res.last_page > 1) {
+    html += '<nav><ul class="pagination">';
+    // Prev
+    if(res.current_page > 1) html += '<li class="page-item"><a class="page-link" href="#" data-page="' + (res.current_page - 1) + '">&laquo;</a></li>';
+    else html += '<li class="page-item disabled"><span class="page-link">&laquo;</span></li>';
 
-  // Prev
-  if(res.current_page > 1) html += '<li class="page-item"><a class="page-link" href="#" data-page="' + (res.current_page - 1) + '">&laquo;</a></li>';
-  else html += '<li class="page-item disabled"><span class="page-link">&laquo;</span></li>';
+    // Pages
+    let start = Math.max(1, res.current_page - 2);
+    let end = Math.min(res.last_page, res.current_page + 2);
+    for(let p = start; p <= end; p++){
+      html += '<li class="page-item' + (p === res.current_page ? ' active' : '') + '"><a class="page-link" href="#" data-page="' + p + '">' + p + '</a></li>';
+    }
 
-  // Pages
-  let start = Math.max(1, res.current_page - 2);
-  let end = Math.min(res.last_page, res.current_page + 2);
-  for(let p = start; p <= end; p++){
-    html += '<li class="page-item' + (p === res.current_page ? ' active' : '') + '"><a class="page-link" href="#" data-page="' + p + '">' + p + '</a></li>';
+    // Next
+    if(res.current_page < res.last_page) html += '<li class="page-item"><a class="page-link" href="#" data-page="' + (res.current_page + 1) + '">&raquo;</a></li>';
+    else html += '<li class="page-item disabled"><span class="page-link">&raquo;</span></li>';
+
+    html += '</ul></nav>';
+  }
+  
+  html += '</div>';
+  return html;
+}
+
+/* ========== IMPORT CONTRACTS MODAL ========== */
+function openImportModal() {
+  $('#importContractsForm')[0].reset();
+  $('#importResults').hide().empty();
+  new bootstrap.Modal(document.getElementById('importContractsModal')).show();
+}
+
+function submitImportContracts() {
+  const fileInput = document.getElementById('import_excel_file');
+  if (!fileInput.files.length) {
+    if (typeof toastr !== 'undefined') toastr.warning('Please select an Excel file first.');
+    else alert('Please select an Excel file first.');
+    return;
   }
 
-  // Next
-  if(res.current_page < res.last_page) html += '<li class="page-item"><a class="page-link" href="#" data-page="' + (res.current_page + 1) + '">&raquo;</a></li>';
-  else html += '<li class="page-item disabled"><span class="page-link">&raquo;</span></li>';
+  const formData = new FormData();
+  formData.append('file', fileInput.files[0]);
 
-  html += '</ul></nav></div>';
-  return html;
+  const btn = $('#btnSubmitImport');
+  const origHtml = btn.html();
+  btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Uploading...').prop('disabled', true);
+
+  $.ajax({
+    url: '/api/am-monthly-contracts/import-excel',
+    method: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    headers: {
+      'Accept': 'application/json',
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') || ''
+    }
+  })
+  .done(function(res) {
+    const createdCount = res.contracts_created || 0;
+    const failuresCount = res.row_failures_count || 0;
+    const errors = res.row_errors || [];
+
+    let msg = `Import completed! Created: ${createdCount} contracts.`;
+    if (typeof toastr !== 'undefined') toastr.success(msg);
+    else alert(msg);
+
+    let resultsHtml = `<div class="alert alert-success fw-bold p-3 shadow-sm"><i class="fas fa-check-circle me-1"></i>Successfully imported ${createdCount} contracts.</div>`;
+
+    if (failuresCount > 0) {
+      resultsHtml += `<div class="alert alert-danger fw-bold p-3 mt-3 shadow-sm border-danger"><i class="fas fa-exclamation-triangle me-1"></i>Failed to import ${failuresCount} rows.</div>`;
+      if (errors.length > 0) {
+        resultsHtml += '<div class="table-responsive bg-white rounded border border-danger"><table class="table table-sm table-bordered table-striped mb-0">';
+        resultsHtml += '<thead class="table-danger"><tr><th style="width: 80px;" class="text-center">Row</th><th>Error Detail</th></tr></thead><tbody>';
+        errors.forEach(function(e) {
+          resultsHtml += `<tr><td class="text-center fw-bold align-middle">${e.row || '-'}</td><td class="align-middle text-danger small">${e.error || '-'}</td></tr>`;
+        });
+        resultsHtml += '</tbody></table></div>';
+      }
+    }
+
+    $('#importResults').html(resultsHtml).fadeIn();
+    $('#importContractsForm').hide();
+    
+    // Refresh the table behind the modal
+    if (typeof loadMovements === 'function') {
+      loadMovements();
+    }
+  })
+  .fail(function(xhr) {
+    let msg = 'Failed to import contracts.';
+    if(xhr.responseJSON) {
+      if(xhr.responseJSON.message) msg = xhr.responseJSON.message;
+      if(xhr.responseJSON.errors) {
+        msg += '<br>' + Object.values(xhr.responseJSON.errors).map(e => e.join(', ')).join('<br>');
+      }
+    }
+    
+    if (typeof toastr !== 'undefined') toastr.error(msg);
+    else alert(msg);
+  })
+  .always(function() {
+    btn.html(origHtml).prop('disabled', false);
+  });
 }
 
 /* ========== CREATE / EDIT MODAL ========== */
@@ -2189,22 +2456,38 @@ function renderPayrollTable(res){
   let html = '<div class="table-responsive">';
   html += '<table class="table table-hover table-bordered mb-0">';
   html += '<thead class="table-light"><tr>';
-  html += '<th class="text-center" style="width: 5%">#</th>';
-  html += '<th style="width: 20%">Maid Information</th>';
-  html += '<th style="width: 15%">Customer</th>';
-  html += '<th class="text-center" style="width: 8%">Working Days</th>';
-  html += '<th class="text-end" style="width: 8%">Base Salary</th>';
-  html += '<th class="text-end" style="width: 9%">Deduction (Dr.)</th>';
-  html += '<th class="text-end" style="width: 9%">Allowance (Cr.)</th>';
-  html += '<th class="text-end" style="width: 9%">Net Salary</th>';
-  html += '<th class="text-center" style="width: 12%">Notes</th>';
-  html += '<th class="text-center" style="width: 5%">Actions</th>';
+  html += '<th class="text-center align-middle" style="width: 3%">';
+  html += '<input type="checkbox" class="form-check-input" id="checkAllPayroll" onclick="toggleAllPayroll(this)">';
+  html += '</th>';
+  html += '<th class="text-center" style="width: 4%">#</th>';
+  html += '<th style="width: 15%">Maid Information</th>';
+  html += '<th style="width: 12%">Customer</th>';
+  html += '<th class="text-center" style="width: 7%">Method</th>';
+  html += '<th class="text-center" style="width: 7%">Working Days</th>';
+  html += '<th class="text-end" style="width: 7%">Base Salary</th>';
+  html += '<th class="text-end" style="width: 8%">Deduction (Dr.)</th>';
+  html += '<th class="text-end" style="width: 8%">Allowance (Cr.)</th>';
+  html += '<th class="text-end" style="width: 8%">Net Salary</th>';
+  html += '<th class="text-center" style="width: 7%">Payroll Status</th>';
+  html += '<th class="text-center" style="width: 10%">Notes</th>';
+  html += '<th class="text-center" style="width: 4%">Actions</th>';
   html += '</tr></thead><tbody>';
 
   data.forEach(function(row, i){
     const idx = ((res.current_page - 1) * res.per_page) + i + 1;
     const maidName = row.maid_name || 'Unknown Maid';
-    const maidId = row.employee_id ? `<span class="badge bg-secondary rounded-pill fw-normal ms-1 px-2 py-1" style="font-size: 0.7rem;">ID: ${row.employee_id}</span>` : '';
+
+    let maidStatusBadge = '';
+    const st = row.inside_status ? row.inside_status.toLowerCase() : '';
+    if (st) {
+      if (st.includes('hired')) maidStatusBadge = ` <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 ms-1 fw-bold px-2 py-1" style="font-size: 0.70rem;">${row.inside_status}</span>`;
+      else if (st.includes('office')) maidStatusBadge = ` <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 ms-1 fw-bold px-2 py-1" style="font-size: 0.70rem;">${row.inside_status}</span>`;
+      else if (st.includes('incidented')) maidStatusBadge = ` <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 ms-1 fw-bold px-2 py-1" style="font-size: 0.70rem;">${row.inside_status}</span>`;
+      else if (st.includes('pending')) maidStatusBadge = ` <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 ms-1 fw-bold px-2 py-1" style="font-size: 0.70rem;">${row.inside_status}</span>`;
+      else maidStatusBadge = ` <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 ms-1 fw-bold px-2 py-1" style="font-size: 0.70rem;">${row.inside_status}</span>`;
+    }
+
+    const maidId = row.employee_id ? `<span class="badge bg-light text-dark border fw-bold ms-1 px-2 py-1" style="font-size: 0.70rem;">ID: ${row.employee_id}</span>${maidStatusBadge}` : '';
     
     const customer = row.last_customer_name || '<em class="text-muted text-xs">No Customer</em>';
 
@@ -2216,26 +2499,63 @@ function renderPayrollTable(res){
     
     // Full note display
     const note = row.deduction_note || '-';
+    
+    // New Columns
+    const methodStr = row.method ? (row.method.charAt(0).toUpperCase() + row.method.slice(1)) : '-';
+    let statusBadge = '<span class="badge bg-secondary">Unknown</span>';
+    const statusVal = (row.payroll_status || '').toLowerCase();
+    
+    if(statusVal === 'paid') {
+      statusBadge = '<span class="badge bg-success shadow-sm">Paid</span>';
+    } else if (statusVal === 'unpaid') {
+      statusBadge = '<span class="badge bg-warning text-dark shadow-sm">Unpaid</span>';
+    } else if (statusVal) {
+      statusBadge = `<span class="badge bg-info shadow-sm">${statusVal}</span>`;
+    }
+    
+    // Combine notes
+    let fullNotes = '';
+    if (row.deduction_note) fullNotes += `<div><strong>Ded:</strong> ${row.deduction_note}</div>`;
+    if (row.payroll_note) fullNotes += `<div><strong>Pay:</strong> ${row.payroll_note}</div>`;
+    if (!fullNotes) fullNotes = '-';
 
-    html += '<tr>';
+    // Disable checkbox if already paid or has no base data
+    const isPaid = statusVal === 'paid';
+    const checkDisabled = isPaid ? 'disabled' : '';
+    const safeMethod = row.method || 'cash';
+    
+    html += '<tr class="' + (isPaid ? 'table-light text-muted' : '') + '">';
+    html += `<td class="text-center align-middle">
+               <input type="checkbox" class="form-check-input payroll-row-check shadow-sm"
+                 ${checkDisabled}
+                 data-id="${row.employee_id}"
+                 data-method="${safeMethod}"
+                 data-base="${row.maid_salary || 0}"
+                 data-dr="${row.total_deduction || 0}"
+                 data-cr="${row.total_allowance || 0}"
+                 data-net="${row.net_salary || 0}"
+               >
+             </td>`;
     html += `<td class="text-center align-middle">${idx}</td>`;
     html += `<td><div class="fw-bold text-dark d-flex align-items-center">${maidName} ${maidId}</div></td>`;
-    html += `<td>${customer}</td>`;
-    html += `<td class="text-center"><span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-bold">${days}</span></td>`;
-    html += `<td class="text-end text-muted fw-bold">${baseSalary}</td>`;
+    html += `<td class="align-middle">${customer}</td>`;
+    html += `<td class="align-middle text-center"><span class="badge bg-light border text-dark">${methodStr}</span></td>`;
+    html += `<td class="text-center align-middle"><span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-bold">${days}</span></td>`;
+    html += `<td class="text-end text-muted fw-bold align-middle">${baseSalary}</td>`;
     
-    html += `<td class="text-end">`;
+    html += `<td class="text-end align-middle">`;
     if(dr > 0) html += `<span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-1">- ${dr}</span>`;
     else html += `<span class="text-muted small">0.00</span>`;
     html += `</td>`;
 
-    html += `<td class="text-end">`;
+    html += `<td class="text-end align-middle">`;
     if(cr > 0) html += `<span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">+ ${cr}</span>`;
     else html += `<span class="text-muted small">0.00</span>`;
     html += `</td>`;
 
     html += `<td class="text-end align-middle"><span class="fw-bolder fs-6 text-dark">${net}</span></td>`;
-    html += `<td class="align-middle text-muted small">${note}</td>`;
+    html += `<td class="text-center align-middle">${statusBadge}</td>`;
+    html += `<td class="align-middle small text-muted">${fullNotes}</td>`;
     html += `<td class="text-center align-middle">
                <button class="btn btn-sm btn-info text-white shadow-sm" onclick="viewMaidBreakdown(${row.employee_id})" title="View Breakdown">
                  <i class="fas fa-eye"></i>
@@ -2247,6 +2567,247 @@ function renderPayrollTable(res){
   html += '</tbody></table></div>';
   html += '<div class="mt-3">' + renderPagination(res) + '</div>';
   $('#payroll_table').html(html);
+}
+
+/* ========== MAIDS PAYROLL BULK ACTIONS ========== */
+function toggleAllPayroll(source) {
+  $('.payroll-row-check:not(:disabled)').prop('checked', source.checked);
+}
+
+function submitBulkPayroll() {
+  const year = parseInt($('#payroll_year').val());
+  const month = parseInt($('#payroll_month').val());
+  const $noteInput = $('#bulk_payroll_note');
+  const note = $noteInput.val().trim();
+
+  if (!year || !month) {
+    toastr.warning("Please select a Year and Month first.");
+    return;
+  }
+
+  if (!note) {
+    $noteInput.addClass('is-invalid');
+    toastr.warning("Please enter a note for the bulk payroll.");
+    return;
+  } else {
+    $noteInput.removeClass('is-invalid');
+  }
+
+  const selectedRows = [];
+  $('.payroll-row-check:checked').each(function() {
+    const $cb = $(this);
+    const dateStr = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    selectedRows.push({
+      employee_id: parseInt($cb.data('id')),
+      payment_method: $cb.data('method') || 'cash',
+      basic_salary: parseFloat($cb.data('base') || 0),
+      deduction: parseFloat($cb.data('dr') || 0),
+      allowance: parseFloat($cb.data('cr') || 0),
+      net: parseFloat($cb.data('net') || 0),
+      paid_at: dateStr,
+      status: 'paid'
+    });
+  });
+
+  if (selectedRows.length === 0) {
+    toastr.warning("Please select at least one unpaid maid to process.");
+    return;
+  }
+
+  Swal.fire({
+    title: 'Process Bulk Payroll?',
+    text: `Are you sure you want to process payroll for ${selectedRows.length} employee(s)?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, process it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const payload = {
+        year: year,
+        month: month,
+        note: note,
+        rows: selectedRows
+      };
+
+      const btn = $(event.currentTarget);
+      const origHtml = btn.html();
+      btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Processing...').prop('disabled', true);
+
+      $.ajax({
+        url: '/api/am-maid-payroll-histories',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(payload),
+        success: function(res) {
+          toastr.success(res.message || "Bulk payroll processed successfully.");
+          $('#checkAllPayroll').prop('checked', false);
+          $noteInput.val('').removeClass('is-invalid');
+          loadPayroll();
+        },
+        error: function(xhr) {
+          let msg = "Failed to process bulk payroll.";
+          if(xhr.responseJSON) {
+            if(xhr.responseJSON.message) msg = xhr.responseJSON.message;
+            if(xhr.responseJSON.errors) {
+              msg += '<br>' + Object.values(xhr.responseJSON.errors).map(e => e.join(', ')).join('<br>');
+            }
+          }
+          toastr.error(msg);
+        },
+        complete: function() {
+          btn.html(origHtml).prop('disabled', false);
+        }
+      });
+    }
+  });
+}
+
+/* ========== PAYROLL HISTORY TABLE ========== */
+function loadPayrollHistory(page){
+  page = page || 1;
+  showPreloader();
+  
+  const params = {
+    page: page,
+    per_page: 25,
+    year: $('#hist_filter_year').val(),
+    month: $('#hist_filter_month').val(),
+    payment_method: $('#hist_filter_method').val(),
+    search: $('#hist_filter_search').val(),
+    sort_by: 'created_at',
+    sort_direction: 'desc'
+  };
+
+  $.getJSON('/api/am-maid-payroll-histories', params)
+    .done(function(res){ renderPayrollHistoryTable(res); })
+    .fail(function(xhr){
+      let msg = 'Failed to load payroll history.';
+      if(xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+      $('#payroll_history_table').html('<div class="p-3 text-center text-danger">' + msg + '</div>');
+    })
+    .always(hidePreloader);
+}
+
+function renderPayrollHistoryTable(res) {
+  const data = res.data || [];
+  if(!data.length){
+    $('#payroll_history_table').html('<div class="p-3 text-center text-muted"><i class="fas fa-folder-open mb-2 text-secondary fs-4 d-block"></i>No history records found matching your filters.</div>');
+    return;
+  }
+
+  const meta = res.meta || res;
+
+  let html = '<div class="table-responsive">';
+  html += '<table class="table table-hover table-bordered mb-0" style="font-size: 0.85rem">';
+  html += '<thead class="table-light"><tr>';
+  html += '<th class="text-center" style="width: 5%">#</th>';
+  html += '<th style="width: 15%">Maid / Employee</th>';
+  html += '<th class="text-center" style="width: 8%">Period</th>';
+  html += '<th class="text-center" style="width: 8%">Method</th>';
+  html += '<th class="text-end" style="width: 9%">Base Salary</th>';
+  html += '<th class="text-end" style="width: 9%">Deduction</th>';
+  html += '<th class="text-end" style="width: 9%">Allowance</th>';
+  html += '<th class="text-end" style="width: 9%">Net Payout</th>';
+  html += '<th class="text-center" style="width: 8%">Status</th>';
+  html += '<th style="width: 12%">Note</th>';
+  html += '<th class="text-end" style="width: 8%">Processed Date</th>';
+  html += '</tr></thead><tbody>';
+
+  data.forEach(function(row, i){
+    // Determine exact numerical row index
+    const currentPage = parseInt(meta.current_page) || 1;
+    const perPage = parseInt(meta.per_page) || 0;
+    const idx = ((currentPage - 1) * perPage) + i + 1;
+    
+    // Employee block
+    const emp = row.employee || {};
+    const empName = emp.name || `Emp ID: ${row.employee_id}`;
+    const empRef = emp.reference_no ? `<small class="text-muted d-block">${emp.reference_no}</small>` : '';
+
+    // Period
+    const periodStr = `${row.year} - ${row.month.toString().padStart(2, '0')}`;
+    
+    // Method & Status logic
+    const methodStr = row.payment_method ? (row.payment_method.charAt(0).toUpperCase() + row.payment_method.slice(1)) : '-';
+    let statusBadge = '<span class="badge bg-secondary">Unknown</span>';
+    const statusVal = (row.status || '').toLowerCase();
+    
+    if(statusVal === 'paid') {
+      statusBadge = '<span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 shadow-sm px-2 py-1">Paid</span>';
+    } else if (statusVal === 'unpaid') {
+      statusBadge = '<span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 text-dark shadow-sm px-2 py-1">Unpaid</span>';
+    } else if (statusVal) {
+      statusBadge = `<span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 shadow-sm px-2 py-1">${statusVal}</span>`;
+    }
+
+    // Number formatting
+    const base = parseFloat(row.basic_salary || 0).toFixed(2);
+    const ded = parseFloat(row.deduction || 0).toFixed(2);
+    const all = parseFloat(row.allowance || 0).toFixed(2);
+    const net = parseFloat(row.net || 0).toFixed(2);
+    
+    const processedDate = row.paid_at ? new Date(row.paid_at).toLocaleDateString() : '-';
+
+    html += '<tr>';
+    html += `<td class="text-center align-middle">${idx}</td>`;
+    html += `<td class="align-middle fw-bold text-dark">${empName} ${empRef}</td>`;
+    html += `<td class="text-center align-middle"><span class="badge bg-light text-dark border">${periodStr}</span></td>`;
+    html += `<td class="text-center align-middle"><span class="badge bg-light border border-secondary text-secondary">${methodStr}</span></td>`;
+    html += `<td class="text-end align-middle text-muted">${base}</td>`;
+    
+    html += `<td class="text-end align-middle">`;
+    if(ded > 0) html += `<span class="text-danger">- ${ded}</span>`;
+    else html += `<span class="text-muted small">0.00</span>`;
+    html += `</td>`;
+
+    html += `<td class="text-end align-middle">`;
+    if(all > 0) html += `<span class="text-success">+ ${all}</span>`;
+    else html += `<span class="text-muted small">0.00</span>`;
+    html += `</td>`;
+
+    html += `<td class="text-end align-middle fw-bolder text-info">${net}</td>`;
+    html += `<td class="text-center align-middle">${statusBadge}</td>`;
+    html += `<td class="align-middle text-muted small" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;" title="${row.note || ''}">${row.note || '-'}</td>`;
+    html += `<td class="text-end align-middle text-muted small">${processedDate}</td>`;
+    html += '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+  const paginationObj = {
+    data: data,
+    total: meta.total || 0,
+    current_page: meta.current_page || 1,
+    last_page: meta.last_page || 1
+  };
+  html += '<div class="mt-3">' + renderPagination(paginationObj) + '</div>';
+  $('#payroll_history_table').html(html);
+}
+
+function exportPayrollHistory() {
+  const year = $('#hist_filter_year').val();
+  const month = $('#hist_filter_month').val();
+
+  if(!year || !month) {
+    if(typeof toastr !== 'undefined') {
+      toastr.warning('Please select both Year and Month to export.');
+    } else {
+      alert('Please select both Year and Month to export.');
+    }
+    return;
+  }
+
+  // Build URL with query parameters
+  let url = '/api/am-maid-payroll-histories/export/excel?year=' + year + '&month=' + month;
+  
+  // Attach other valid filters if needed (optional but robust)
+  const method = $('#hist_filter_method').val();
+  const search = $('#hist_filter_search').val();
+  if(method) url += '&payment_method=' + encodeURIComponent(method);
+  if(search) url += '&search=' + encodeURIComponent(search);
+
+  window.location.href = url;
 }
 
 /* ========== MAIDS PAYROLL BREAKDOWN ========== */
@@ -2268,9 +2829,10 @@ function viewMaidBreakdown(employeeId) {
       const moves = res.movements || [];
       const adjs = res.payroll_adjustments || [];
       
+      const methodStr = res.method ? (res.method.charAt(0).toUpperCase() + res.method.slice(1)) : '-';
       let html = `<div class="p-3 bg-light border mb-4">
                     <div class="row g-3">
-                      <div class="col-md-6">
+                      <div class="col-md-4">
                         <small class="text-muted d-block text-uppercase fw-bold" style="font-size:0.7rem;">Employee Name</small>
                         <div class="fw-bold fs-5 text-dark">${emp.name || '-'}</div>
                       </div>
@@ -2281,6 +2843,10 @@ function viewMaidBreakdown(employeeId) {
                       <div class="col-md-3">
                         <small class="text-muted d-block text-uppercase fw-bold" style="font-size:0.7rem;">Nationality</small>
                         <div class="text-dark">${emp.nationality || '-'}</div>
+                      </div>
+                      <div class="col-md-2">
+                        <small class="text-muted d-block text-uppercase fw-bold" style="font-size:0.7rem;">Method</small>
+                        <div class="text-dark"><span class="badge bg-white border text-dark shadow-sm">${methodStr}</span></div>
                       </div>
                     </div>
                   </div>`;
@@ -2355,6 +2921,18 @@ function viewMaidBreakdown(employeeId) {
       const totalCr = parseFloat(res.total_allowance || 0).toFixed(2);
       const netSalary = parseFloat(res.net_salary || 0).toFixed(2);
 
+      let statusBadge = '<span class="badge bg-secondary">Unknown</span>';
+      const statusVal = (res.payroll_status || '').toLowerCase();
+      if(statusVal === 'paid') {
+        statusBadge = '<span class="badge bg-success shadow-sm px-2 py-1 mt-1">Paid</span>';
+      } else if (statusVal === 'unpaid') {
+        statusBadge = '<span class="badge bg-warning text-dark shadow-sm px-2 py-1 mt-1">Unpaid</span>';
+      } else if (statusVal) {
+        statusBadge = `<span class="badge bg-info shadow-sm px-2 py-1 mt-1">${statusVal}</span>`;
+      }
+      
+      const pNote = res.payroll_note ? `<div class="mt-2 text-muted fw-bold" style="font-size:0.75rem; max-width: 200px;"><i class="fas fa-comment-dots text-secondary me-1"></i>${res.payroll_note}</div>` : '';
+
       html += `<div class="row g-3">
                 <div class="col-md-6">
                   <div class="p-3 bg-light border h-100">
@@ -2375,8 +2953,12 @@ function viewMaidBreakdown(employeeId) {
                        <span><span class="text-danger me-2">-${totalDr}</span> <span class="text-success">+${totalCr}</span></span>
                      </div>
                      <div class="d-flex justify-content-between align-items-center mt-3">
-                       <span class="text-uppercase fw-bold text-muted" style="letter-spacing:0.05rem;">Net Payout</span>
-                       <span class="fs-4 fw-bolder text-info">${netSalary}</span>
+                       <div>
+                         <span class="text-uppercase fw-bold text-muted d-block" style="letter-spacing:0.05rem;">Net Payout</span>
+                         ${statusBadge}
+                         ${pNote}
+                       </div>
+                       <span class="fs-4 fw-bolder text-info align-self-start">${netSalary}</span>
                      </div>
                    </div>
                 </div>
@@ -2846,7 +3428,8 @@ function doDeleteMovement(id){
 
 /* ========== TAB SWITCHING ========== */
 function loadCurrentTab(page){
-  if(currentTab === 'contracts') loadContracts(page);
+  if(currentTab === 'maids') loadMaids(page);
+  else if(currentTab === 'contracts') loadContracts(page);
   else if(currentTab === 'movements') loadMovements(page);
   else if(currentTab === 'installments') loadInstallments(page);
   else if(currentTab === 'invoices') loadInvoices(page);
@@ -2855,6 +3438,7 @@ function loadCurrentTab(page){
   else if(currentTab === 'refund-requests') loadRefundRequests(page);
   else if(currentTab === 'deductions') loadDeductions(page);
   else if(currentTab === 'payroll') loadPayroll(page);
+  else if(currentTab === 'payroll-history') loadPayrollHistory(page);
 }
 
 /* ========== REFUND ========== */
@@ -2956,11 +3540,14 @@ $(function(){
   const now = new Date();
   $('#payroll_year').val(now.getFullYear());
   $('#payroll_month').val(now.getMonth() + 1);
+  $('#hist_filter_year').val(now.getFullYear());
+  $('#hist_filter_month').val(now.getMonth() + 1);
 
   // Read hash from URL to determine initial tab
   const hash = window.location.hash;
   if (hash) {
-      if(hash === '#tab-movements') currentTab = 'movements';
+      if(hash === '#tab-maids') currentTab = 'maids';
+      else if(hash === '#tab-movements') currentTab = 'movements';
       else if(hash === '#tab-installments') currentTab = 'installments';
       else if(hash === '#tab-invoices') currentTab = 'invoices';
       else if(hash === '#tab-returns') currentTab = 'returns';
@@ -2968,6 +3555,7 @@ $(function(){
       else if(hash === '#tab-refund-requests') currentTab = 'refund-requests';
       else if(hash === '#tab-deductions') currentTab = 'deductions';
       else if(hash === '#tab-payroll') currentTab = 'payroll';
+      else if(hash === '#tab-payroll-history') currentTab = 'payroll-history';
       else currentTab = 'contracts';
       
       // Activate the corresponding tab visually
@@ -2986,7 +3574,8 @@ $(function(){
     // Update URL hash without jumping page
     history.replaceState(null, null, href);
 
-    if(href === '#tab-movements') currentTab = 'movements';
+    if(href === '#tab-maids') currentTab = 'maids';
+    else if(href === '#tab-movements') currentTab = 'movements';
     else if(href === '#tab-installments') currentTab = 'installments';
     else if(href === '#tab-invoices') currentTab = 'invoices';
     else if(href === '#tab-returns') currentTab = 'returns';
@@ -2994,6 +3583,7 @@ $(function(){
     else if(href === '#tab-refund-requests') currentTab = 'refund-requests';
     else if(href === '#tab-deductions') currentTab = 'deductions';
     else if(href === '#tab-payroll') currentTab = 'payroll';
+    else if(href === '#tab-payroll-history') currentTab = 'payroll-history';
     else currentTab = 'contracts';
     loadCurrentTab();
   });

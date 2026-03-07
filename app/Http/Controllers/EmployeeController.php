@@ -2307,7 +2307,7 @@ class EmployeeController extends Controller
 
             switch ($status) {
                 case 'office':
-                    $q->where('employees.inside_status', 1)->whereNotNull('office.office_id')->orderByDesc('office.office_updated_at');
+                    $q->where('employees.inside_status', 1)->orderByRaw('COALESCE(office.office_updated_at, employees.updated_at) DESC');
                     if ($arrivedOrder) {
                         $q->orderBy('employees.arrived_date', $arrivedOrder);
                     }

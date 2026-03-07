@@ -82,23 +82,11 @@ class AmReturnMaidService
         });
     }
 
-    public function makeReplacement(AmReturnMaid $returnMaid): AmReturnMaid
-    {
-        return $this->replacementActionService->makeReplacement($returnMaid);
-    }
-
-    public function executeReplacement(array $data): AmContractMovment
-    {
-        return $this->replacementActionService->executeReplacement($data);
-    }
-
     public function replaceReturnedMaid(AmReturnMaid $returnMaid, array $data): AmContractMovment
     {
         return DB::transaction(function () use ($returnMaid, $data) {
-            // 1) Mark return action as replacement requested (action = 2)
             $this->replacementActionService->makeReplacement($returnMaid);
 
-            // 2) Execute replacement workflow using the return's source movement
             return $this->replacementActionService->executeReplacement([
                 'old_movement_id' => $returnMaid->am_movment_id,
                 'new_employee_id' => $data['new_employee_id'],
@@ -107,14 +95,9 @@ class AmReturnMaidService
         });
     }
 
-    public function raiseRefundByReturnMaidId(int $id, int $action, array $data = []): AmReturnMaid
+    public function raiseRefund(array $data, ?int $returnMaidId = null): AmReturnMaid|Amp3ActionNotify
     {
-        return $this->refundActionService->raiseRefundByReturnMaidId($id, $action, $data);
-    }
-
-    public function raiseRefund(array $data): Amp3ActionNotify
-    {
-        return $this->refundActionService->raiseRefund($data);
+        return $this->refundActionService->createRefund($data, $returnMaidId);
     }
 
     public function updateActionNotify(Amp3ActionNotify $actionNotify, array $data): Amp3ActionNotify
@@ -127,7 +110,7 @@ class AmReturnMaidService
     public function deleteActionNotify(Amp3ActionNotify $actionNotify): bool
     {
         return DB::transaction(function () use ($actionNotify) {
-            return $this->refundActionService->deleteActionNotify($actionNotify);
+            return (bool) $actionNotify->delete();
         });
     }
 }

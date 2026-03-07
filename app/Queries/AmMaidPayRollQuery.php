@@ -2,6 +2,7 @@
 
 namespace App\Queries;
 
+use App\Enum\EnumMaidStatus;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -46,6 +47,11 @@ class AmMaidPayRollQuery
             ->join('am_primary_contracts as pc', 'pc.id', '=', 'm.am_contract_id')
             ->join('crm as c', 'c.id', '=', 'pc.crm_id')
             ->leftJoin('am_return_maids as r', 'r.am_movment_id', '=', 'm.id')
+            ->leftJoin('am_maid_pay_rolls as pr', function ($join) use ($year, $month) {
+                $join->on('pr.employee_id', '=', 'e.id')
+                    ->where('pr.year', '=', $year)
+                    ->where('pr.month', '=', $month);
+            })
             ->leftJoinSub($deductionSubQuery, 'dp', function ($join) {
                 $join->on('dp.employee_id', '=', 'e.id');
             })
@@ -59,7 +65,17 @@ class AmMaidPayRollQuery
             ->select([
                 'e.id as employee_id',
                 'e.name as maid_name',
-                'e.salary as maid_salary',
+                'e.total_salary as maid_salary',
+                'e.payment_type as method',
+                DB::raw("
+                    CASE e.inside_status
+                        WHEN " . EnumMaidStatus::PENDING->value . " THEN '" . EnumMaidStatus::PENDING->label() . "'
+                        WHEN " . EnumMaidStatus::OFFICE->value . " THEN '" . EnumMaidStatus::OFFICE->label() . "'
+                        WHEN " . EnumMaidStatus::HIRED->value . " THEN '" . EnumMaidStatus::HIRED->label() . "'
+                        WHEN " . EnumMaidStatus::INCIDENTED->value . " THEN '" . EnumMaidStatus::INCIDENTED->label() . "'
+                        ELSE 'Unknown'
+                    END as inside_status
+                "),
 
                 DB::raw("MAX(pc.id) as last_contract_id"),
                 DB::raw("MAX(CONCAT(c.first_name, ' ', c.last_name)) as last_customer_name"),
@@ -67,9 +83,17 @@ class AmMaidPayRollQuery
                 DB::raw("MAX(COALESCE(dp.total_allowance, 0)) as total_allowance"),
                 DB::raw("MAX(COALESCE(dp.deduction_note, '')) as deduction_note"),
                 DB::raw("
+                    CASE
+                        WHEN MAX(pr.id) IS NULL THEN 'unpaid'
+                        WHEN MAX(COALESCE(pr.status, '')) = 'paid' THEN 'paid'
+                        ELSE 'unpaid'
+                    END as payroll_status
+                "),
+                DB::raw("MAX(COALESCE(pr.note, '')) as payroll_note"),
+                DB::raw("
                     ROUND(
                         (
-                            ((e.salary / 30) * SUM({$workingDaysExpr}))
+                            ((e.total_salary / 30) * SUM({$workingDaysExpr}))
                             + MAX(COALESCE(dp.total_allowance, 0))
                             - MAX(COALESCE(dp.total_deduction, 0))
                         ),
@@ -82,7 +106,7 @@ class AmMaidPayRollQuery
                     ) as working_days
                 "),
             ])
-            ->groupBy('e.id', 'e.name', 'e.salary')
+            ->groupBy('e.id', 'e.name', 'e.total_salary')
             ->orderBy('e.name')
             ->paginate($perPage);
     }
@@ -115,7 +139,7 @@ class AmMaidPayRollQuery
 
         $employee = DB::table('employees')
             ->where('id', $employeeId)
-            ->select('id', 'name', 'salary', 'nationality', 'reference_no')
+            ->select('id', 'name', 'total_salary', 'nationality', 'reference_no', 'payment_type')
             ->first();
 
         if (!$employee) {
@@ -169,7 +193,18 @@ class AmMaidPayRollQuery
             ->get();
         $totalDeduction = (float) $payrollAdjustments->sum('amount_deduction');
         $totalAllowance = (float) $payrollAdjustments->sum('amount_allowance');
-        $netSalary = round((((float) $employee->salary / 30) * (float) $totalWorkingDays) + $totalAllowance - $totalDeduction, 2);
+        $netSalary = round((((float) $employee->total_salary / 30) * (float) $totalWorkingDays) + $totalAllowance - $totalDeduction, 2);
+
+        $payrollRecord = DB::table('am_maid_pay_rolls')
+            ->where('employee_id', $employeeId)
+            ->where('year', $year)
+            ->where('month', $month)
+            ->select('status', 'note')
+            ->first();
+            
+        $payrollStatus = $payrollRecord ? ($payrollRecord->status ?: 'unpaid') : 'unpaid';
+        $payrollNote = $payrollRecord ? ($payrollRecord->note ?: '') : '';
+        $methodStr = $employee->payment_type ? ucfirst(strtolower($employee->payment_type)) : '-';
 
         return [
             'employee'           => $employee,
@@ -183,6 +218,9 @@ class AmMaidPayRollQuery
             'total_deduction'    => $totalDeduction,
             'total_allowance'    => $totalAllowance,
             'net_salary'         => $netSalary,
+            'method'             => $methodStr,
+            'payroll_status'     => $payrollStatus,
+            'payroll_note'       => $payrollNote,
         ];
     }
 }

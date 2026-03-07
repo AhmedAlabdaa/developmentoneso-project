@@ -34,14 +34,14 @@ class AmIncidentService
                 'created_by'    => auth()->id(),
             ]);
 
-            // If status is RanAway, Cancelled, or Hold, update Employee inside_status to 4
+       
             if (in_array($status, [MCStatus::RanAway, MCStatus::Cancelled, MCStatus::Hold])) {
                 $movement = $incident->contractMovment;
                 if ($movement) {
                     Employee::where('id', $movement->employee_id)
                         ->update(['inside_status' => EnumMaidStatus::INCIDENTED]);
                     
-                    // Also close the movement and contract if it's a critical incident
+              
                     $movement->update(['status' => 0]);
                     $movement->primaryContract->update(['status' => 0]);
                 }

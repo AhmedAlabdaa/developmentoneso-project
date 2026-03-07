@@ -43,7 +43,9 @@ class AmMaidPayRollController extends Controller
      *       "maid_salary": "1500.00",
      *       "last_contract_id": 12,
      *       "last_customer_name": "John Doe",
-     *       "working_days": 28
+     *       "working_days": 28,
+     *       "payroll_status": "paid",
+     *       "payroll_note": "Salary paid via bank"
      *     }
      *   ],
      *   "last_page": 1,

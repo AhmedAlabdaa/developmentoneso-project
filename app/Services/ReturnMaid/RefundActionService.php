@@ -21,22 +21,27 @@ class RefundActionService
         'movementContract.employee',
     ];
 
-    public function raiseRefundByReturnMaidId(int $id, int $action, array $data = []): AmReturnMaid
+    public function createRefund(array $data, ?int $returnMaidId = null): AmReturnMaid|Amp3ActionNotify
     {
-        $this->assertRefundAction($action);
+        $refundPayload = [
+            'amount' => $data['amount'] ?? null,
+            'note' => $data['note'] ?? null,
+            'refund_date' => $data['refund_date'] ?? null,
+        ];
 
-        $returnMaid = AmReturnMaid::findOrFail($id);
-        $actionChanged = $this->applyRefundAction($returnMaid);
+        if (!is_null($returnMaidId)) {
+            $this->assertRefundAction((int) ($data['action'] ?? 0));
 
-        if ($actionChanged) {
-            $this->createOrUpdateRefundNotify($returnMaid, $this->buildRefundPayload($data));
+            $returnMaid = AmReturnMaid::findOrFail($returnMaidId);
+            $actionChanged = $this->applyRefundAction($returnMaid);
+
+            if ($actionChanged) {
+                $this->createOrUpdateRefundNotify($returnMaid, $refundPayload);
+            }
+
+            return $returnMaid->refresh()->load(self::RETURN_MAID_RELATIONS);
         }
 
-        return $returnMaid->refresh()->load(self::RETURN_MAID_RELATIONS);
-    }
-
-    public function raiseRefund(array $data): Amp3ActionNotify
-    {
         $returnMaid = AmReturnMaid::query()
             ->where('am_movment_id', $data['am_contract_movement_id'])
             ->latest('id')
@@ -44,7 +49,7 @@ class RefundActionService
 
         $this->applyRefundAction($returnMaid);
 
-        return $this->createOrUpdateRefundNotify($returnMaid, $this->buildRefundPayload($data));
+        return $this->createOrUpdateRefundNotify($returnMaid, $refundPayload);
     }
 
     public function updateActionNotify(Amp3ActionNotify $actionNotify, array $data): Amp3ActionNotify
@@ -54,11 +59,6 @@ class RefundActionService
         ]));
 
         return $actionNotify->refresh()->load(self::ACTION_NOTIFY_RELATIONS);
-    }
-
-    public function deleteActionNotify(Amp3ActionNotify $actionNotify): bool
-    {
-        return (bool) $actionNotify->delete();
     }
 
     private function createOrUpdateRefundNotify(AmReturnMaid $returnMaid, array $refundData): Amp3ActionNotify
@@ -110,13 +110,4 @@ class RefundActionService
         }
     }
 
-    private function buildRefundPayload(array $data): array
-    {
-        return [
-            'amount' => $data['amount'] ?? null,
-            'note' => $data['note'] ?? null,
-            'refund_date' => $data['refund_date'] ?? null,
-        ];
-    }
 }
-

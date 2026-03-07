@@ -336,7 +336,7 @@ endpoints:
       subgroup: 'Primary contract p3'
       subgroupDescription: ''
       title: 'List all employees (maids).'
-      description: 'Returns a paginated list of employees filtered by name only.'
+      description: 'Returns a paginated list of employees with optional filters.'
       authenticated: false
       deprecated: false
     headers:
@@ -367,11 +367,181 @@ endpoints:
         exampleWasSpecified: true
         nullable: false
         deprecated: false
+      inside_status:
+        custom: []
+        name: inside_status
+        description: |-
+          Filter by maid status enum:
+          0 = Pending, 1 = Office, 2 = Hired, 3 = Incidented.
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      nationality:
+        custom: []
+        name: nationality
+        description: 'Filter by nationality.'
+        required: false
+        example: Philippines
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      payment_type:
+        custom: []
+        name: payment_type
+        description: 'Filter by payment type.'
+        required: false
+        example: bank
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      passport_no:
+        custom: []
+        name: passport_no
+        description: 'Filter by passport number (partial match).'
+        required: false
+        example: P12345
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      emirates_id:
+        custom: []
+        name: emirates_id
+        description: 'Filter by Emirates ID (partial match).'
+        required: false
+        example: 784-
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      reference_no:
+        custom: []
+        name: reference_no
+        description: 'Filter by reference number (partial match).'
+        required: false
+        example: EMP-0001
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
     cleanQueryParameters:
       per_page: 20
       name: maria
-    bodyParameters: []
-    cleanBodyParameters: []
+      inside_status: 1
+      nationality: Philippines
+      payment_type: bank
+      passport_no: P12345
+      emirates_id: 784-
+      reference_no: EMP-0001
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      inside_status:
+        custom: []
+        name: inside_status
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      nationality:
+        custom: []
+        name: nationality
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      payment_type:
+        custom: []
+        name: payment_type
+        description: 'Must not be greater than 50 characters.'
+        required: false
+        example: g
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      passport_no:
+        custom: []
+        name: passport_no
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: z
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      emirates_id:
+        custom: []
+        name: emirates_id
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: m
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      reference_no:
+        custom: []
+        name: reference_no
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: i
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Must be at least 1. Must not be greater than 200.'
+        required: false
+        example: 8
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: architecto
+      inside_status: 16
+      nationality: 'n'
+      payment_type: g
+      passport_no: z
+      emirates_id: m
+      reference_no: i
+      per_page: 8
     fileParameters: []
     responses:
       -
@@ -389,6 +559,79 @@ endpoints:
             "last_page": 1,
             "per_page": 15,
             "total": 1
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/am-monthly-contracts/import-excel
+    metadata:
+      custom: []
+      groupName: 'Package 3 Modular'
+      groupDescription: ''
+      subgroup: 'Primary contract p3'
+      subgroupDescription: ''
+      title: 'Import monthly contracts from Excel.'
+      description: |-
+        Expected heading columns:
+        - customer
+        - maid
+        - start
+        - end
+        - amount
+        - date_of_installment
+
+        Validation:
+        - customer must exist in CRM table
+        - maid must exist in Employees table
+
+        Creates:
+        1) am_primary_contracts
+        2) am_contract_movments
+        3) am_installments
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      file:
+        custom: []
+        name: file
+        description: 'Excel file (.xlsx/.xls/.csv) with heading row.'
+        required: true
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters: []
+    fileParameters:
+      file: null
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Import completed",
+            "contracts_created": 3,
+            "row_failures_count": 1,
+            "row_errors": [
+              {"row": 4, "error": "Customer not found: Unknown"}
+            ]
           }
         headers: []
         description: ''
@@ -660,7 +903,7 @@ endpoints:
         name: date
         description: 'Must be a valid date.'
         required: true
-        example: '2026-02-22T23:11:35'
+        example: '2026-03-04T21:09:06'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -707,7 +950,7 @@ endpoints:
         name: action
         description: ''
         required: false
-        example: 3
+        example: 1
         type: integer
         enumValues:
           - 1
@@ -718,11 +961,11 @@ endpoints:
         nullable: true
         deprecated: false
     cleanBodyParameters:
-      date: '2026-02-22T23:11:35'
+      date: '2026-03-04T21:09:06'
       am_movment_id: architecto
       note: architecto
       status: 3
-      action: 3
+      action: 1
     fileParameters: []
     responses:
       -
@@ -785,7 +1028,7 @@ endpoints:
         name: date
         description: 'Must be a valid date.'
         required: false
-        example: '2026-02-22T23:11:35'
+        example: '2026-03-04T21:09:06'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -807,7 +1050,7 @@ endpoints:
         name: status
         description: ''
         required: false
-        example: 4
+        example: 2
         type: integer
         enumValues:
           - 2
@@ -832,9 +1075,9 @@ endpoints:
         nullable: true
         deprecated: false
     cleanBodyParameters:
-      date: '2026-02-22T23:11:35'
+      date: '2026-03-04T21:09:06'
       note: architecto
-      status: 4
+      status: 2
       action: 4
     fileParameters: []
     responses: []
@@ -1500,6 +1743,863 @@ endpoints:
         custom: []
         name: id
         description: 'Deduction payroll ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/am-maid-payroll-histories/export/excel
+    metadata:
+      custom: []
+      groupName: 'Package 3 Modular'
+      groupDescription: ''
+      subgroup: |-
+        Maid Payroll History
+
+        APIs for managing maid payroll history records.
+      subgroupDescription: ''
+      title: 'Export payroll histories to Excel.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      year:
+        custom: []
+        name: year
+        description: 'Payroll year.'
+        required: true
+        example: 2026
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      month:
+        custom: []
+        name: month
+        description: 'Payroll month (1-12).'
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      year: 2026
+      month: 2
+    bodyParameters:
+      year:
+        custom: []
+        name: year
+        description: 'Must be at least 2020. Must not be greater than 2099.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      month:
+        custom: []
+        name: month
+        description: 'Must be at least 1. Must not be greater than 12.'
+        required: true
+        example: 4
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      year: 1
+      month: 4
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Excel file download started"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/am-maid-payroll-histories
+    metadata:
+      custom: []
+      groupName: 'Package 3 Modular'
+      groupDescription: ''
+      subgroup: |-
+        Maid Payroll History
+
+        APIs for managing maid payroll history records.
+      subgroupDescription: ''
+      title: 'List payroll histories.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Number of items per page.'
+        required: false
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      employee_id:
+        custom: []
+        name: employee_id
+        description: 'Filter by employee ID.'
+        required: false
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      year:
+        custom: []
+        name: year
+        description: 'Filter by payroll year.'
+        required: false
+        example: 2026
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      month:
+        custom: []
+        name: month
+        description: 'Filter by payroll month (1-12).'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      status:
+        custom: []
+        name: status
+        description: 'Filter by status.'
+        required: false
+        example: paid
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      payment_method:
+        custom: []
+        name: payment_method
+        description: 'Filter by payment method.'
+        required: false
+        example: cash
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      search:
+        custom: []
+        name: search
+        description: 'Search in note field.'
+        required: false
+        example: bonus
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      sort_by:
+        custom: []
+        name: sort_by
+        description: 'Sort field.'
+        required: false
+        example: created_at
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      sort_direction:
+        custom: []
+        name: sort_direction
+        description: 'Sort direction (`asc` or `desc`).'
+        required: false
+        example: desc
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      per_page: 15
+      employee_id: 10
+      year: 2026
+      month: 2
+      status: paid
+      payment_method: cash
+      search: bonus
+      sort_by: created_at
+      sort_direction: desc
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "current_page": 1,
+            "data": [
+              {
+                "id": 1,
+                "employee_id": 10,
+                "year": 2026,
+                "month": 2,
+                "payment_method": "bank",
+                "basic_salary": "1500.00",
+                "deduction": "200.00",
+                "allowance": "100.00",
+                "net": "1400.00",
+                "note": "February payroll",
+                "status": "paid",
+                "created_at": "2026-02-28T10:00:00.000000Z",
+                "updated_at": "2026-02-28T10:00:00.000000Z"
+              }
+            ],
+            "last_page": 1,
+            "per_page": 15,
+            "total": 1
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/am-maid-payroll-histories
+    metadata:
+      custom: []
+      groupName: 'Package 3 Modular'
+      groupDescription: ''
+      subgroup: |-
+        Maid Payroll History
+
+        APIs for managing maid payroll history records.
+      subgroupDescription: ''
+      title: 'Store payroll history record(s).'
+      description: 'Creates payroll history rows in bulk with per-employee values.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      year:
+        custom: []
+        name: year
+        description: 'Payroll year for all rows.'
+        required: true
+        example: 2026
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      month:
+        custom: []
+        name: month
+        description: 'Payroll month (1-12) for all rows.'
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      note:
+        custom: []
+        name: note
+        description: 'Optional note applied to all rows.'
+        required: false
+        example: 'February payroll'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      rows:
+        custom: []
+        name: rows
+        description: 'Payroll rows.'
+        required: true
+        example:
+          -
+            employee_id: 10
+            payment_method: bank
+            basic_salary: 1500
+            deduction: 200
+            allowance: 100
+            net: 1400
+            paid_at: '2026-02-28 10:00:00'
+            status: paid
+          -
+            employee_id: 11
+            payment_method: cash
+            basic_salary: 1800
+            deduction: 50
+            allowance: 0
+            net: 1750
+            paid_at: '2026-02-28 10:00:00'
+            status: paid
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'rows[].employee_id':
+        custom: []
+        name: 'rows[].employee_id'
+        description: 'Employee ID. The <code>id</code> of an existing record in the employees table.'
+        required: true
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'rows[].payment_method':
+        custom: []
+        name: 'rows[].payment_method'
+        description: 'Optional payment method. Must not be greater than 20 characters.'
+        required: false
+        example: bank
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'rows[].basic_salary':
+        custom: []
+        name: 'rows[].basic_salary'
+        description: 'Optional basic salary. Must be at least 0.'
+        required: false
+        example: 1500.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'rows[].deduction':
+        custom: []
+        name: 'rows[].deduction'
+        description: 'Optional deduction amount. Must be at least 0.'
+        required: false
+        example: 200.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'rows[].allowance':
+        custom: []
+        name: 'rows[].allowance'
+        description: 'Optional allowance amount. Must be at least 0.'
+        required: false
+        example: 100.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'rows[].net':
+        custom: []
+        name: 'rows[].net'
+        description: 'Optional net amount. Must be at least 0.'
+        required: false
+        example: 1400.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'rows[].paid_at':
+        custom: []
+        name: 'rows[].paid_at'
+        description: 'Optional paid datetime. Must be a valid date.'
+        required: false
+        example: '2026-02-28 10:00:00'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'rows[].status':
+        custom: []
+        name: 'rows[].status'
+        description: 'Optional status. Must not be greater than 20 characters.'
+        required: false
+        example: paid
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'rows.*.employee_id':
+        custom: []
+        name: 'rows.*.employee_id'
+        description: 'Employee ID.'
+        required: true
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'rows.*.payment_method':
+        custom: []
+        name: 'rows.*.payment_method'
+        description: 'Optional payment method.'
+        required: false
+        example: bank
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'rows.*.basic_salary':
+        custom: []
+        name: 'rows.*.basic_salary'
+        description: 'Optional basic salary.'
+        required: false
+        example: 1500.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'rows.*.deduction':
+        custom: []
+        name: 'rows.*.deduction'
+        description: 'Optional deduction amount.'
+        required: false
+        example: 200.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'rows.*.allowance':
+        custom: []
+        name: 'rows.*.allowance'
+        description: 'Optional allowance amount.'
+        required: false
+        example: 100.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'rows.*.net':
+        custom: []
+        name: 'rows.*.net'
+        description: 'Optional net amount.'
+        required: false
+        example: 1400.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'rows.*.paid_at':
+        custom: []
+        name: 'rows.*.paid_at'
+        description: 'Optional paid date/time.'
+        required: false
+        example: '2026-02-28 10:00:00'
+        type: date
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'rows.*.status':
+        custom: []
+        name: 'rows.*.status'
+        description: 'Optional status.'
+        required: false
+        example: paid
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      year: 2026
+      month: 2
+      note: 'February payroll'
+      rows:
+        -
+          employee_id: 10
+          payment_method: bank
+          basic_salary: 1500
+          deduction: 200
+          allowance: 100
+          net: 1400
+          paid_at: '2026-02-28 10:00:00'
+          status: paid
+        -
+          employee_id: 11
+          payment_method: cash
+          basic_salary: 1800
+          deduction: 50
+          allowance: 0
+          net: 1750
+          paid_at: '2026-02-28 10:00:00'
+          status: paid
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/am-maid-payroll-histories/{id}'
+    metadata:
+      custom: []
+      groupName: 'Package 3 Modular'
+      groupDescription: ''
+      subgroup: |-
+        Maid Payroll History
+
+        APIs for managing maid payroll history records.
+      subgroupDescription: ''
+      title: 'Show payroll history record.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'Payroll history ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "employee_id": 10,
+            "year": 2026,
+            "month": 2,
+            "payment_method": "bank",
+            "basic_salary": "1500.00",
+            "deduction": "200.00",
+            "allowance": "100.00",
+            "net": "1400.00",
+            "note": "February payroll",
+            "status": "paid",
+            "created_at": "2026-02-28T10:00:00.000000Z",
+            "updated_at": "2026-02-28T10:00:00.000000Z"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Payroll history not found"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/am-maid-payroll-histories/{id}'
+    metadata:
+      custom: []
+      groupName: 'Package 3 Modular'
+      groupDescription: ''
+      subgroup: |-
+        Maid Payroll History
+
+        APIs for managing maid payroll history records.
+      subgroupDescription: ''
+      title: 'Update payroll history record.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'Payroll history ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      employee_id:
+        custom: []
+        name: employee_id
+        description: 'Employee ID.'
+        required: false
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      year:
+        custom: []
+        name: year
+        description: 'Payroll year.'
+        required: false
+        example: 2026
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      month:
+        custom: []
+        name: month
+        description: 'Payroll month (1-12).'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      payment_method:
+        custom: []
+        name: payment_method
+        description: 'Payment method.'
+        required: false
+        example: bank
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      basic_salary:
+        custom: []
+        name: basic_salary
+        description: 'Basic salary.'
+        required: false
+        example: 1500.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      deduction:
+        custom: []
+        name: deduction
+        description: 'Deduction amount.'
+        required: false
+        example: 200.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      allowance:
+        custom: []
+        name: allowance
+        description: 'Allowance amount.'
+        required: false
+        example: 100.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      net:
+        custom: []
+        name: net
+        description: 'Net amount.'
+        required: false
+        example: 1400.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      note:
+        custom: []
+        name: note
+        description: 'Optional note.'
+        required: false
+        example: 'Updated note'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      paid_at:
+        custom: []
+        name: paid_at
+        description: 'Optional paid date/time.'
+        required: false
+        example: '2026-02-28 10:00:00'
+        type: date
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      status:
+        custom: []
+        name: status
+        description: Status.
+        required: false
+        example: paid
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      employee_id: 10
+      year: 2026
+      month: 2
+      payment_method: bank
+      basic_salary: 1500.0
+      deduction: 200.0
+      allowance: 100.0
+      net: 1400.0
+      note: 'Updated note'
+      paid_at: '2026-02-28 10:00:00'
+      status: paid
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/am-maid-payroll-histories/{id}'
+    metadata:
+      custom: []
+      groupName: 'Package 3 Modular'
+      groupDescription: ''
+      subgroup: |-
+        Maid Payroll History
+
+        APIs for managing maid payroll history records.
+      subgroupDescription: ''
+      title: 'Delete payroll history record.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'Payroll history ID.'
         required: true
         example: 1
         type: integer
@@ -3456,7 +4556,7 @@ endpoints:
         name: refund_date
         description: 'This field is required when <code>action</code> is <code>3</code>. Must be a valid date.'
         required: false
-        example: '2026-02-22T23:11:35'
+        example: '2026-03-04T21:09:06'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -3476,7 +4576,7 @@ endpoints:
     cleanBodyParameters:
       action: 2
       amount: 27
-      refund_date: '2026-02-22T23:11:35'
+      refund_date: '2026-03-04T21:09:06'
       note: architecto
     fileParameters: []
     responses:
@@ -4286,7 +5386,9 @@ endpoints:
                 "maid_salary": "1500.00",
                 "last_contract_id": 12,
                 "last_customer_name": "John Doe",
-                "working_days": 28
+                "working_days": 28,
+                "payroll_status": "paid",
+                "payroll_note": "Salary paid via bank"
               }
             ],
             "last_page": 1,

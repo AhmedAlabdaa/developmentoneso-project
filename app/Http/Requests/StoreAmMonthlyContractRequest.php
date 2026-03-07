@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 use Carbon\Carbon;
 
 class StoreAmMonthlyContractRequest extends FormRequest
@@ -27,10 +28,10 @@ class StoreAmMonthlyContractRequest extends FormRequest
             $data['start_date'] = Carbon::parse($this->start_date)->format('Y-m-d');
         }
         if ($this->ended_date) {
+            // Keep the user-provided date so we can validate it is month-end.
             $data['ended_date'] = Carbon::parse($this->ended_date)->format('Y-m-d');
         }
 
-        // Normalize installment dates
         if ($this->installment && is_array($this->installment)) {
             $installments = $this->installment;
             foreach ($installments as &$inst) {
@@ -78,5 +79,44 @@ class StoreAmMonthlyContractRequest extends FormRequest
         return [
             'maid_id.exists' => 'The maid should be in office.',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            if ($validator->errors()->isNotEmpty()) {
+                return;
+            }
+
+            $startDate = $this->input('start_date');
+            $endedDate = $this->input('ended_date');
+            $installments = $this->input('installment', []);
+
+            if (empty($endedDate)) {
+                return;
+            }
+
+            $start = Carbon::parse($startDate);
+            $end = Carbon::parse($endedDate);
+
+            if (!$end->isSameDay($end->copy()->endOfMonth())) {
+                $validator->errors()->add(
+                    'ended_date',
+                    'The ended_date must be the last day of the selected month.'
+                );
+                return;
+            }
+
+            // Count months excluding the start month (eg Mar to May => 2).
+            $expectedMonths = (($end->year * 12 + $end->month) - ($start->year * 12 + $start->month));
+            $installmentCount = is_array($installments) ? count($installments) : 0;
+
+            if ($expectedMonths !== $installmentCount) {
+                $validator->errors()->add(
+                    'installment',
+                    "Installment count must be {$expectedMonths} month(s) based on start_date and ended_date (excluding the start month)."
+                );
+            }
+        });
     }
 }
