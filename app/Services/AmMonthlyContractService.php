@@ -54,9 +54,9 @@ class AmMonthlyContractService
                
             ]);
 
-            // 3. Update Employee inside_status to 4 (Hired)
+            // 3. Update Employee inside_status to Hired
             $employee = Employee::findOrFail($data['maid_id']);
-            $employee->update(['inside_status' => EnumMaidStatus::HIRED ]);
+            $employee->update(['inside_status' => EnumMaidStatus::HIRED->value]);
 
             // 4. Create AmInstallments
             if (isset($data['installment']) && is_array($data['installment'])) {
