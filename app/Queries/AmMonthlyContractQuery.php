@@ -209,6 +209,10 @@ class AmMonthlyContractQuery
             }
         }
 
+        if (!empty($filters['inside_country_or_outside'])) {
+            $query->where('inside_country_or_outside', $filters['inside_country_or_outside']);
+        }
+
         return $query->orderBy('name')->paginate($perPage);
     }
 

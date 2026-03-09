@@ -118,7 +118,7 @@ paths:
                 type:
                   type: integer
                   description: ''
-                  example: 3
+                  example: 1
                   enum:
                     - 1
                     - 2
@@ -207,11 +207,11 @@ paths:
                 status:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                 type:
                   type: integer
                   description: ''
-                  example: 1
+                  example: 3
                   enum:
                     - 1
                     - 2
@@ -1010,6 +1010,16 @@ paths:
             type: string
             description: 'Filter by reference number (partial match).'
             example: EMP-0001
+        -
+          in: query
+          name: inside_country_or_outside
+          description: 'Filter by location status (1 = Outside, 2 = Inside).'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by location status (1 = Outside, 2 = Inside).'
+            example: 1
       responses:
         200:
           description: ''
@@ -1098,17 +1108,22 @@ paths:
                   description: 'Must not be greater than 100 characters.'
                   example: i
                   nullable: true
+                inside_country_or_outside:
+                  type: integer
+                  description: ''
+                  example: 16
+                  nullable: true
                 per_page:
                   type: integer
                   description: 'Must be at least 1. Must not be greater than 200.'
-                  example: 8
+                  example: 22
                   nullable: true
       security: []
   /api/am-monthly-contracts/import-excel:
     post:
       summary: 'Import monthly contracts from Excel.'
       operationId: importMonthlyContractsFromExcel
-      description: "Expected heading columns:\n- customer\n- maid\n- start\n- end\n- amount\n- date_of_installment\n\nValidation:\n- customer must exist in CRM table\n- maid must exist in Employees table\n\nCreates:\n1) am_primary_contracts\n2) am_contract_movments\n3) am_installments"
+      description: "Expected heading columns:\n- customer (CL_Number from CRM table)\n- maid\n- start\n- end\n- amount\n- date_of_installment\n\nValidation:\n- customer CL_Number must exist in CRM table\n- maid must exist in Employees table\n\nCreates:\n1) am_primary_contracts\n2) am_contract_movments\n3) am_installments"
       parameters: []
       responses:
         200:
@@ -1387,7 +1402,7 @@ paths:
                 date:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-03-04T21:09:06'
+                  example: '2026-03-09T22:12:36'
                 am_movment_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the am_contract_movments table.'
@@ -1400,7 +1415,7 @@ paths:
                 status:
                   type: integer
                   description: ''
-                  example: 3
+                  example: 4
                   enum:
                     - 2
                     - 3
@@ -1439,7 +1454,7 @@ paths:
                 date:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-03-04T21:09:06'
+                  example: '2026-03-09T22:12:36'
                 note:
                   type: string
                   description: ''
@@ -1448,7 +1463,7 @@ paths:
                 status:
                   type: integer
                   description: ''
-                  example: 2
+                  example: 3
                   enum:
                     - 2
                     - 3
@@ -1456,7 +1471,7 @@ paths:
                 action:
                   type: integer
                   description: ''
-                  example: 4
+                  example: 3
                   enum:
                     - 1
                     - 2
@@ -3761,7 +3776,7 @@ paths:
                 refund_date:
                   type: string
                   description: 'This field is required when <code>action</code> is <code>3</code>. Must be a valid date.'
-                  example: '2026-03-04T21:09:06'
+                  example: '2026-03-09T22:12:36'
                 note:
                   type: string
                   description: 'This field is required when <code>action</code> is <code>3</code>.'

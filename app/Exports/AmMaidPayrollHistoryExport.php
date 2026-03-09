@@ -18,7 +18,7 @@ class AmMaidPayrollHistoryExport implements FromCollection, WithHeadings, Should
 
     public function collection(): Collection
     {
-        return $this->rows->map(static function ($row) {
+        $mappedRows = $this->rows->map(static function ($row) {
             return [
                 $row->employee_name,
                 $row->passport_no,
@@ -33,6 +33,22 @@ class AmMaidPayrollHistoryExport implements FromCollection, WithHeadings, Should
                 $row->payment_note,
             ];
         });
+
+        $mappedRows->push([
+            'TOTAL',
+            '',
+            '',
+            '',
+            '',
+            (float) $this->rows->sum(fn ($row) => (float) ($row->total_salary ?? 0)),
+            (float) $this->rows->sum(fn ($row) => (float) ($row->deductions ?? 0)),
+            (float) $this->rows->sum(fn ($row) => (float) ($row->allowance ?? 0)),
+            (float) $this->rows->sum(fn ($row) => (float) ($row->net_salary ?? 0)),
+            '',
+            '',
+        ]);
+
+        return $mappedRows;
     }
 
     public function headings(): array

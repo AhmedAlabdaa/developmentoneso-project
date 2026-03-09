@@ -326,6 +326,7 @@ class AmMonthlyContractController extends Controller
      * @queryParam passport_no string Filter by passport number (partial match). Example: P12345
      * @queryParam emirates_id string Filter by Emirates ID (partial match). Example: 784-
      * @queryParam reference_no string Filter by reference number (partial match). Example: EMP-0001
+     * @queryParam inside_country_or_outside integer Filter by location status (1 = Outside, 2 = Inside). Example: 1
      *
      * @response 200 {
      *   "current_page": 1,
@@ -355,6 +356,7 @@ class AmMonthlyContractController extends Controller
             'passport_no' => 'nullable|string|max:100',
             'emirates_id' => 'nullable|string|max:100',
             'reference_no' => 'nullable|string|max:100',
+            'inside_country_or_outside' => ['nullable', 'integer', Rule::in([1, 2])],
             'per_page' => 'nullable|integer|min:1|max:200',
         ]);
 
@@ -367,6 +369,7 @@ class AmMonthlyContractController extends Controller
                 'passport_no',
                 'emirates_id',
                 'reference_no',
+                'inside_country_or_outside',
             ]),
             $request->input('per_page', 15)
         );

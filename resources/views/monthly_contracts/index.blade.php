@@ -44,7 +44,7 @@ body{background:linear-gradient(to right,#e0f7fa,#e1bee7);font-family:Arial,sans
         {{-- Toolbar --}}
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
           <ul class="nav nav-tabs" id="mainTabs">
-            <li class="nav-item"><a class="nav-link" id="maids-tab" data-bs-toggle="tab" href="#tab-maids"><i class="fas fa-users me-1"></i>Maids</a></li>
+            <li class="nav-item"><a class="nav-link" id="maids-tab" data-bs-toggle="tab" href="#tab-maids"><i class="fas fa-users me-1"></i>Employees</a></li>
             <li class="nav-item"><a class="nav-link active" id="contracts-tab" data-bs-toggle="tab" href="#tab-contracts"><i class="fas fa-file-contract me-1"></i>Primary Contracts</a></li>
             <li class="nav-item"><a class="nav-link" id="movements-tab" data-bs-toggle="tab" href="#tab-movements"><i class="fas fa-exchange-alt me-1"></i>Movement Contracts</a></li>
             <li class="nav-item"><a class="nav-link" id="installments-tab" data-bs-toggle="tab" href="#tab-installments"><i class="fas fa-money-check-alt me-1"></i>Installments</a></li>
@@ -62,7 +62,7 @@ body{background:linear-gradient(to right,#e0f7fa,#e1bee7);font-family:Arial,sans
         <div class="tab-content">
           <div class="tab-pane fade" id="tab-maids">
             <div class="d-flex justify-content-between align-items-center bg-light rounded border p-3 mb-3 full-width">
-              <h5 class="mb-0 fw-bold text-secondary text-nowrap me-3"><i class="fas fa-users me-2"></i>Maids Directory</h5>
+              <h5 class="mb-0 fw-bold text-secondary text-nowrap me-3"><i class="fas fa-users me-2"></i>Employees Directory</h5>
               <div class="d-flex align-items-center gap-2 mb-0 flex-wrap justify-content-end">
                 <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="maids_filter_name" placeholder="Name" style="width:120px">
                 <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="maids_filter_ref" placeholder="Ref No" style="width:100px">
@@ -80,9 +80,17 @@ body{background:linear-gradient(to right,#e0f7fa,#e1bee7);font-family:Arial,sans
                   <option value="bank">Bank</option>
                   <option value="exchange">Exchange</option>
                 </select>
+                <select class="form-select form-select-sm border-secondary border-opacity-50" id="maids_filter_inside_country_or_outside" style="width:120px">
+                  <option value="">Inside/Outside</option>
+                  <option value="1">Outside</option>
+                  <option value="2">Inside</option>
+                </select>
                 <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="maids_filter_passport" placeholder="Passport" style="width:100px">
                 <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="maids_filter_eid" placeholder="Emirates ID" style="width:110px">
-                <button class="btn btn-primary btn-sm ms-2" onclick="loadMaids()"><i class="fas fa-filter me-1"></i>Filter</button>
+                <div class="d-flex ms-2 gap-1">
+                  <button class="btn btn-primary btn-sm" onclick="loadMaids()"><i class="fas fa-filter me-1"></i>Filter</button>
+                  <button class="btn btn-secondary btn-sm" onclick="clearMaidsFilter()"><i class="fas fa-times me-1"></i>Clear</button>
+                </div>
               </div>
             </div>
             <div class="table-responsive" id="maids_table"></div>
@@ -809,6 +817,18 @@ function renderContractsTable(res){
 }
 
 /* ========== MAIDS DIRECTORY ========== */
+function clearMaidsFilter(){
+  $('#maids_filter_name').val('');
+  $('#maids_filter_ref').val('');
+  $('#maids_filter_inside_country_or_outside').val('');
+  $('#maids_filter_inside_status').val('');
+  $('#maids_filter_nationality').val('');
+  $('#maids_filter_payment_type').val('');
+  $('#maids_filter_passport').val('');
+  $('#maids_filter_eid').val('');
+  loadMaids(1);
+}
+
 function loadMaids(page){
   page = page || 1;
   showPreloader();
@@ -818,6 +838,7 @@ function loadMaids(page){
     per_page: 25,
     name: $('#maids_filter_name').val(),
     reference_no: $('#maids_filter_ref').val(),
+    inside_country_or_outside: $('#maids_filter_inside_country_or_outside').val(),
     inside_status: $('#maids_filter_inside_status').val(),
     nationality: $('#maids_filter_nationality').val(),
     payment_type: $('#maids_filter_payment_type').val(),
@@ -844,11 +865,13 @@ function renderMaidsTable(res){
   html += '<table class="table table-hover table-bordered mb-0" style="font-size: 0.85rem">';
   html += '<thead class="table-light"><tr>';
   html += '<th class="text-center" style="width: 5%">ID</th>';
-  html += '<th style="width: 25%">Name / Reference No</th>';
+  html += '<th style="width: 10%">Reference No</th>';
+  html += '<th style="width: 20%">Name</th>';
   html += '<th class="text-center" style="width: 15%">Nationality</th>';
-  html += '<th class="text-center" style="width: 15%">Inside Status</th>';
-  html += '<th class="text-center" style="width: 15%">Payment Type</th>';
-  html += '<th style="width: 25%">Passport / Emirates ID</th>';
+  html += '<th class="text-center" style="width: 10%">Inside/Outside</th>';
+  html += '<th class="text-center" style="width: 10%">Inside Status</th>';
+  html += '<th class="text-center" style="width: 10%">Payment Type</th>';
+  html += '<th style="width: 20%">Passport / Emirates ID</th>';
   html += '</tr></thead><tbody>';
 
   data.forEach(function(row){
@@ -860,14 +883,22 @@ function renderMaidsTable(res){
     else if(statusVal === 2) statusBadge = '<span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1 shadow-sm">Hired</span>';
     else if(statusVal === 3) statusBadge = '<span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-1 shadow-sm">Incidented</span>';
 
+    // Inside / Outside Mapping
+    let inOutBadge = '<span class="badge bg-secondary">Unknown</span>';
+    const inOutVal = parseInt(row.inside_country_or_outside);
+    if(inOutVal === 1) inOutBadge = '<span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1 shadow-sm">Outside</span>';
+    else if(inOutVal === 2) inOutBadge = '<span class="badge bg-indigo bg-opacity-10 text-indigo border border-indigo border-opacity-25 px-2 py-1 shadow-sm" style="color: #6610f2;">Inside</span>';
+
     // Payment Type
     let payStr = (row.payment_type || '-').toLowerCase();
     let paymentBadge = `<span class="badge bg-light border text-secondary">${payStr.charAt(0).toUpperCase() + payStr.slice(1)}</span>`;
 
     html += '<tr>';
     html += `<td class="text-center align-middle">${row.id}</td>`;
-    html += `<td class="align-middle fw-bold text-dark">${row.name || '-'}<br><small class="text-muted fw-normal">${row.reference_no || ''}</small></td>`;
+    html += `<td class="align-middle text-dark">${row.reference_no || '-'}</td>`;
+    html += `<td class="align-middle fw-bold text-dark">${row.name || '-'}</td>`;
     html += `<td class="text-center align-middle">${row.nationality || '-'}</td>`;
+    html += `<td class="text-center align-middle">${inOutBadge}</td>`;
     html += `<td class="text-center align-middle">${statusBadge}</td>`;
     html += `<td class="text-center align-middle">${paymentBadge}</td>`;
     html += `<td class="align-middle">

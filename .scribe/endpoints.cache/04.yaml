@@ -79,7 +79,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: 3
+        example: 1
         type: integer
         enumValues:
           - 1
@@ -183,7 +183,7 @@ endpoints:
       code: 'n'
       note: g
       status: false
-      type: 3
+      type: 1
       lines:
         -
           ledger_account_id: 16
@@ -275,7 +275,7 @@ endpoints:
         name: status
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -286,7 +286,7 @@ endpoints:
         name: type
         description: ''
         required: false
-        example: 1
+        example: 3
         type: integer
         enumValues:
           - 1
@@ -400,8 +400,8 @@ endpoints:
       name: b
       code: 'n'
       note: g
-      status: false
-      type: 1
+      status: true
+      type: 3
       lines:
         -
           ledger_account_id: 16

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "9797bfcc-6c31-44e6-bd4b-320c7d0d1caa",
+        "_postman_id": "49e33055-2cd0-4728-9d8b-f2ea2b206d56",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -91,7 +91,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"n\",\"note\":\"g\",\"status\":false,\"type\":3,\"lines\":[{\"ledger_account_id\":16,\"amount_debit\":39,\"amount_credit\":84,\"vatable\":true,\"note\":\"z\",\"source_amount\":2}]}"
+                            "raw": "{\"name\":\"b\",\"code\":\"n\",\"note\":\"g\",\"status\":false,\"type\":1,\"lines\":[{\"ledger_account_id\":16,\"amount_debit\":39,\"amount_credit\":84,\"vatable\":true,\"note\":\"z\",\"source_amount\":2}]}"
                         },
                         "description": "Store a newly created resource in storage.",
                         "auth": {
@@ -130,7 +130,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"n\",\"note\":\"g\",\"status\":false,\"type\":1,\"lines\":[{\"ledger_account_id\":16,\"amount_debit\":39,\"amount_credit\":84,\"vatable\":true,\"note\":\"z\",\"source_amount\":2}]}"
+                            "raw": "{\"name\":\"b\",\"code\":\"n\",\"note\":\"g\",\"status\":true,\"type\":3,\"lines\":[{\"ledger_account_id\":16,\"amount_debit\":39,\"amount_credit\":84,\"vatable\":true,\"note\":\"z\",\"source_amount\":2}]}"
                         },
                         "description": "Update the specified resource in storage.",
                         "auth": {
@@ -704,9 +704,15 @@
                                             "value": "EMP-0001",
                                             "description": "Filter by reference number (partial match).",
                                             "disabled": false
+                                        },
+                                        {
+                                            "key": "inside_country_or_outside",
+                                            "value": "1",
+                                            "description": "Filter by location status (1 = Outside, 2 = Inside).",
+                                            "disabled": false
                                         }
                                     ],
-                                    "raw": "{{baseUrl}}\/api\/am-monthly-contracts\/all-employees?per_page=20&name=maria&inside_status=1&nationality=Philippines&payment_type=bank&passport_no=P12345&emirates_id=784-&reference_no=EMP-0001"
+                                    "raw": "{{baseUrl}}\/api\/am-monthly-contracts\/all-employees?per_page=20&name=maria&inside_status=1&nationality=Philippines&payment_type=bank&passport_no=P12345&emirates_id=784-&reference_no=EMP-0001&inside_country_or_outside=1"
                                 },
                                 "method": "GET",
                                 "header": [
@@ -721,7 +727,7 @@
                                 ],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\"name\":\"architecto\",\"inside_status\":16,\"nationality\":\"n\",\"payment_type\":\"g\",\"passport_no\":\"z\",\"emirates_id\":\"m\",\"reference_no\":\"i\",\"per_page\":8}"
+                                    "raw": "{\"name\":\"architecto\",\"inside_status\":16,\"nationality\":\"n\",\"payment_type\":\"g\",\"passport_no\":\"z\",\"emirates_id\":\"m\",\"reference_no\":\"i\",\"inside_country_or_outside\":16,\"per_page\":22}"
                                 },
                                 "description": "Returns a paginated list of employees with optional filters.",
                                 "auth": {
@@ -767,7 +773,7 @@
                                         }
                                     ]
                                 },
-                                "description": "Expected heading columns:\n- customer\n- maid\n- start\n- end\n- amount\n- date_of_installment\n\nValidation:\n- customer must exist in CRM table\n- maid must exist in Employees table\n\nCreates:\n1) am_primary_contracts\n2) am_contract_movments\n3) am_installments",
+                                "description": "Expected heading columns:\n- customer (CL_Number from CRM table)\n- maid\n- start\n- end\n- amount\n- date_of_installment\n\nValidation:\n- customer CL_Number must exist in CRM table\n- maid must exist in Employees table\n\nCreates:\n1) am_primary_contracts\n2) am_contract_movments\n3) am_installments",
                                 "auth": {
                                     "type": "noauth"
                                 }
@@ -1533,7 +1539,7 @@
                                 ],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\"date\":\"2026-03-04T21:09:06\",\"am_movment_id\":\"architecto\",\"note\":\"architecto\",\"status\":3,\"action\":1}"
+                                    "raw": "{\"date\":\"2026-03-09T22:12:36\",\"am_movment_id\":\"architecto\",\"note\":\"architecto\",\"status\":4,\"action\":1}"
                                 },
                                 "description": "",
                                 "auth": {
@@ -1579,7 +1585,7 @@
                                 ],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\"date\":\"2026-03-04T21:09:06\",\"note\":\"architecto\",\"status\":2,\"action\":4}"
+                                    "raw": "{\"date\":\"2026-03-09T22:12:36\",\"note\":\"architecto\",\"status\":3,\"action\":3}"
                                 },
                                 "description": "",
                                 "auth": {
@@ -2582,7 +2588,7 @@
                                 ],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\"action\":2,\"amount\":27,\"refund_date\":\"2026-03-04T21:09:06\",\"note\":\"architecto\"}"
+                                    "raw": "{\"action\":2,\"amount\":27,\"refund_date\":\"2026-03-09T22:12:36\",\"note\":\"architecto\"}"
                                 },
                                 "description": "",
                                 "auth": {
