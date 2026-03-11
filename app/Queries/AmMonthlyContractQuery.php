@@ -215,7 +215,8 @@ class AmMonthlyContractQuery
 
         return $query
         ->where('package' , 'PKG-3')
-        ->orderBy('id')->paginate($perPage);
+        ->orderBy('id', 'desc')
+        ->paginate($perPage);
     }
 
 
