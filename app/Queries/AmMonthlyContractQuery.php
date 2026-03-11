@@ -213,7 +213,9 @@ class AmMonthlyContractQuery
             $query->where('inside_country_or_outside', $filters['inside_country_or_outside']);
         }
 
-        return $query->orderBy('id')->paginate($perPage);
+        return $query
+        ->where('package' , 'PKG-3')
+        ->orderBy('id')->paginate($perPage);
     }
 
 
