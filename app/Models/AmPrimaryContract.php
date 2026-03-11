@@ -48,7 +48,7 @@ class AmPrimaryContract extends Model
     public function crm()
     {
         return $this->belongsTo(CRM::class)
-        ->select(['id', 'first_name', 'last_name', 'mobile', 'CL_Number', 'ledger_id' , 'payment_methods']);
+        ->select(['id', 'first_name', 'last_name', 'mobile', 'CL_Number', 'ledger_id' , 'payment_methods' , 'address' , 'nationality' , 'passport_number' , 'emirates_id']);
     }
 
     public function contractMovments()

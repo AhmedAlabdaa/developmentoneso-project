@@ -46,6 +46,11 @@
     use App\Http\Controllers\ReplacementController;
     use App\Http\Controllers\InvoiceServiceController;
     use Illuminate\Support\Carbon;
+    use App\Http\Controllers\AmContractMovementController;
+
+
+
+    Route::get('/minisry/p3/{contractId}', [AmContractMovementController::class, 'getMinistryContract'])->name('ministry.contract');
 
     Route::get('/', function () {
         return view('index');
@@ -530,7 +535,6 @@
         Route::get('/{replacement}/view', [ReplacementController::class, 'viewForm'])->name('view');
         Route::post('/status', [ReplacementController::class, 'updateStatus'])->name('updateStatus');
     });
-
 
 
 

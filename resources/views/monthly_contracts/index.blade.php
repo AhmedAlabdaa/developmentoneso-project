@@ -979,6 +979,7 @@ function renderMovementsTable(res){
     html += '<td class="text-center"><span class="' + statusClass + '">' + statusText + '</span></td>';
     html += '<td class="text-center" style="white-space:nowrap">';
     html += '<button class="btn btn-outline-info action-btn" onclick="viewMovement(' + m.id + ')" title="View"><i class="fas fa-eye"></i></button> ';
+    html += `<a href="/minisry/p3/${m.id}" target="_blank" class="btn btn-outline-dark action-btn" title="Ministry P3"><i class="far fa-file-alt"></i></a> `;
     if(m.status == 1){ 
       html += '<button class="btn btn-outline-warning action-btn" onclick="editMovement(' + m.id + ')" title="Edit"><i class="fas fa-edit"></i></button> ';
       html += '<button class="btn btn-outline-secondary action-btn" onclick="openReturnModal(' + m.id + ')" title="Return Maid"><i class="fas fa-undo-alt"></i></button> ';

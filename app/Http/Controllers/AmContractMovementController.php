@@ -9,6 +9,8 @@ use App\Services\AmInstallmentService;
 use Illuminate\Http\Request;
 use Exception;
 use Carbon\Carbon;
+use App\Models\AmContractMovment;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @group Package 3 Modular
@@ -246,6 +248,17 @@ class AmContractMovementController extends Controller
                 'error' => $e->getMessage(),
             ], $status);
         }
+    }
+
+
+    public function getMinistryContract(Request $request, $contractId)
+    {
+
+        Log::info("Fetching ministry contract for contract ID: {$contractId}");
+        $cont = AmContractMovment::with(['employee', 'primaryContract.crm'])->findorFail($contractId);
+
+        return view('monthly_contracts/ministry_contract', compact('cont'));
+        
     }
 
 

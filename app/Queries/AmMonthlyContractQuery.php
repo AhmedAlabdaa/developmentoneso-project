@@ -213,7 +213,7 @@ class AmMonthlyContractQuery
             $query->where('inside_country_or_outside', $filters['inside_country_or_outside']);
         }
 
-        return $query->orderBy('name')->paginate($perPage);
+        return $query->orderBy('id')->paginate($perPage);
     }
 
 

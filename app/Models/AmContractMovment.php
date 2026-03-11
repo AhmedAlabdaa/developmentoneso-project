@@ -64,7 +64,7 @@ class AmContractMovment extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class)
-                    ->select(['id', 'name', 'salary']);
+                    ->select(['id', 'name', 'salary','nationality','passport_no', 'emirates_id' , 'maritial_status']);
     }
         public function invoice() 
     {
