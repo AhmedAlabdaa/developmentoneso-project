@@ -34,14 +34,14 @@ class AmPrimaryContract extends Model
                         return $max;
                     }
 
-                    if (!preg_match('/^CT-(\d+)$/', $serial, $matches)) {
+                    if (!preg_match('/^CTP3-(\d+)$/', $serial, $matches)) {
                         return $max;
                     }
 
                     return max($max, (int) $matches[1]);
                 }, 0);
 
-            $model->serial_no = 'CT-' . str_pad((string) ($maxSerialNumber + 1), 4, '0', STR_PAD_LEFT);
+            $model->serial_no = 'CTP3-' . str_pad((string) ($maxSerialNumber + 1), 4, '0', STR_PAD_LEFT);
         });
     }
 

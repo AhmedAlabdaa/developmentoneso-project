@@ -34,7 +34,7 @@ class AmContractMovment extends Model
             }
 
             $contractSerial = $primaryContract->serial_no
-                ?: ('CT-' . str_pad((string) $primaryContract->id, 4, '0', STR_PAD_LEFT));
+                ?: ('CTP3-' . str_pad((string) $primaryContract->id, 4, '0', STR_PAD_LEFT));
 
             $maxSequence = self::query()
                 ->where('am_contract_id', $model->am_contract_id)
