@@ -59,7 +59,7 @@ class AmMonthlyContractQuery
             $query->where('status', $filters['status']);
         }
 
-        return $query->latest()->paginate($perPage);
+        return $query->orderBy('id')->paginate($perPage);
     }
 
 
@@ -188,7 +188,7 @@ class AmMonthlyContractQuery
 
         return $query
         ->where('package' , 'PKG-3')
-        ->orderBy('serial_no', 'desc')
+        ->orderBy('id', 'desc')
         ->paginate($perPage);
     }
 
