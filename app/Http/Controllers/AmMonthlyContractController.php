@@ -7,6 +7,9 @@ use App\Imports\AmMonthlyContractsImport;
 use App\Services\AmMonthlyContractService;
 use App\Queries\AmMonthlyContractQuery;
 use App\Http\Requests\StoreAmMonthlyContractRequest;
+use App\Http\Requests\StoreAmMonthlyContractEmployeeRequest;
+use App\Models\Employee;
+use App\Models\NewCandidate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -279,38 +282,6 @@ class AmMonthlyContractController extends Controller
         return response()->json($employees);
     }
 
-    /**
-     * List employees (maids).
-     *
-     * Returns a paginated list of employees with optional filters.
-     *
-     * @queryParam per_page integer Number of items per page. Default: 15. Example: 20
-     * @queryParam name string Filter by employee name. Example: maria
-     * @queryParam inside_status integer Filter by inside status (1 = Office, 4 = Hired). Example: 1
-     *
-     * @response 200 {
-     *   "current_page": 1,
-     *   "data": [
-     *     {
-     *       "id": 5,
-     *       "name": "Maria Santos",
-     *       "inside_status": 1
-     *     }
-     *   ],
-     *   "last_page": 1,
-     *   "per_page": 15,
-     *   "total": 1
-     * }
-     */
-    public function employees(Request $request)
-    {
-        $employees = $this->query->getEmployees(
-            $request->only(['name', 'inside_status']),
-            $request->input('per_page', 15)
-        );
-
-        return response()->json($employees);
-    }
 
     /**
      * List all employees (maids).
@@ -356,7 +327,6 @@ class AmMonthlyContractController extends Controller
             'passport_no' => 'nullable|string|max:100',
             'emirates_id' => 'nullable|string|max:100',
             'reference_no' => 'nullable|string|max:100',
-            'inside_country_or_outside' => ['nullable', 'integer', Rule::in([1, 2])],
             'per_page' => 'nullable|integer|min:1|max:200',
         ]);
 
@@ -368,8 +338,7 @@ class AmMonthlyContractController extends Controller
                 'payment_type',
                 'passport_no',
                 'emirates_id',
-                'reference_no',
-                'inside_country_or_outside',
+                'reference_no'
             ]),
             $request->input('per_page', 15)
         );
@@ -404,6 +373,124 @@ class AmMonthlyContractController extends Controller
         );
 
         return response()->json($employees);
+    }
+
+    /**
+     * Search candidates by CN number, reference numbers, or candidate name.
+     *
+     * Returns full candidate records from new_candidates.
+     *
+     * @queryParam search string required Search keyword. Matches CN_Number, reference_no, ref_no, candidate_name. Example: EP3-0008
+     * @queryParam limit integer Max number of rows to return. Default: 20. Example: 50
+     *
+     * @response 200 [
+     *   {
+     *     "id": 1,
+     *     "CN_Number": "CN-0001",
+     *     "reference_no": "EP3-0008",
+     *     "ref_no": "REF-001",
+     *     "candidate_name": "Maria Santos"
+     *   }
+     * ]
+     */
+    public function searchCandidates(Request $request)
+    {
+        $request->validate([
+            'search' => 'required|string|max:255',
+        ]);
+
+        $search = trim((string) $request->input('search', ''));
+
+        $candidates = NewCandidate::query()
+            ->where(function ($query) use ($search) {
+                $query->where('CN_Number', $search)
+                    ->orWhere('reference_no', $search)
+                    ->orWhere('ref_no', $search)
+                    ->orWhere('candidate_name', $search);
+            })
+            ->orderByDesc('id')
+            ->first();
+
+        return response()->json($candidates);
+    }
+
+    /**
+     * Create a new employee for monthly contracts.
+     *
+     * @bodyParam name string required Employee name. Example: Maria Santos
+     * @bodyParam nationality string required Employee nationality. Example: Philippines
+     * @bodyParam passport_expiry_date string required Passport expiry date. Example: 2028-12-31
+     * @bodyParam passport_no string Employee passport number. Example: P1234567
+     * @bodyParam emirates_id string Employee Emirates ID. Example: 784-1990-1234567-1
+     * @bodyParam salary number Employee monthly salary. Example: 1500
+     * @bodyParam payment_type string Employee payment type. Example: cash
+     * @bodyParam inside_country_or_outside integer 1 = Outside, 2 = Inside. Example: 2
+     *
+     * @response 201 {
+     *   "message": "Employee created successfully",
+     *   "data": {
+     *     "id": 1,
+     *     "name": "Maria Santos"
+     *   }
+     * }
+     */
+    public function storeEmployee(StoreAmMonthlyContractEmployeeRequest $request)
+    {
+        $employee = $this->service->createEmployee($request->validated());
+
+        return response()->json([
+            'message' => 'Employee created successfully',
+            'data' => $employee,
+        ], 201);
+    }
+
+    /**
+     * Update an employee for monthly contracts.
+     *
+     * @urlParam employee integer required Employee ID. Example: 5
+     * @bodyParam name string Employee name. Example: Maria Santos
+     * @bodyParam nationality string Employee nationality. Example: Philippines
+     * @bodyParam passport_expiry_date string Passport expiry date. Example: 2028-12-31
+     * @bodyParam passport_no string Employee passport number. Example: P1234567
+     * @bodyParam emirates_id string Employee Emirates ID. Example: 784-1990-1234567-1
+     * @bodyParam salary number Employee monthly salary. Example: 1500
+     * @bodyParam payment_type string Employee payment type. Example: bank
+     *
+     * @response 200 {
+     *   "message": "Employee updated successfully",
+     *   "data": {}
+     * }
+     */
+    public function updateEmployee(Request $request, Employee $employee)
+    {
+        $data = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'nationality' => 'sometimes|string|max:255',
+            'passport_expiry_date' => 'sometimes|date',
+            'passport_no' => [
+                'sometimes',
+                'nullable',
+                'string',
+                'max:50',
+                Rule::unique('employees', 'passport_no')->ignore($employee->id),
+            ],
+            'emirates_id' => [
+                'sometimes',
+                'nullable',
+                'string',
+                'max:100',
+                Rule::unique('employees', 'emirates_id')->ignore($employee->id),
+            ],
+            'salary' => 'sometimes|numeric|min:0',
+            'payment_type' => 'sometimes|nullable|string|max:50',
+        ]);
+
+        $employee->update($data);
+
+        return response()->json([
+            'message' => 'Employee updated successfully',
+            'data' => $employee->fresh(),
+        ]);
     }
 
     /**
@@ -519,4 +606,7 @@ class AmMonthlyContractController extends Controller
             ],
         ]);
     }
+
+
+
 }

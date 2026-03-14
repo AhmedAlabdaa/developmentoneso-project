@@ -54,9 +54,11 @@ Route::get('candidates/getCandidateBySlug', [CandidateController::class, 'getCan
     //for am monthly contracts
     Route::get('am-monthly-contracts/lookup-employees', [AmMonthlyContractController::class, 'lookupEmployee'])->name('api.am-monthly-contracts.lookup-employees');
     Route::get('am-monthly-contracts/lookup-all-employees', [AmMonthlyContractController::class, 'lookupAllEmployees'])->name('api.am-monthly-contracts.lookup-all-employees');
-    Route::get('am-monthly-contracts/lookup-customers', [AmMonthlyContractController::class, 'lookupCustomer'])->name('api.am-monthly-contracts.lookup-customers');
-    Route::get('am-monthly-contracts/employees', [AmMonthlyContractController::class, 'employees'])->name('api.am-monthly-contracts.employees');
+    Route::get('am-monthly-contracts/search-candidates', [AmMonthlyContractController::class, 'searchCandidates'])->name('api.am-monthly-contracts.search-candidates');
     Route::get('am-monthly-contracts/all-employees', [AmMonthlyContractController::class, 'allEmployees'])->name('api.am-monthly-contracts.all-employees');
+    Route::post('am-monthly-contracts/employees', [AmMonthlyContractController::class, 'storeEmployee'])->name('api.am-monthly-contracts.employees.store');
+    Route::put('am-monthly-contracts/employees/{employee:id}', [AmMonthlyContractController::class, 'updateEmployee'])->name('api.am-monthly-contracts.employees.update');
+    Route::get('am-monthly-contracts/lookup-customers', [AmMonthlyContractController::class, 'lookupCustomer'])->name('api.am-monthly-contracts.lookup-customers');
     Route::post('am-monthly-contracts/import-excel', [AmMonthlyContractController::class, 'importExcel'])->name('api.am-monthly-contracts.import-excel');
     Route::post('am-monthly-contracts/{id}/return', [AmReturnMaidController::class, 'returnContract'])->name('api.am-monthly-contracts.return');
     Route::apiResource('am-incidents', AmIncidentController::class)->names('api.am-incidents');

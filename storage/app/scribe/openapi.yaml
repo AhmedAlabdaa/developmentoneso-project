@@ -118,7 +118,7 @@ paths:
                 type:
                   type: integer
                   description: ''
-                  example: 1
+                  example: 2
                   enum:
                     - 1
                     - 2
@@ -163,7 +163,7 @@ paths:
                       source_amount:
                         type: integer
                         description: ''
-                        example: 2
+                        example: 1
                         enum:
                           - 1
                           - 2
@@ -207,11 +207,11 @@ paths:
                 status:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                 type:
                   type: integer
                   description: ''
-                  example: 3
+                  example: 2
                   enum:
                     - 1
                     - 2
@@ -261,7 +261,7 @@ paths:
                       source_amount:
                         type: integer
                         description: ''
-                        example: 2
+                        example: 1
                         enum:
                           - 1
                           - 2
@@ -467,7 +467,7 @@ paths:
                 status:
                   type: integer
                   description: ''
-                  example: 0
+                  example: 1
                   enum:
                     - 0
                     - 1
@@ -723,206 +723,79 @@ paths:
       tags:
         - 'Package 3 Modular'
       security: []
-  /api/am-monthly-contracts/lookup-customers:
+  /api/am-monthly-contracts/search-candidates:
     get:
-      summary: 'Lookup customers (CRM).'
-      operationId: lookupCustomersCRM
-      description: "Search customers by name, mobile, or CL number for autocomplete.\nReturns CRM IDs (not ledger IDs). Same response format as /api/ledgers/lookup-customers."
+      summary: 'Search candidates by CN number, reference numbers, or candidate name.'
+      operationId: searchCandidatesByCNNumberReferenceNumbersOrCandidateName
+      description: 'Returns full candidate records from new_candidates.'
       parameters:
         -
           in: query
           name: search
-          description: 'Search by name, mobile, CL number.'
-          example: ahmed
-          required: false
+          description: 'Search keyword. Matches CN_Number, reference_no, ref_no, candidate_name.'
+          example: EP3-0008
+          required: true
           schema:
             type: string
-            description: 'Search by name, mobile, CL number.'
-            example: ahmed
+            description: 'Search keyword. Matches CN_Number, reference_no, ref_no, candidate_name.'
+            example: EP3-0008
         -
           in: query
-          name: page
-          description: 'Page number.'
-          example: 1
+          name: limit
+          description: 'Max number of rows to return. Default: 20.'
+          example: 50
           required: false
           schema:
             type: integer
-            description: 'Page number.'
-            example: 1
-        -
-          in: query
-          name: per_page
-          description: 'Items per page. Default: 10.'
-          example: 20
-          required: false
-          schema:
-            type: integer
-            description: 'Items per page. Default: 10.'
-            example: 20
+            description: 'Max number of rows to return. Default: 20.'
+            example: 50
       responses:
         200:
           description: ''
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    CN_Number:
+                      type: string
+                      example: CN-0001
+                    reference_no:
+                      type: string
+                      example: EP3-0008
+                    ref_no:
+                      type: string
+                      example: REF-001
+                    candidate_name:
+                      type: string
+                      example: 'Maria Santos'
                 example:
-                  results:
-                    -
-                      id: 5
-                      text: 'Ahmed Ali'
-                      mobile: '0501234567'
-                      crm:
-                        first_name: Ahmed
-                        last_name: Ali
-                        mobile: '0501234567'
-                        CL_Number: CL-001
-                  pagination:
-                    more: false
-                    current_page: 1
-                    total: 1
-                properties:
-                  results:
-                    type: array
-                    example:
-                      -
-                        id: 5
-                        text: 'Ahmed Ali'
-                        mobile: '0501234567'
-                        crm:
-                          first_name: Ahmed
-                          last_name: Ali
-                          mobile: '0501234567'
-                          CL_Number: CL-001
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 5
-                        text:
-                          type: string
-                          example: 'Ahmed Ali'
-                        mobile:
-                          type: string
-                          example: '0501234567'
-                        crm:
-                          type: object
-                          properties:
-                            first_name:
-                              type: string
-                              example: Ahmed
-                            last_name:
-                              type: string
-                              example: Ali
-                            mobile:
-                              type: string
-                              example: '0501234567'
-                            CL_Number:
-                              type: string
-                              example: CL-001
-                  pagination:
-                    type: object
-                    properties:
-                      more:
-                        type: boolean
-                        example: false
-                      current_page:
-                        type: integer
-                        example: 1
-                      total:
-                        type: integer
-                        example: 1
+                  -
+                    id: 1
+                    CN_Number: CN-0001
+                    reference_no: EP3-0008
+                    ref_no: REF-001
+                    candidate_name: 'Maria Santos'
       tags:
         - 'Package 3 Modular'
-      security: []
-  /api/am-monthly-contracts/employees:
-    get:
-      summary: 'List employees (maids).'
-      operationId: listEmployeesmaids
-      description: 'Returns a paginated list of employees with optional filters.'
-      parameters:
-        -
-          in: query
-          name: per_page
-          description: 'Number of items per page. Default: 15.'
-          example: 20
-          required: false
-          schema:
-            type: integer
-            description: 'Number of items per page. Default: 15.'
-            example: 20
-        -
-          in: query
-          name: name
-          description: 'Filter by employee name.'
-          example: maria
-          required: false
-          schema:
-            type: string
-            description: 'Filter by employee name.'
-            example: maria
-        -
-          in: query
-          name: inside_status
-          description: 'Filter by inside status (1 = Office, 4 = Hired).'
-          example: 1
-          required: false
-          schema:
-            type: integer
-            description: 'Filter by inside status (1 = Office, 4 = Hired).'
-            example: 1
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  current_page: 1
-                  data:
-                    -
-                      id: 5
-                      name: 'Maria Santos'
-                      inside_status: 1
-                  last_page: 1
-                  per_page: 15
-                  total: 1
-                properties:
-                  current_page:
-                    type: integer
-                    example: 1
-                  data:
-                    type: array
-                    example:
-                      -
-                        id: 5
-                        name: 'Maria Santos'
-                        inside_status: 1
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 5
-                        name:
-                          type: string
-                          example: 'Maria Santos'
-                        inside_status:
-                          type: integer
-                          example: 1
-                  last_page:
-                    type: integer
-                    example: 1
-                  per_page:
-                    type: integer
-                    example: 15
-                  total:
-                    type: integer
-                    example: 1
-      tags:
-        - 'Package 3 Modular'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                search:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+              required:
+                - search
       security: []
   /api/am-monthly-contracts/all-employees:
     get:
@@ -1118,6 +991,282 @@ paths:
                   description: 'Must be at least 1. Must not be greater than 200.'
                   example: 22
                   nullable: true
+      security: []
+  /api/am-monthly-contracts/employees:
+    post:
+      summary: 'Create a new employee for monthly contracts.'
+      operationId: createANewEmployeeForMonthlyContracts
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Employee created successfully'
+                  data:
+                    id: 1
+                    name: 'Maria Santos'
+                properties:
+                  message:
+                    type: string
+                    example: 'Employee created successfully'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: 'Maria Santos'
+      tags:
+        - 'Package 3 Modular'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Employee name.'
+                  example: 'Maria Santos'
+                nationality:
+                  type: string
+                  description: 'Employee nationality.'
+                  example: Philippines
+                passport_expiry_date:
+                  type: string
+                  description: 'Passport expiry date.'
+                  example: '2028-12-31'
+                passport_no:
+                  type: string
+                  description: 'Employee passport number.'
+                  example: P1234567
+                  nullable: true
+                emirates_id:
+                  type: string
+                  description: 'Employee Emirates ID.'
+                  example: 784-1990-1234567-1
+                  nullable: true
+                salary:
+                  type: number
+                  description: 'Employee monthly salary.'
+                  example: 1500.0
+                  nullable: true
+                payment_type:
+                  type: string
+                  description: 'Employee payment type.'
+                  example: cash
+                  nullable: true
+                inside_country_or_outside:
+                  type: integer
+                  description: '1 = Outside, 2 = Inside.'
+                  example: 2
+                  nullable: true
+              required:
+                - name
+                - nationality
+                - passport_expiry_date
+      security: []
+  '/api/am-monthly-contracts/employees/{id}':
+    put:
+      summary: 'Update an employee for monthly contracts.'
+      operationId: updateAnEmployeeForMonthlyContracts
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Employee updated successfully'
+                  data: {  }
+                properties:
+                  message:
+                    type: string
+                    example: 'Employee updated successfully'
+                  data:
+                    type: object
+                    properties: {  }
+      tags:
+        - 'Package 3 Modular'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Employee name.'
+                  example: 'Maria Santos'
+                nationality:
+                  type: string
+                  description: 'Employee nationality.'
+                  example: Philippines
+                passport_expiry_date:
+                  type: string
+                  description: 'Passport expiry date.'
+                  example: '2028-12-31'
+                passport_no:
+                  type: string
+                  description: 'Employee passport number.'
+                  example: P1234567
+                  nullable: true
+                emirates_id:
+                  type: string
+                  description: 'Employee Emirates ID.'
+                  example: 784-1990-1234567-1
+                  nullable: true
+                salary:
+                  type: number
+                  description: 'Employee monthly salary.'
+                  example: 1500.0
+                payment_type:
+                  type: string
+                  description: 'Employee payment type.'
+                  example: bank
+                  nullable: true
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the employee.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: employee
+        description: 'Employee ID.'
+        example: 5
+        required: true
+        schema:
+          type: integer
+  /api/am-monthly-contracts/lookup-customers:
+    get:
+      summary: 'Lookup customers (CRM).'
+      operationId: lookupCustomersCRM
+      description: "Search customers by name, mobile, or CL number for autocomplete.\nReturns CRM IDs (not ledger IDs). Same response format as /api/ledgers/lookup-customers."
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'Search by name, mobile, CL number.'
+          example: ahmed
+          required: false
+          schema:
+            type: string
+            description: 'Search by name, mobile, CL number.'
+            example: ahmed
+        -
+          in: query
+          name: page
+          description: 'Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number.'
+            example: 1
+        -
+          in: query
+          name: per_page
+          description: 'Items per page. Default: 10.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Items per page. Default: 10.'
+            example: 20
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  results:
+                    -
+                      id: 5
+                      text: 'Ahmed Ali'
+                      mobile: '0501234567'
+                      crm:
+                        first_name: Ahmed
+                        last_name: Ali
+                        mobile: '0501234567'
+                        CL_Number: CL-001
+                  pagination:
+                    more: false
+                    current_page: 1
+                    total: 1
+                properties:
+                  results:
+                    type: array
+                    example:
+                      -
+                        id: 5
+                        text: 'Ahmed Ali'
+                        mobile: '0501234567'
+                        crm:
+                          first_name: Ahmed
+                          last_name: Ali
+                          mobile: '0501234567'
+                          CL_Number: CL-001
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 5
+                        text:
+                          type: string
+                          example: 'Ahmed Ali'
+                        mobile:
+                          type: string
+                          example: '0501234567'
+                        crm:
+                          type: object
+                          properties:
+                            first_name:
+                              type: string
+                              example: Ahmed
+                            last_name:
+                              type: string
+                              example: Ali
+                            mobile:
+                              type: string
+                              example: '0501234567'
+                            CL_Number:
+                              type: string
+                              example: CL-001
+                  pagination:
+                    type: object
+                    properties:
+                      more:
+                        type: boolean
+                        example: false
+                      current_page:
+                        type: integer
+                        example: 1
+                      total:
+                        type: integer
+                        example: 1
+      tags:
+        - 'Package 3 Modular'
       security: []
   /api/am-monthly-contracts/import-excel:
     post:
@@ -1402,7 +1551,7 @@ paths:
                 date:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-03-09T22:12:36'
+                  example: '2026-03-12T17:54:57'
                 am_movment_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the am_contract_movments table.'
@@ -1415,7 +1564,7 @@ paths:
                 status:
                   type: integer
                   description: ''
-                  example: 4
+                  example: 2
                   enum:
                     - 2
                     - 3
@@ -1423,7 +1572,7 @@ paths:
                 action:
                   type: integer
                   description: ''
-                  example: 1
+                  example: 2
                   enum:
                     - 1
                     - 2
@@ -1454,7 +1603,7 @@ paths:
                 date:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-03-09T22:12:36'
+                  example: '2026-03-12T17:54:57'
                 note:
                   type: string
                   description: ''
@@ -1471,7 +1620,7 @@ paths:
                 action:
                   type: integer
                   description: ''
-                  example: 3
+                  example: 1
                   enum:
                     - 1
                     - 2
@@ -3776,7 +3925,7 @@ paths:
                 refund_date:
                   type: string
                   description: 'This field is required when <code>action</code> is <code>3</code>. Must be a valid date.'
-                  example: '2026-03-09T22:12:36'
+                  example: '2026-03-12T17:54:57'
                 note:
                   type: string
                   description: 'This field is required when <code>action</code> is <code>3</code>.'

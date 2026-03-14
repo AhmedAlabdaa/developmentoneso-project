@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html><body>
+<input type="date" id="myDate">
+<script>
+  let rawDate = "2026-08-08 00:00:00";
+  // Try mapping the standard approach
+  let d = new Date(rawDate);
+  document.getElementById('myDate').value = d.toISOString().split('T')[0];
+  console.log("Date set to:", document.getElementById('myDate').value);
+</script>
+</body></html>

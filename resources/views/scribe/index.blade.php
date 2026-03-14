@@ -149,14 +149,20 @@
                                                                             <li class="tocify-item level-3" data-unique="package-3-modular-GETapi-am-monthly-contracts-lookup-all-employees">
                                             <a href="#package-3-modular-GETapi-am-monthly-contracts-lookup-all-employees">Lookup all employees (maids).</a>
                                         </li>
-                                                                            <li class="tocify-item level-3" data-unique="package-3-modular-GETapi-am-monthly-contracts-lookup-customers">
-                                            <a href="#package-3-modular-GETapi-am-monthly-contracts-lookup-customers">Lookup customers (CRM).</a>
-                                        </li>
-                                                                            <li class="tocify-item level-3" data-unique="package-3-modular-GETapi-am-monthly-contracts-employees">
-                                            <a href="#package-3-modular-GETapi-am-monthly-contracts-employees">List employees (maids).</a>
+                                                                            <li class="tocify-item level-3" data-unique="package-3-modular-GETapi-am-monthly-contracts-search-candidates">
+                                            <a href="#package-3-modular-GETapi-am-monthly-contracts-search-candidates">Search candidates by CN number, reference numbers, or candidate name.</a>
                                         </li>
                                                                             <li class="tocify-item level-3" data-unique="package-3-modular-GETapi-am-monthly-contracts-all-employees">
                                             <a href="#package-3-modular-GETapi-am-monthly-contracts-all-employees">List all employees (maids).</a>
+                                        </li>
+                                                                            <li class="tocify-item level-3" data-unique="package-3-modular-POSTapi-am-monthly-contracts-employees">
+                                            <a href="#package-3-modular-POSTapi-am-monthly-contracts-employees">Create a new employee for monthly contracts.</a>
+                                        </li>
+                                                                            <li class="tocify-item level-3" data-unique="package-3-modular-PUTapi-am-monthly-contracts-employees--id-">
+                                            <a href="#package-3-modular-PUTapi-am-monthly-contracts-employees--id-">Update an employee for monthly contracts.</a>
+                                        </li>
+                                                                            <li class="tocify-item level-3" data-unique="package-3-modular-GETapi-am-monthly-contracts-lookup-customers">
+                                            <a href="#package-3-modular-GETapi-am-monthly-contracts-lookup-customers">Lookup customers (CRM).</a>
                                         </li>
                                                                             <li class="tocify-item level-3" data-unique="package-3-modular-POSTapi-am-monthly-contracts-import-excel">
                                             <a href="#package-3-modular-POSTapi-am-monthly-contracts-import-excel">Import monthly contracts from Excel.</a>
@@ -433,7 +439,7 @@ APIs for maid payroll salary calculations.</a>
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: March 9, 2026</li>
+        <li>Last updated: March 12, 2026</li>
     </ul>
 </div>
 
@@ -481,7 +487,7 @@ You can switch the language used with the tabs at the top right (or from the nav
     "http://alebdaa.cloudledger.ae/api/journals/bulk-import" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "file=@/tmp/php3aav8A" </code></pre></div>
+    --form "file=@/tmp/phpyAY93Q" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -601,7 +607,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>The CSV file to import. Example: <code>/tmp/php3aav8A</code></p>
+<p>The CSV file to import. Example: <code>/tmp/phpyAY93Q</code></p>
         </div>
         </form>
 
@@ -630,7 +636,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"code\": \"n\",
     \"note\": \"g\",
     \"status\": false,
-    \"type\": 1,
+    \"type\": 2,
     \"lines\": [
         {
             \"ledger_account_id\": 16,
@@ -638,7 +644,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             \"amount_credit\": 84,
             \"vatable\": true,
             \"note\": \"z\",
-            \"source_amount\": 2
+            \"source_amount\": 1
         }
     ]
 }"
@@ -660,7 +666,7 @@ let body = {
     "code": "n",
     "note": "g",
     "status": false,
-    "type": 1,
+    "type": 2,
     "lines": [
         {
             "ledger_account_id": 16,
@@ -668,7 +674,7 @@ let body = {
             "amount_credit": 84,
             "vatable": true,
             "note": "z",
-            "source_amount": 2
+            "source_amount": 1
         }
     ]
 };
@@ -820,10 +826,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="type"                data-endpoint="POSTapi-invoice-services"
-               value="1"
+               value="2"
                data-component="body">
     <br>
-<p>Example: <code>1</code></p>
+<p>Example: <code>2</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>1</code></li> <li><code>2</code></li> <li><code>3</code></li></ul>
         </div>
@@ -926,10 +932,10 @@ Must be one of:
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="lines.0.source_amount"                data-endpoint="POSTapi-invoice-services"
-               value="2"
+               value="1"
                data-component="body">
     <br>
-<p>Example: <code>2</code></p>
+<p>Example: <code>1</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>1</code></li> <li><code>2</code></li></ul>
                     </div>
@@ -957,8 +963,8 @@ Must be one of:
     \"name\": \"b\",
     \"code\": \"n\",
     \"note\": \"g\",
-    \"status\": true,
-    \"type\": 3,
+    \"status\": false,
+    \"type\": 2,
     \"lines\": [
         {
             \"ledger_account_id\": 16,
@@ -966,7 +972,7 @@ Must be one of:
             \"amount_credit\": 84,
             \"vatable\": true,
             \"note\": \"z\",
-            \"source_amount\": 2
+            \"source_amount\": 1
         }
     ]
 }"
@@ -987,8 +993,8 @@ let body = {
     "name": "b",
     "code": "n",
     "note": "g",
-    "status": true,
-    "type": 3,
+    "status": false,
+    "type": 2,
     "lines": [
         {
             "ledger_account_id": 16,
@@ -996,7 +1002,7 @@ let body = {
             "amount_credit": 84,
             "vatable": true,
             "note": "z",
-            "source_amount": 2
+            "source_amount": 1
         }
     ]
 };
@@ -1156,7 +1162,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
@@ -1165,10 +1171,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="type"                data-endpoint="PUTapi-invoice-services--id-"
-               value="3"
+               value="2"
                data-component="body">
     <br>
-<p>Example: <code>3</code></p>
+<p>Example: <code>2</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>1</code></li> <li><code>2</code></li> <li><code>3</code></li></ul>
         </div>
@@ -1283,10 +1289,10 @@ Must be one of:
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="lines.0.source_amount"                data-endpoint="PUTapi-invoice-services--id-"
-               value="2"
+               value="1"
                data-component="body">
     <br>
-<p>Example: <code>2</code></p>
+<p>Example: <code>1</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>1</code></li> <li><code>2</code></li></ul>
                     </div>
@@ -2235,7 +2241,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"ids\": [
         16
     ],
-    \"status\": 0
+    \"status\": 1
 }"
 </code></pre></div>
 
@@ -2254,7 +2260,7 @@ let body = {
     "ids": [
         16
     ],
-    "status": 0
+    "status": 1
 };
 
 fetch(url, {
@@ -2360,10 +2366,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="status"                data-endpoint="POSTapi-journal-tran-lines-bulk-update-status"
-               value="0"
+               value="1"
                data-component="body">
     <br>
-<p>Example: <code>0</code></p>
+<p>Example: <code>1</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>0</code></li> <li><code>1</code></li> <li><code>2</code></li></ul>
         </div>
@@ -3322,34 +3328,36 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                 </form>
 
-                    <h2 id="package-3-modular-GETapi-am-monthly-contracts-lookup-customers">Lookup customers (CRM).</h2>
+                    <h2 id="package-3-modular-GETapi-am-monthly-contracts-search-candidates">Search candidates by CN number, reference numbers, or candidate name.</h2>
 
 <p>
 </p>
 
-<p>Search customers by name, mobile, or CL number for autocomplete.
-Returns CRM IDs (not ledger IDs). Same response format as /api/ledgers/lookup-customers.</p>
+<p>Returns full candidate records from new_candidates.</p>
 
-<span id="example-requests-GETapi-am-monthly-contracts-lookup-customers">
+<span id="example-requests-GETapi-am-monthly-contracts-search-candidates">
 <blockquote>Example request:</blockquote>
 
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://alebdaa.cloudledger.ae/api/am-monthly-contracts/lookup-customers?search=ahmed&amp;page=1&amp;per_page=20" \
+    --get "http://alebdaa.cloudledger.ae/api/am-monthly-contracts/search-candidates?search=EP3-0008&amp;limit=50" \
     --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
+    --header "Accept: application/json" \
+    --data "{
+    \"search\": \"b\"
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://alebdaa.cloudledger.ae/api/am-monthly-contracts/lookup-customers"
+    "http://alebdaa.cloudledger.ae/api/am-monthly-contracts/search-candidates"
 );
 
 const params = {
-    "search": "ahmed",
-    "page": "1",
-    "per_page": "20",
+    "search": "EP3-0008",
+    "limit": "50",
 };
 Object.keys(params)
     .forEach(key =&gt; url.searchParams.append(key, params[key]));
@@ -3359,78 +3367,72 @@ const headers = {
     "Accept": "application/json",
 };
 
+let body = {
+    "search": "b"
+};
+
 fetch(url, {
     method: "GET",
     headers,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 </span>
 
-<span id="example-responses-GETapi-am-monthly-contracts-lookup-customers">
+<span id="example-responses-GETapi-am-monthly-contracts-search-candidates">
             <blockquote>
             <p>Example response (200):</p>
         </blockquote>
                 <pre>
 
-<code class="language-json" style="max-height: 300px;">{
-    &quot;results&quot;: [
-        {
-            &quot;id&quot;: 5,
-            &quot;text&quot;: &quot;Ahmed Ali&quot;,
-            &quot;mobile&quot;: &quot;0501234567&quot;,
-            &quot;crm&quot;: {
-                &quot;first_name&quot;: &quot;Ahmed&quot;,
-                &quot;last_name&quot;: &quot;Ali&quot;,
-                &quot;mobile&quot;: &quot;0501234567&quot;,
-                &quot;CL_Number&quot;: &quot;CL-001&quot;
-            }
-        }
-    ],
-    &quot;pagination&quot;: {
-        &quot;more&quot;: false,
-        &quot;current_page&quot;: 1,
-        &quot;total&quot;: 1
+<code class="language-json" style="max-height: 300px;">[
+    {
+        &quot;id&quot;: 1,
+        &quot;CN_Number&quot;: &quot;CN-0001&quot;,
+        &quot;reference_no&quot;: &quot;EP3-0008&quot;,
+        &quot;ref_no&quot;: &quot;REF-001&quot;,
+        &quot;candidate_name&quot;: &quot;Maria Santos&quot;
     }
-}</code>
+]</code>
  </pre>
     </span>
-<span id="execution-results-GETapi-am-monthly-contracts-lookup-customers" hidden>
+<span id="execution-results-GETapi-am-monthly-contracts-search-candidates" hidden>
     <blockquote>Received response<span
-                id="execution-response-status-GETapi-am-monthly-contracts-lookup-customers"></span>:
+                id="execution-response-status-GETapi-am-monthly-contracts-search-candidates"></span>:
     </blockquote>
-    <pre class="json"><code id="execution-response-content-GETapi-am-monthly-contracts-lookup-customers"
+    <pre class="json"><code id="execution-response-content-GETapi-am-monthly-contracts-search-candidates"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
 </span>
-<span id="execution-error-GETapi-am-monthly-contracts-lookup-customers" hidden>
+<span id="execution-error-GETapi-am-monthly-contracts-search-candidates" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-GETapi-am-monthly-contracts-lookup-customers">
+    <pre><code id="execution-error-message-GETapi-am-monthly-contracts-search-candidates">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
-<form id="form-GETapi-am-monthly-contracts-lookup-customers" data-method="GET"
-      data-path="api/am-monthly-contracts/lookup-customers"
+<form id="form-GETapi-am-monthly-contracts-search-candidates" data-method="GET"
+      data-path="api/am-monthly-contracts/search-candidates"
       data-authed="0"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('GETapi-am-monthly-contracts-lookup-customers', this);">
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-am-monthly-contracts-search-candidates', this);">
     <h3>
         Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
                     style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-GETapi-am-monthly-contracts-lookup-customers"
-                    onclick="tryItOut('GETapi-am-monthly-contracts-lookup-customers');">Try it out ⚡
+                    id="btn-tryout-GETapi-am-monthly-contracts-search-candidates"
+                    onclick="tryItOut('GETapi-am-monthly-contracts-search-candidates');">Try it out ⚡
             </button>
             <button type="button"
                     style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-GETapi-am-monthly-contracts-lookup-customers"
-                    onclick="cancelTryOut('GETapi-am-monthly-contracts-lookup-customers');" hidden>Cancel 🛑
+                    id="btn-canceltryout-GETapi-am-monthly-contracts-search-candidates"
+                    onclick="cancelTryOut('GETapi-am-monthly-contracts-search-candidates');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
                     style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-GETapi-am-monthly-contracts-lookup-customers"
+                    id="btn-executetryout-GETapi-am-monthly-contracts-search-candidates"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
                     hidden>Send Request 💥
@@ -3438,7 +3440,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </h3>
             <p>
             <small class="badge badge-green">GET</small>
-            <b><code>api/am-monthly-contracts/lookup-customers</code></b>
+            <b><code>api/am-monthly-contracts/search-candidates</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
@@ -3447,7 +3449,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-am-monthly-contracts-lookup-customers"
+                              name="Content-Type"                data-endpoint="GETapi-am-monthly-contracts-search-candidates"
                value="application/json"
                data-component="header">
     <br>
@@ -3459,7 +3461,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="GETapi-am-monthly-contracts-lookup-customers"
+                              name="Accept"                data-endpoint="GETapi-am-monthly-contracts-search-candidates"
                value="application/json"
                data-component="header">
     <br>
@@ -3469,214 +3471,41 @@ You can check the Dev Tools console for debugging information.</code></pre>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
-<i>optional</i> &nbsp;
+ &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="search"                data-endpoint="GETapi-am-monthly-contracts-lookup-customers"
-               value="ahmed"
+                              name="search"                data-endpoint="GETapi-am-monthly-contracts-search-candidates"
+               value="EP3-0008"
                data-component="query">
     <br>
-<p>Search by name, mobile, CL number. Example: <code>ahmed</code></p>
+<p>Search keyword. Matches CN_Number, reference_no, ref_no, candidate_name. Example: <code>EP3-0008</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+                <b style="line-height: 2;"><code>limit</code></b>&nbsp;&nbsp;
 <small>integer</small>&nbsp;
 <i>optional</i> &nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="page"                data-endpoint="GETapi-am-monthly-contracts-lookup-customers"
-               value="1"
+               step="any"               name="limit"                data-endpoint="GETapi-am-monthly-contracts-search-candidates"
+               value="50"
                data-component="query">
     <br>
-<p>Page number. Example: <code>1</code></p>
+<p>Max number of rows to return. Default: 20. Example: <code>50</code></p>
             </div>
-                                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="per_page"                data-endpoint="GETapi-am-monthly-contracts-lookup-customers"
-               value="20"
-               data-component="query">
-    <br>
-<p>Items per page. Default: 10. Example: <code>20</code></p>
-            </div>
-                </form>
-
-                    <h2 id="package-3-modular-GETapi-am-monthly-contracts-employees">List employees (maids).</h2>
-
-<p>
-</p>
-
-<p>Returns a paginated list of employees with optional filters.</p>
-
-<span id="example-requests-GETapi-am-monthly-contracts-employees">
-<blockquote>Example request:</blockquote>
-
-
-<div class="bash-example">
-    <pre><code class="language-bash">curl --request GET \
-    --get "http://alebdaa.cloudledger.ae/api/am-monthly-contracts/employees?per_page=20&amp;name=maria&amp;inside_status=1" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
-
-
-<div class="javascript-example">
-    <pre><code class="language-javascript">const url = new URL(
-    "http://alebdaa.cloudledger.ae/api/am-monthly-contracts/employees"
-);
-
-const params = {
-    "per_page": "20",
-    "name": "maria",
-    "inside_status": "1",
-};
-Object.keys(params)
-    .forEach(key =&gt; url.searchParams.append(key, params[key]));
-
-const headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers,
-}).then(response =&gt; response.json());</code></pre></div>
-
-</span>
-
-<span id="example-responses-GETapi-am-monthly-contracts-employees">
-            <blockquote>
-            <p>Example response (200):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;current_page&quot;: 1,
-    &quot;data&quot;: [
-        {
-            &quot;id&quot;: 5,
-            &quot;name&quot;: &quot;Maria Santos&quot;,
-            &quot;inside_status&quot;: 1
-        }
-    ],
-    &quot;last_page&quot;: 1,
-    &quot;per_page&quot;: 15,
-    &quot;total&quot;: 1
-}</code>
- </pre>
-    </span>
-<span id="execution-results-GETapi-am-monthly-contracts-employees" hidden>
-    <blockquote>Received response<span
-                id="execution-response-status-GETapi-am-monthly-contracts-employees"></span>:
-    </blockquote>
-    <pre class="json"><code id="execution-response-content-GETapi-am-monthly-contracts-employees"
-      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-</span>
-<span id="execution-error-GETapi-am-monthly-contracts-employees" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-GETapi-am-monthly-contracts-employees">
-
-Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
-You can check the Dev Tools console for debugging information.</code></pre>
-</span>
-<form id="form-GETapi-am-monthly-contracts-employees" data-method="GET"
-      data-path="api/am-monthly-contracts/employees"
-      data-authed="0"
-      data-hasfiles="0"
-      data-isarraybody="0"
-      autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('GETapi-am-monthly-contracts-employees', this);">
-    <h3>
-        Request&nbsp;&nbsp;&nbsp;
-                    <button type="button"
-                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-GETapi-am-monthly-contracts-employees"
-                    onclick="tryItOut('GETapi-am-monthly-contracts-employees');">Try it out ⚡
-            </button>
-            <button type="button"
-                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-GETapi-am-monthly-contracts-employees"
-                    onclick="cancelTryOut('GETapi-am-monthly-contracts-employees');" hidden>Cancel 🛑
-            </button>&nbsp;&nbsp;
-            <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-GETapi-am-monthly-contracts-employees"
-                    data-initial-text="Send Request 💥"
-                    data-loading-text="⏱ Sending..."
-                    hidden>Send Request 💥
-            </button>
-            </h3>
-            <p>
-            <small class="badge badge-green">GET</small>
-            <b><code>api/am-monthly-contracts/employees</code></b>
-        </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-am-monthly-contracts-employees"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="GETapi-am-monthly-contracts-employees"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
-                                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="per_page"                data-endpoint="GETapi-am-monthly-contracts-employees"
-               value="20"
-               data-component="query">
-    <br>
-<p>Number of items per page. Default: 15. Example: <code>20</code></p>
-            </div>
-                                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
-<i>optional</i> &nbsp;
+ &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="name"                data-endpoint="GETapi-am-monthly-contracts-employees"
-               value="maria"
-               data-component="query">
+                              name="search"                data-endpoint="GETapi-am-monthly-contracts-search-candidates"
+               value="b"
+               data-component="body">
     <br>
-<p>Filter by employee name. Example: <code>maria</code></p>
-            </div>
-                                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>inside_status</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="inside_status"                data-endpoint="GETapi-am-monthly-contracts-employees"
-               value="1"
-               data-component="query">
-    <br>
-<p>Filter by inside status (1 = Office, 4 = Hired). Example: <code>1</code></p>
-            </div>
-                </form>
+<p>Must not be greater than 255 characters. Example: <code>b</code></p>
+        </div>
+        </form>
 
                     <h2 id="package-3-modular-GETapi-am-monthly-contracts-all-employees">List all employees (maids).</h2>
 
@@ -4064,6 +3893,682 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
         </form>
 
+                    <h2 id="package-3-modular-POSTapi-am-monthly-contracts-employees">Create a new employee for monthly contracts.</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-POSTapi-am-monthly-contracts-employees">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://alebdaa.cloudledger.ae/api/am-monthly-contracts/employees" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"name\": \"Maria Santos\",
+    \"nationality\": \"Philippines\",
+    \"passport_expiry_date\": \"2028-12-31\",
+    \"passport_no\": \"P1234567\",
+    \"emirates_id\": \"784-1990-1234567-1\",
+    \"salary\": 1500,
+    \"payment_type\": \"cash\",
+    \"inside_country_or_outside\": 2
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://alebdaa.cloudledger.ae/api/am-monthly-contracts/employees"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "Maria Santos",
+    "nationality": "Philippines",
+    "passport_expiry_date": "2028-12-31",
+    "passport_no": "P1234567",
+    "emirates_id": "784-1990-1234567-1",
+    "salary": 1500,
+    "payment_type": "cash",
+    "inside_country_or_outside": 2
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-am-monthly-contracts-employees">
+            <blockquote>
+            <p>Example response (201):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Employee created successfully&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 1,
+        &quot;name&quot;: &quot;Maria Santos&quot;
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-am-monthly-contracts-employees" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-am-monthly-contracts-employees"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-am-monthly-contracts-employees"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-am-monthly-contracts-employees" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-am-monthly-contracts-employees">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-am-monthly-contracts-employees" data-method="POST"
+      data-path="api/am-monthly-contracts/employees"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-am-monthly-contracts-employees', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-am-monthly-contracts-employees"
+                    onclick="tryItOut('POSTapi-am-monthly-contracts-employees');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-am-monthly-contracts-employees"
+                    onclick="cancelTryOut('POSTapi-am-monthly-contracts-employees');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-am-monthly-contracts-employees"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/am-monthly-contracts/employees</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-am-monthly-contracts-employees"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-am-monthly-contracts-employees"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="POSTapi-am-monthly-contracts-employees"
+               value="Maria Santos"
+               data-component="body">
+    <br>
+<p>Employee name. Example: <code>Maria Santos</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>nationality</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="nationality"                data-endpoint="POSTapi-am-monthly-contracts-employees"
+               value="Philippines"
+               data-component="body">
+    <br>
+<p>Employee nationality. Example: <code>Philippines</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>passport_expiry_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="passport_expiry_date"                data-endpoint="POSTapi-am-monthly-contracts-employees"
+               value="2028-12-31"
+               data-component="body">
+    <br>
+<p>Passport expiry date. Example: <code>2028-12-31</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>passport_no</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="passport_no"                data-endpoint="POSTapi-am-monthly-contracts-employees"
+               value="P1234567"
+               data-component="body">
+    <br>
+<p>Employee passport number. Example: <code>P1234567</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>emirates_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="emirates_id"                data-endpoint="POSTapi-am-monthly-contracts-employees"
+               value="784-1990-1234567-1"
+               data-component="body">
+    <br>
+<p>Employee Emirates ID. Example: <code>784-1990-1234567-1</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>salary</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="salary"                data-endpoint="POSTapi-am-monthly-contracts-employees"
+               value="1500"
+               data-component="body">
+    <br>
+<p>Employee monthly salary. Example: <code>1500</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>payment_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="payment_type"                data-endpoint="POSTapi-am-monthly-contracts-employees"
+               value="cash"
+               data-component="body">
+    <br>
+<p>Employee payment type. Example: <code>cash</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>inside_country_or_outside</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="inside_country_or_outside"                data-endpoint="POSTapi-am-monthly-contracts-employees"
+               value="2"
+               data-component="body">
+    <br>
+<p>1 = Outside, 2 = Inside. Example: <code>2</code></p>
+        </div>
+        </form>
+
+                    <h2 id="package-3-modular-PUTapi-am-monthly-contracts-employees--id-">Update an employee for monthly contracts.</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-PUTapi-am-monthly-contracts-employees--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "http://alebdaa.cloudledger.ae/api/am-monthly-contracts/employees/architecto" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"name\": \"Maria Santos\",
+    \"nationality\": \"Philippines\",
+    \"passport_expiry_date\": \"2028-12-31\",
+    \"passport_no\": \"P1234567\",
+    \"emirates_id\": \"784-1990-1234567-1\",
+    \"salary\": 1500,
+    \"payment_type\": \"bank\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://alebdaa.cloudledger.ae/api/am-monthly-contracts/employees/architecto"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "Maria Santos",
+    "nationality": "Philippines",
+    "passport_expiry_date": "2028-12-31",
+    "passport_no": "P1234567",
+    "emirates_id": "784-1990-1234567-1",
+    "salary": 1500,
+    "payment_type": "bank"
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-am-monthly-contracts-employees--id-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Employee updated successfully&quot;,
+    &quot;data&quot;: {}
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PUTapi-am-monthly-contracts-employees--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-am-monthly-contracts-employees--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-am-monthly-contracts-employees--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-am-monthly-contracts-employees--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-am-monthly-contracts-employees--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-am-monthly-contracts-employees--id-" data-method="PUT"
+      data-path="api/am-monthly-contracts/employees/{id}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-am-monthly-contracts-employees--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-am-monthly-contracts-employees--id-"
+                    onclick="tryItOut('PUTapi-am-monthly-contracts-employees--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-am-monthly-contracts-employees--id-"
+                    onclick="cancelTryOut('PUTapi-am-monthly-contracts-employees--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-am-monthly-contracts-employees--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/am-monthly-contracts/employees/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-am-monthly-contracts-employees--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-am-monthly-contracts-employees--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="PUTapi-am-monthly-contracts-employees--id-"
+               value="architecto"
+               data-component="url">
+    <br>
+<p>The ID of the employee. Example: <code>architecto</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>employee</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="employee"                data-endpoint="PUTapi-am-monthly-contracts-employees--id-"
+               value="5"
+               data-component="url">
+    <br>
+<p>Employee ID. Example: <code>5</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="PUTapi-am-monthly-contracts-employees--id-"
+               value="Maria Santos"
+               data-component="body">
+    <br>
+<p>Employee name. Example: <code>Maria Santos</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>nationality</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="nationality"                data-endpoint="PUTapi-am-monthly-contracts-employees--id-"
+               value="Philippines"
+               data-component="body">
+    <br>
+<p>Employee nationality. Example: <code>Philippines</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>passport_expiry_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="passport_expiry_date"                data-endpoint="PUTapi-am-monthly-contracts-employees--id-"
+               value="2028-12-31"
+               data-component="body">
+    <br>
+<p>Passport expiry date. Example: <code>2028-12-31</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>passport_no</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="passport_no"                data-endpoint="PUTapi-am-monthly-contracts-employees--id-"
+               value="P1234567"
+               data-component="body">
+    <br>
+<p>Employee passport number. Example: <code>P1234567</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>emirates_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="emirates_id"                data-endpoint="PUTapi-am-monthly-contracts-employees--id-"
+               value="784-1990-1234567-1"
+               data-component="body">
+    <br>
+<p>Employee Emirates ID. Example: <code>784-1990-1234567-1</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>salary</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="salary"                data-endpoint="PUTapi-am-monthly-contracts-employees--id-"
+               value="1500"
+               data-component="body">
+    <br>
+<p>Employee monthly salary. Example: <code>1500</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>payment_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="payment_type"                data-endpoint="PUTapi-am-monthly-contracts-employees--id-"
+               value="bank"
+               data-component="body">
+    <br>
+<p>Employee payment type. Example: <code>bank</code></p>
+        </div>
+        </form>
+
+                    <h2 id="package-3-modular-GETapi-am-monthly-contracts-lookup-customers">Lookup customers (CRM).</h2>
+
+<p>
+</p>
+
+<p>Search customers by name, mobile, or CL number for autocomplete.
+Returns CRM IDs (not ledger IDs). Same response format as /api/ledgers/lookup-customers.</p>
+
+<span id="example-requests-GETapi-am-monthly-contracts-lookup-customers">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://alebdaa.cloudledger.ae/api/am-monthly-contracts/lookup-customers?search=ahmed&amp;page=1&amp;per_page=20" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://alebdaa.cloudledger.ae/api/am-monthly-contracts/lookup-customers"
+);
+
+const params = {
+    "search": "ahmed",
+    "page": "1",
+    "per_page": "20",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-am-monthly-contracts-lookup-customers">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;results&quot;: [
+        {
+            &quot;id&quot;: 5,
+            &quot;text&quot;: &quot;Ahmed Ali&quot;,
+            &quot;mobile&quot;: &quot;0501234567&quot;,
+            &quot;crm&quot;: {
+                &quot;first_name&quot;: &quot;Ahmed&quot;,
+                &quot;last_name&quot;: &quot;Ali&quot;,
+                &quot;mobile&quot;: &quot;0501234567&quot;,
+                &quot;CL_Number&quot;: &quot;CL-001&quot;
+            }
+        }
+    ],
+    &quot;pagination&quot;: {
+        &quot;more&quot;: false,
+        &quot;current_page&quot;: 1,
+        &quot;total&quot;: 1
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-am-monthly-contracts-lookup-customers" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-am-monthly-contracts-lookup-customers"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-am-monthly-contracts-lookup-customers"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-am-monthly-contracts-lookup-customers" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-am-monthly-contracts-lookup-customers">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-am-monthly-contracts-lookup-customers" data-method="GET"
+      data-path="api/am-monthly-contracts/lookup-customers"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-am-monthly-contracts-lookup-customers', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-am-monthly-contracts-lookup-customers"
+                    onclick="tryItOut('GETapi-am-monthly-contracts-lookup-customers');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-am-monthly-contracts-lookup-customers"
+                    onclick="cancelTryOut('GETapi-am-monthly-contracts-lookup-customers');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-am-monthly-contracts-lookup-customers"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/am-monthly-contracts/lookup-customers</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-am-monthly-contracts-lookup-customers"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-am-monthly-contracts-lookup-customers"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="search"                data-endpoint="GETapi-am-monthly-contracts-lookup-customers"
+               value="ahmed"
+               data-component="query">
+    <br>
+<p>Search by name, mobile, CL number. Example: <code>ahmed</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="page"                data-endpoint="GETapi-am-monthly-contracts-lookup-customers"
+               value="1"
+               data-component="query">
+    <br>
+<p>Page number. Example: <code>1</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="per_page"                data-endpoint="GETapi-am-monthly-contracts-lookup-customers"
+               value="20"
+               data-component="query">
+    <br>
+<p>Items per page. Default: 10. Example: <code>20</code></p>
+            </div>
+                </form>
+
                     <h2 id="package-3-modular-POSTapi-am-monthly-contracts-import-excel">Import monthly contracts from Excel.</h2>
 
 <p>
@@ -4097,7 +4602,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     "http://alebdaa.cloudledger.ae/api/am-monthly-contracts/import-excel" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "file=@/tmp/phpNFyP8y" </code></pre></div>
+    --form "file=@/tmp/php1samnN" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -4222,7 +4727,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Excel file (.xlsx/.xls/.csv) with heading row. Example: <code>/tmp/phpNFyP8y</code></p>
+<p>Excel file (.xlsx/.xls/.csv) with heading row. Example: <code>/tmp/php1samnN</code></p>
         </div>
         </form>
 
@@ -6653,11 +7158,11 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"date\": \"2026-03-09T22:12:36\",
+    \"date\": \"2026-03-12T17:54:57\",
     \"am_movment_id\": \"architecto\",
     \"note\": \"architecto\",
-    \"status\": 4,
-    \"action\": 1
+    \"status\": 2,
+    \"action\": 2
 }"
 </code></pre></div>
 
@@ -6673,11 +7178,11 @@ const headers = {
 };
 
 let body = {
-    "date": "2026-03-09T22:12:36",
+    "date": "2026-03-12T17:54:57",
     "am_movment_id": "architecto",
     "note": "architecto",
-    "status": 4,
-    "action": 1
+    "status": 2,
+    "action": 2
 };
 
 fetch(url, {
@@ -6779,10 +7284,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="date"                data-endpoint="POSTapi-am-incidents"
-               value="2026-03-09T22:12:36"
+               value="2026-03-12T17:54:57"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-03-09T22:12:36</code></p>
+<p>Must be a valid date. Example: <code>2026-03-12T17:54:57</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>am_movment_id</code></b>&nbsp;&nbsp;
@@ -6815,10 +7320,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="status"                data-endpoint="POSTapi-am-incidents"
-               value="4"
+               value="2"
                data-component="body">
     <br>
-<p>Example: <code>4</code></p>
+<p>Example: <code>2</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>2</code></li> <li><code>3</code></li> <li><code>4</code></li></ul>
         </div>
@@ -6829,10 +7334,10 @@ Must be one of:
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="action"                data-endpoint="POSTapi-am-incidents"
-               value="1"
+               value="2"
                data-component="body">
     <br>
-<p>Example: <code>1</code></p>
+<p>Example: <code>2</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>1</code></li> <li><code>2</code></li> <li><code>3</code></li> <li><code>4</code></li></ul>
         </div>
@@ -6855,10 +7360,10 @@ Must be one of:
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"date\": \"2026-03-09T22:12:36\",
+    \"date\": \"2026-03-12T17:54:57\",
     \"note\": \"architecto\",
     \"status\": 3,
-    \"action\": 3
+    \"action\": 1
 }"
 </code></pre></div>
 
@@ -6874,10 +7379,10 @@ const headers = {
 };
 
 let body = {
-    "date": "2026-03-09T22:12:36",
+    "date": "2026-03-12T17:54:57",
     "note": "architecto",
     "status": 3,
-    "action": 3
+    "action": 1
 };
 
 fetch(url, {
@@ -6986,10 +7491,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="date"                data-endpoint="PUTapi-am-incidents--id-"
-               value="2026-03-09T22:12:36"
+               value="2026-03-12T17:54:57"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-03-09T22:12:36</code></p>
+<p>Must be a valid date. Example: <code>2026-03-12T17:54:57</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>note</code></b>&nbsp;&nbsp;
@@ -7024,10 +7529,10 @@ Must be one of:
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="action"                data-endpoint="PUTapi-am-incidents--id-"
-               value="3"
+               value="1"
                data-component="body">
     <br>
-<p>Example: <code>3</code></p>
+<p>Example: <code>1</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>1</code></li> <li><code>2</code></li> <li><code>3</code></li> <li><code>4</code></li></ul>
         </div>
@@ -10993,7 +11498,7 @@ and aslo make same one it the insident return list maid.</h2>
     --data "{
     \"action\": 2,
     \"amount\": 27,
-    \"refund_date\": \"2026-03-09T22:12:36\",
+    \"refund_date\": \"2026-03-12T17:54:57\",
     \"note\": \"architecto\"
 }"
 </code></pre></div>
@@ -11012,7 +11517,7 @@ const headers = {
 let body = {
     "action": 2,
     "amount": 27,
-    "refund_date": "2026-03-09T22:12:36",
+    "refund_date": "2026-03-12T17:54:57",
     "note": "architecto"
 };
 
@@ -11164,10 +11669,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="refund_date"                data-endpoint="PUTapi-am-return-maids--id--update-action"
-               value="2026-03-09T22:12:36"
+               value="2026-03-12T17:54:57"
                data-component="body">
     <br>
-<p>This field is required when <code>action</code> is <code>3</code>. Must be a valid date. Example: <code>2026-03-09T22:12:36</code></p>
+<p>This field is required when <code>action</code> is <code>3</code>. Must be a valid date. Example: <code>2026-03-12T17:54:57</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>note</code></b>&nbsp;&nbsp;

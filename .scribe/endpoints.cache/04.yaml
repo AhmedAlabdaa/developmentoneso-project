@@ -79,7 +79,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: 1
+        example: 2
         type: integer
         enumValues:
           - 1
@@ -170,7 +170,7 @@ endpoints:
         name: 'lines[].source_amount'
         description: ''
         required: true
-        example: 2
+        example: 1
         type: integer
         enumValues:
           - 1
@@ -183,7 +183,7 @@ endpoints:
       code: 'n'
       note: g
       status: false
-      type: 1
+      type: 2
       lines:
         -
           ledger_account_id: 16
@@ -191,7 +191,7 @@ endpoints:
           amount_credit: 84
           vatable: true
           note: z
-          source_amount: 2
+          source_amount: 1
     fileParameters: []
     responses: []
     responseFields: []
@@ -275,7 +275,7 @@ endpoints:
         name: status
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -286,7 +286,7 @@ endpoints:
         name: type
         description: ''
         required: false
-        example: 3
+        example: 2
         type: integer
         enumValues:
           - 1
@@ -388,7 +388,7 @@ endpoints:
         name: 'lines[].source_amount'
         description: ''
         required: false
-        example: 2
+        example: 1
         type: integer
         enumValues:
           - 1
@@ -400,8 +400,8 @@ endpoints:
       name: b
       code: 'n'
       note: g
-      status: true
-      type: 3
+      status: false
+      type: 2
       lines:
         -
           ledger_account_id: 16
@@ -409,7 +409,7 @@ endpoints:
           amount_credit: 84
           vatable: true
           note: z
-          source_amount: 2
+          source_amount: 1
     fileParameters: []
     responses: []
     responseFields: []

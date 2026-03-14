@@ -47,7 +47,7 @@ endpoints:
         name: status
         description: ''
         required: true
-        example: 0
+        example: 1
         type: integer
         enumValues:
           - 0
@@ -59,7 +59,7 @@ endpoints:
     cleanBodyParameters:
       ids:
         - 16
-      status: 0
+      status: 1
     fileParameters: []
     responses: []
     responseFields: []

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "49e33055-2cd0-4728-9d8b-f2ea2b206d56",
+        "_postman_id": "39e7e512-4917-4ee7-a4e6-40df202bba23",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -91,7 +91,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"n\",\"note\":\"g\",\"status\":false,\"type\":1,\"lines\":[{\"ledger_account_id\":16,\"amount_debit\":39,\"amount_credit\":84,\"vatable\":true,\"note\":\"z\",\"source_amount\":2}]}"
+                            "raw": "{\"name\":\"b\",\"code\":\"n\",\"note\":\"g\",\"status\":false,\"type\":2,\"lines\":[{\"ledger_account_id\":16,\"amount_debit\":39,\"amount_credit\":84,\"vatable\":true,\"note\":\"z\",\"source_amount\":1}]}"
                         },
                         "description": "Store a newly created resource in storage.",
                         "auth": {
@@ -130,7 +130,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"code\":\"n\",\"note\":\"g\",\"status\":true,\"type\":3,\"lines\":[{\"ledger_account_id\":16,\"amount_debit\":39,\"amount_credit\":84,\"vatable\":true,\"note\":\"z\",\"source_amount\":2}]}"
+                            "raw": "{\"name\":\"b\",\"code\":\"n\",\"note\":\"g\",\"status\":false,\"type\":2,\"lines\":[{\"ledger_account_id\":16,\"amount_debit\":39,\"amount_credit\":84,\"vatable\":true,\"note\":\"z\",\"source_amount\":1}]}"
                         },
                         "description": "Update the specified resource in storage.",
                         "auth": {
@@ -315,7 +315,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"ids\":[16],\"status\":0}"
+                            "raw": "{\"ids\":[16],\"status\":1}"
                         },
                         "description": "Update the status of multiple journal headers by their IDs.",
                         "auth": {
@@ -543,32 +543,26 @@
                             ]
                         },
                         {
-                            "name": "Lookup customers (CRM).",
+                            "name": "Search candidates by CN number, reference numbers, or candidate name.",
                             "request": {
                                 "url": {
                                     "host": "{{baseUrl}}",
-                                    "path": "api\/am-monthly-contracts\/lookup-customers",
+                                    "path": "api\/am-monthly-contracts\/search-candidates",
                                     "query": [
                                         {
                                             "key": "search",
-                                            "value": "ahmed",
-                                            "description": "Search by name, mobile, CL number.",
+                                            "value": "EP3-0008",
+                                            "description": "Search keyword. Matches CN_Number, reference_no, ref_no, candidate_name.",
                                             "disabled": false
                                         },
                                         {
-                                            "key": "page",
-                                            "value": "1",
-                                            "description": "Page number.",
-                                            "disabled": false
-                                        },
-                                        {
-                                            "key": "per_page",
-                                            "value": "20",
-                                            "description": "Items per page. Default: 10.",
+                                            "key": "limit",
+                                            "value": "50",
+                                            "description": "Max number of rows to return. Default: 20.",
                                             "disabled": false
                                         }
                                     ],
-                                    "raw": "{{baseUrl}}\/api\/am-monthly-contracts\/lookup-customers?search=ahmed&page=1&per_page=20"
+                                    "raw": "{{baseUrl}}\/api\/am-monthly-contracts\/search-candidates?search=EP3-0008&limit=50"
                                 },
                                 "method": "GET",
                                 "header": [
@@ -581,62 +575,11 @@
                                         "value": "application\/json"
                                     }
                                 ],
-                                "body": null,
-                                "description": "Search customers by name, mobile, or CL number for autocomplete.\nReturns CRM IDs (not ledger IDs). Same response format as \/api\/ledgers\/lookup-customers.",
-                                "auth": {
-                                    "type": "noauth"
-                                }
-                            },
-                            "response": [
-                                {
-                                    "header": [],
-                                    "code": 200,
-                                    "body": "{\n  \"results\": [\n    {\n      \"id\": 5,\n      \"text\": \"Ahmed Ali\",\n      \"mobile\": \"0501234567\",\n      \"crm\": {\n        \"first_name\": \"Ahmed\",\n        \"last_name\": \"Ali\",\n        \"mobile\": \"0501234567\",\n        \"CL_Number\": \"CL-001\"\n      }\n    }\n  ],\n  \"pagination\": {\n    \"more\": false,\n    \"current_page\": 1,\n    \"total\": 1\n  }\n}",
-                                    "name": ""
-                                }
-                            ]
-                        },
-                        {
-                            "name": "List employees (maids).",
-                            "request": {
-                                "url": {
-                                    "host": "{{baseUrl}}",
-                                    "path": "api\/am-monthly-contracts\/employees",
-                                    "query": [
-                                        {
-                                            "key": "per_page",
-                                            "value": "20",
-                                            "description": "Number of items per page. Default: 15.",
-                                            "disabled": false
-                                        },
-                                        {
-                                            "key": "name",
-                                            "value": "maria",
-                                            "description": "Filter by employee name.",
-                                            "disabled": false
-                                        },
-                                        {
-                                            "key": "inside_status",
-                                            "value": "1",
-                                            "description": "Filter by inside status (1 = Office, 4 = Hired).",
-                                            "disabled": false
-                                        }
-                                    ],
-                                    "raw": "{{baseUrl}}\/api\/am-monthly-contracts\/employees?per_page=20&name=maria&inside_status=1"
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"search\":\"b\"}"
                                 },
-                                "method": "GET",
-                                "header": [
-                                    {
-                                        "key": "Content-Type",
-                                        "value": "application\/json"
-                                    },
-                                    {
-                                        "key": "Accept",
-                                        "value": "application\/json"
-                                    }
-                                ],
-                                "body": null,
-                                "description": "Returns a paginated list of employees with optional filters.",
+                                "description": "Returns full candidate records from new_candidates.",
                                 "auth": {
                                     "type": "noauth"
                                 }
@@ -645,7 +588,7 @@
                                 {
                                     "header": [],
                                     "code": 200,
-                                    "body": "{\n  \"current_page\": 1,\n  \"data\": [\n    {\n      \"id\": 5,\n      \"name\": \"Maria Santos\",\n      \"inside_status\": 1\n    }\n  ],\n  \"last_page\": 1,\n  \"per_page\": 15,\n  \"total\": 1\n}",
+                                    "body": "[\n  {\n    \"id\": 1,\n    \"CN_Number\": \"CN-0001\",\n    \"reference_no\": \"EP3-0008\",\n    \"ref_no\": \"REF-001\",\n    \"candidate_name\": \"Maria Santos\"\n  }\n]",
                                     "name": ""
                                 }
                             ]
@@ -739,6 +682,150 @@
                                     "header": [],
                                     "code": 200,
                                     "body": "{\n  \"current_page\": 1,\n  \"data\": [\n    {\n      \"id\": 5,\n      \"name\": \"Maria Santos\"\n    }\n  ],\n  \"last_page\": 1,\n  \"per_page\": 15,\n  \"total\": 1\n}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Create a new employee for monthly contracts.",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/am-monthly-contracts\/employees",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/am-monthly-contracts\/employees"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name\":\"Maria Santos\",\"nationality\":\"Philippines\",\"passport_expiry_date\":\"2028-12-31\",\"passport_no\":\"P1234567\",\"emirates_id\":\"784-1990-1234567-1\",\"salary\":1500,\"payment_type\":\"cash\",\"inside_country_or_outside\":2}"
+                                },
+                                "description": "",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 201,
+                                    "body": "{\n  \"message\": \"Employee created successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Maria Santos\"\n  }\n}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Update an employee for monthly contracts.",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/am-monthly-contracts\/employees\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/am-monthly-contracts\/employees\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": "architecto",
+                                            "description": "The ID of the employee."
+                                        },
+                                        {
+                                            "id": "employee",
+                                            "key": "employee",
+                                            "value": "5",
+                                            "description": "Employee ID."
+                                        }
+                                    ]
+                                },
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name\":\"Maria Santos\",\"nationality\":\"Philippines\",\"passport_expiry_date\":\"2028-12-31\",\"passport_no\":\"P1234567\",\"emirates_id\":\"784-1990-1234567-1\",\"salary\":1500,\"payment_type\":\"bank\"}"
+                                },
+                                "description": "",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\n  \"message\": \"Employee updated successfully\",\n  \"data\": {}\n}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Lookup customers (CRM).",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/am-monthly-contracts\/lookup-customers",
+                                    "query": [
+                                        {
+                                            "key": "search",
+                                            "value": "ahmed",
+                                            "description": "Search by name, mobile, CL number.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "page",
+                                            "value": "1",
+                                            "description": "Page number.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "20",
+                                            "description": "Items per page. Default: 10.",
+                                            "disabled": false
+                                        }
+                                    ],
+                                    "raw": "{{baseUrl}}\/api\/am-monthly-contracts\/lookup-customers?search=ahmed&page=1&per_page=20"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Search customers by name, mobile, or CL number for autocomplete.\nReturns CRM IDs (not ledger IDs). Same response format as \/api\/ledgers\/lookup-customers.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\n  \"results\": [\n    {\n      \"id\": 5,\n      \"text\": \"Ahmed Ali\",\n      \"mobile\": \"0501234567\",\n      \"crm\": {\n        \"first_name\": \"Ahmed\",\n        \"last_name\": \"Ali\",\n        \"mobile\": \"0501234567\",\n        \"CL_Number\": \"CL-001\"\n      }\n    }\n  ],\n  \"pagination\": {\n    \"more\": false,\n    \"current_page\": 1,\n    \"total\": 1\n  }\n}",
                                     "name": ""
                                 }
                             ]
@@ -1539,7 +1626,7 @@
                                 ],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\"date\":\"2026-03-09T22:12:36\",\"am_movment_id\":\"architecto\",\"note\":\"architecto\",\"status\":4,\"action\":1}"
+                                    "raw": "{\"date\":\"2026-03-12T17:54:57\",\"am_movment_id\":\"architecto\",\"note\":\"architecto\",\"status\":2,\"action\":2}"
                                 },
                                 "description": "",
                                 "auth": {
@@ -1585,7 +1672,7 @@
                                 ],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\"date\":\"2026-03-09T22:12:36\",\"note\":\"architecto\",\"status\":3,\"action\":3}"
+                                    "raw": "{\"date\":\"2026-03-12T17:54:57\",\"note\":\"architecto\",\"status\":3,\"action\":1}"
                                 },
                                 "description": "",
                                 "auth": {
@@ -2588,7 +2675,7 @@
                                 ],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\"action\":2,\"amount\":27,\"refund_date\":\"2026-03-09T22:12:36\",\"note\":\"architecto\"}"
+                                    "raw": "{\"action\":2,\"amount\":27,\"refund_date\":\"2026-03-12T17:54:57\",\"note\":\"architecto\"}"
                                 },
                                 "description": "",
                                 "auth": {

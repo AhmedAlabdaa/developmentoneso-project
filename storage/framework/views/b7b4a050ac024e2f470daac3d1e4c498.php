@@ -1,1 +1,0 @@
-<p style="font-weight: bold;text-align: center;">No data found...</p><?php /**PATH /var/www/developmentoneso-project/resources/views/employee/partials/no_data.blade.php ENDPATH**/ ?>

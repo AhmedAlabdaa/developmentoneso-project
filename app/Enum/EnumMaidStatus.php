@@ -13,7 +13,7 @@ enum EnumMaidStatus :int
 
         {
         return match ($this) {
-          self::PENDING => "Pending",
+          self::PENDING => "Outside",
           self::OFFICE => "Office",
           self::HIRED => "Hired",
           self::INCIDENTED => "Incidented"

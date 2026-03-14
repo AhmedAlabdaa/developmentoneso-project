@@ -113,9 +113,7 @@ class AmMonthlyContractQuery
         return $query->orderBy('name')->limit($limit)->get();
     }
 
-
-
-        /**
+    /**
      * Lookup employees (maids) by name.
      *
      * Returns id and name for autocomplete/search use.
@@ -140,28 +138,6 @@ class AmMonthlyContractQuery
 
 
     
-
-    /**
-     * Get employees with filters and pagination.
-     *
-     * @param array $filters
-     * @param int $perPage
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-     */
-    public function getEmployees(array $filters = [], int $perPage = 15)
-    {
-        $query = Employee::query();
-
-        if (!empty($filters['name'])) {
-            $query->where('name', 'like', "%{$filters['name']}%");
-        }
-
-        if (isset($filters['inside_status']) && $filters['inside_status'] !== '') {
-            $query->where('inside_status', $filters['inside_status']);
-        }
-
-        return $query->orderBy('name')->paginate($perPage);
-    }
 
     /**
      * Get all employees with optional filters and pagination.
@@ -209,21 +185,12 @@ class AmMonthlyContractQuery
             }
         }
 
-        if (!empty($filters['inside_country_or_outside'])) {
-            $query->where('inside_country_or_outside', $filters['inside_country_or_outside']);
-        }
 
         return $query
         ->where('package' , 'PKG-3')
-        ->orderBy('id', 'desc')
+        ->orderBy('serial_no', 'desc')
         ->paginate($perPage);
     }
-
-
-
-
-    
-
 
     /**
      * Lookup customers (CRM) by name, mobile, or CL number.

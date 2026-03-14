@@ -11,6 +11,7 @@ use App\Models\Employee;
 use App\Models\LedgerOfAccount;
 use App\Services\JournalHeaderService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Exception;
 use App\Enum\EnumMaidStatus;
 
@@ -253,5 +254,48 @@ class AmMonthlyContractService
         }
 
         return $ledger->id;
+    }
+
+    public function generateEmployeeReferenceNo(): string
+    {
+        $last = Employee::whereNotNull('reference_no')
+            ->where('reference_no', 'like', 'EP3-%')
+            ->orderByRaw("CAST(SUBSTRING(reference_no, 5) AS UNSIGNED) DESC")
+            ->value('reference_no');
+
+        if (!$last) {
+            return 'EP3-' . str_pad('1', 4, '0', STR_PAD_LEFT);
+        }
+
+        if (!preg_match('/^EP3-(\d+)$/', $last, $matches)) {
+            return 'EP3-' . str_pad('1', 4, '0', STR_PAD_LEFT);
+        }
+
+        $number = (int) $matches[1];
+
+        return 'EP3-' . str_pad($number + 1, 4, '0', STR_PAD_LEFT);
+    }
+
+    public function createEmployee(array $data): Employee
+    {
+        $referenceNo = $this->generateEmployeeReferenceNo();
+
+        return Employee::create([
+            'reference_no' => $referenceNo,
+            'CN_Number' => null,
+            'package' => 'PKG-3',
+            'name' => $data['name'],
+            'slug' => Str::slug($data['name'] . '-' . $referenceNo),
+            'nationality' => $data['nationality'],
+            'passport_expiry_date' => $data['passport_expiry_date'],
+            'passport_no' => $data['passport_no'] ?? null,
+            'emirates_id' => $data['emirates_id'] ?? null,
+            'salary' => $data['salary'] ?? 1200,
+            'payment_type' => $data['payment_type'] ?? null,
+            'inside_country_or_outside' => 1,
+            'inside_status' => EnumMaidStatus::PENDING->value,
+            'current_status' => 1,
+            'status' => 1,
+        ]);
     }
 }

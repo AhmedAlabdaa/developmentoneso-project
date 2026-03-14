@@ -63,12 +63,14 @@ body{background:linear-gradient(to right,#e0f7fa,#e1bee7);font-family:Arial,sans
           <div class="tab-pane fade" id="tab-maids">
             <div class="d-flex justify-content-between align-items-center bg-light rounded border p-3 mb-3 full-width">
               <h5 class="mb-0 fw-bold text-secondary text-nowrap me-3"><i class="fas fa-users me-2"></i>Employees Directory</h5>
-              <div class="d-flex align-items-center gap-2 mb-0 flex-wrap justify-content-end">
+              <button class="btn btn-create btn-sm" onclick="openAddEmployeeModal()"><i class="fas fa-user-plus me-1"></i>Add New Employee</button>
+            </div>
+            <div class="d-flex align-items-center gap-2 mb-3 flex-wrap bg-light rounded border p-3">
                 <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="maids_filter_name" placeholder="Name" style="width:120px">
                 <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="maids_filter_ref" placeholder="Ref No" style="width:100px">
                 <select class="form-select form-select-sm border-secondary border-opacity-50" id="maids_filter_inside_status" style="width:120px">
                   <option value="">Status</option>
-                  <option value="0">Pending</option>
+                  <option value="0">Outside</option>
                   <option value="1">Office</option>
                   <option value="2">Hired</option>
                   <option value="3">Incidented</option>
@@ -80,11 +82,7 @@ body{background:linear-gradient(to right,#e0f7fa,#e1bee7);font-family:Arial,sans
                   <option value="bank">Bank</option>
                   <option value="exchange">Exchange</option>
                 </select>
-                <select class="form-select form-select-sm border-secondary border-opacity-50" id="maids_filter_inside_country_or_outside" style="width:120px">
-                  <option value="">Inside/Outside</option>
-                  <option value="1">Outside</option>
-                  <option value="2">Inside</option>
-                </select>
+
                 <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="maids_filter_passport" placeholder="Passport" style="width:100px">
                 <input type="text" class="form-control form-control-sm border-secondary border-opacity-50" id="maids_filter_eid" placeholder="Emirates ID" style="width:110px">
                 <div class="d-flex ms-2 gap-1">
@@ -92,7 +90,6 @@ body{background:linear-gradient(to right,#e0f7fa,#e1bee7);font-family:Arial,sans
                   <button class="btn btn-secondary btn-sm" onclick="clearMaidsFilter()"><i class="fas fa-times me-1"></i>Clear</button>
                 </div>
               </div>
-            </div>
             <div class="table-responsive" id="maids_table"></div>
           </div>
           <div class="tab-pane fade show active" id="tab-contracts">
@@ -166,6 +163,178 @@ body{background:linear-gradient(to right,#e0f7fa,#e1bee7);font-family:Arial,sans
     </div>
   </section>
 </main>
+
+
+<div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      <div class="modal-header border-bottom-0 pb-2" style="background:linear-gradient(45deg,#17a2b8,#138496);color:#fff">
+        <h5 class="modal-title fw-bold"><i class="fas fa-user-plus me-2"></i>Add New Employee</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4 bg-light">
+        
+        
+        <div class="bg-white rounded-3 shadow-sm p-3 mb-4 border" style="border-left: 4px solid #17a2b8 !important;">
+          <h6 class="fw-bold mb-3 text-secondary"><i class="fas fa-search me-2"></i>Fetch Candidate Details</h6>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-secondary border-opacity-25"><i class="fas fa-hashtag text-secondary"></i></span>
+            <input type="text" class="form-control border-secondary border-opacity-25" id="emp_search_candidate" placeholder="Enter CN Number, Ref No, or Name to auto-fill...">
+            <button class="btn btn-info text-white fw-bold px-4" type="button" id="btnSearchCandidate" onclick="searchCandidateForEmployee()">
+              Search
+            </button>
+          </div>
+          <div id="emp_search_result" class="mt-2 small" style="display:none;"></div>
+        </div>
+
+        
+        <form id="addEmployeeForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-secondary">Name <span class="text-danger">*</span></label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light"><i class="fas fa-user text-muted"></i></span>
+                <input type="text" class="form-control" id="emp_name" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-secondary">Nationality <span class="text-danger">*</span></label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light"><i class="fas fa-flag text-muted"></i></span>
+                <input type="text" class="form-control" id="emp_nationality" required>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-secondary">Passport No</label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light"><i class="fas fa-passport text-muted"></i></span>
+                <input type="text" class="form-control" id="emp_passport_no" placeholder="e.g. P1234567">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-secondary">Passport Expiry Date <span class="text-danger">*</span></label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light"><i class="fas fa-calendar-alt text-muted"></i></span>
+                <input type="date" class="form-control" id="emp_passport_expiry" required>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-secondary">Emirates ID</label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light"><i class="fas fa-id-card text-muted"></i></span>
+                <input type="text" class="form-control" id="emp_emirates_id" placeholder="784-1990-1234567-1">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-secondary">Salary</label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light"><i class="fas fa-money-bill-wave text-muted"></i></span>
+                <input type="number" step="0.01" class="form-control" id="emp_salary" placeholder="0.00">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-secondary">Payment Type</label>
+              <select class="form-select form-select-sm" id="emp_payment_type">
+                <option value="cash">Cash</option>
+                <option value="bank">Bank</option>
+                <option value="exchange">Exchange</option>
+              </select>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer border-top-0 pt-0 bg-light rounded-bottom-3 pb-3 px-4">
+        <button type="button" class="btn btn-secondary px-4 fw-bold shadow-sm btn-sm" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-info text-white px-4 fw-bold shadow-sm btn-sm" id="btnSubmitEmployee" onclick="submitNewEmployee()">
+          <i class="fas fa-check me-1"></i>Create Employee
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      <div class="modal-header border-bottom-0 pb-2" style="background:linear-gradient(45deg,#ffc107,#e0a800);color:#fff">
+        <h5 class="modal-title fw-bold text-dark"><i class="fas fa-user-edit me-2"></i>Edit Employee Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4 bg-light">
+        <form id="editEmployeeForm">
+          <input type="hidden" id="edit_emp_id">
+          
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-secondary">Name <span class="text-danger">*</span></label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light"><i class="fas fa-user text-muted"></i></span>
+                <input type="text" class="form-control" id="edit_emp_name" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-secondary">Nationality <span class="text-danger">*</span></label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light"><i class="fas fa-flag text-muted"></i></span>
+                <input type="text" class="form-control" id="edit_emp_nationality" required>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-secondary">Passport No</label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light"><i class="fas fa-passport text-muted"></i></span>
+                <input type="text" class="form-control" id="edit_emp_passport_no" placeholder="e.g. P1234567">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-secondary">Passport Expiry Date <span class="text-danger">*</span></label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light"><i class="fas fa-calendar-alt text-muted"></i></span>
+                <input type="date" class="form-control" id="edit_emp_passport_expiry" required>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-secondary">Emirates ID</label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light"><i class="fas fa-id-card text-muted"></i></span>
+                <input type="text" class="form-control" id="edit_emp_emirates_id" placeholder="784-1990-1234567-1">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-secondary">Salary</label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light"><i class="fas fa-money-bill-wave text-muted"></i></span>
+                <input type="number" step="0.01" class="form-control" id="edit_emp_salary" placeholder="0.00">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-secondary">Payment Type</label>
+              <select class="form-select form-select-sm" id="edit_emp_payment_type">
+                <option value="cash">Cash</option>
+                <option value="bank">Bank</option>
+                <option value="exchange">Exchange</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer border-top-0 pt-0 bg-light rounded-bottom-3 pb-3 px-4">
+        <button type="button" class="btn btn-secondary px-4 fw-bold shadow-sm btn-sm" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-warning text-dark px-4 fw-bold shadow-sm btn-sm" id="btnSubmitEditEmployee" onclick="submitEditEmployee()">
+          <i class="fas fa-save me-1"></i>Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <div class="modal fade" id="importContractsModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
@@ -817,10 +986,205 @@ function renderContractsTable(res){
 }
 
 /* ========== MAIDS DIRECTORY ========== */
+function openAddEmployeeModal() {
+  $('#emp_search_candidate').val('');
+  $('#emp_search_result').hide();
+  document.getElementById('addEmployeeForm').reset();
+  new bootstrap.Modal(document.getElementById('addEmployeeModal')).show();
+}
+
+function searchCandidateForEmployee() {
+  const query = $('#emp_search_candidate').val().trim();
+  if (!query) {
+    alert('Please enter a Search Query');
+    return;
+  }
+
+  const btn = document.getElementById('btnSearchCandidate');
+  const origText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  
+  const resContainer = $('#emp_search_result');
+  resContainer.hide().removeClass('text-danger text-success').text('');
+
+  $.getJSON('/api/am-monthly-contracts/search-candidates', { search: query, limit: 1 })
+    .done(function(res) {
+      if (res && res.id) {
+        // Map candidate fields to employee form
+        $('#emp_name').val(res.candidate_name || '');
+        $('#emp_nationality').val(res.nationality || '');
+        
+        // Ensure passport expiry exists before parsing 
+        if(res.passport_expiry_date) {
+            setDatePickerValue('emp_passport_expiry', res.passport_expiry_date);
+        } else {
+            setDatePickerValue('emp_passport_expiry', '');
+        }
+        
+        $('#emp_passport_no').val(res.passport_no || '');
+        $('#emp_salary').val(res.salary ? parseFloat(res.salary).toFixed(2) : '');
+        
+        resContainer.removeClass('text-danger').addClass('text-success')
+                    .html('<i class="fas fa-check-circle me-1"></i>Candidate details found and populated successfully.')
+                    .show();
+      } else {
+        resContainer.removeClass('text-success').addClass('text-danger')
+                    .html('<i class="fas fa-exclamation-circle me-1"></i>No candidate found matching this query.')
+                    .show();
+      }
+    })
+    .fail(function() {
+      resContainer.removeClass('text-success').addClass('text-danger')
+                  .html('<i class="fas fa-exclamation-triangle me-1"></i>Error fetching candidate details.')
+                  .show();
+    })
+    .always(function() {
+      btn.disabled = false;
+      btn.innerHTML = origText;
+    });
+}
+
+function submitNewEmployee() {
+  const form = document.getElementById('addEmployeeForm');
+  if(!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  const payload = {
+    name: $('#emp_name').val().trim(),
+    nationality: $('#emp_nationality').val().trim(),
+    passport_expiry_date: $('#emp_passport_expiry').val(),
+    passport_no: $('#emp_passport_no').val().trim() || null,
+    emirates_id: $('#emp_emirates_id').val().trim() || null,
+    salary: $('#emp_salary').val() ? parseFloat($('#emp_salary').val()) : null,
+    payment_type: $('#emp_payment_type').val()
+  };
+
+  const btn = document.getElementById('btnSubmitEmployee');
+  const origText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving...';
+
+  $.ajax({
+    url: '/api/am-monthly-contracts/employees',
+    method: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(payload),
+    headers: {
+      'Accept': 'application/json',
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') || ''
+    }
+  })
+  .done(function(res) {
+    const msg = res.message || 'Employee created successfully!';
+    if(typeof toastr !== 'undefined') toastr.success(msg);
+    else alert(msg);
+    bootstrap.Modal.getInstance(document.getElementById('addEmployeeModal')).hide();
+    loadMaids(1);
+  })
+  .fail(function(xhr) {
+    let msg = 'Failed to create employee.';
+    if(xhr.responseJSON) {
+      if(xhr.responseJSON.errors) {
+        msg = Object.values(xhr.responseJSON.errors).map(e => e.join(', ')).join('\n');
+      } else if(xhr.responseJSON.message) {
+        msg = xhr.responseJSON.message;
+      }
+    }
+    if(typeof toastr !== 'undefined') toastr.error(msg);
+    else alert(msg);
+  })
+  .always(function() {
+    btn.disabled = false;
+    btn.innerHTML = origText;
+  });
+}
+
+function openEditEmployeeModal(row) {
+  document.getElementById('editEmployeeForm').reset();
+  
+  $('#edit_emp_id').val(row.id);
+  $('#edit_emp_name').val(row.name || '');
+  $('#edit_emp_nationality').val(row.nationality || '');
+  $('#edit_emp_passport_no').val(row.passport_no || '');
+  
+  if(row.passport_expiry_date) {
+      setDatePickerValue('edit_emp_passport_expiry', row.passport_expiry_date);
+  } else {
+      setDatePickerValue('edit_emp_passport_expiry', '');
+  }
+  
+  $('#edit_emp_emirates_id').val(row.emirates_id || '');
+  $('#edit_emp_salary').val(row.salary ? parseFloat(row.salary).toFixed(2) : '');
+  $('#edit_emp_payment_type').val((row.payment_type || 'cash').toLowerCase());
+
+  new bootstrap.Modal(document.getElementById('editEmployeeModal')).show();
+}
+
+function submitEditEmployee() {
+  const form = document.getElementById('editEmployeeForm');
+  if(!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  const id = $('#edit_emp_id').val();
+  const payload = {
+    name: $('#edit_emp_name').val().trim(),
+    nationality: $('#edit_emp_nationality').val().trim(),
+    passport_expiry_date: $('#edit_emp_passport_expiry').val(),
+    passport_no: $('#edit_emp_passport_no').val().trim() || null,
+    emirates_id: $('#edit_emp_emirates_id').val().trim() || null,
+    salary: $('#edit_emp_salary').val() ? parseFloat($('#edit_emp_salary').val()) : null,
+    payment_type: $('#edit_emp_payment_type').val()
+  };
+
+  const btn = document.getElementById('btnSubmitEditEmployee');
+  const origText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving...';
+
+  $.ajax({
+    url: '/api/am-monthly-contracts/employees/' + id,
+    method: 'PUT',
+    contentType: 'application/json',
+    data: JSON.stringify(payload),
+    headers: {
+      'Accept': 'application/json',
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') || ''
+    }
+  })
+  .done(function(res) {
+    const msg = res.message || 'Employee updated successfully!';
+    if(typeof toastr !== 'undefined') toastr.success(msg);
+    else alert(msg);
+    bootstrap.Modal.getInstance(document.getElementById('editEmployeeModal')).hide();
+    loadMaids($('#maids_table .pagination .active span').text() || 1);
+  })
+  .fail(function(xhr) {
+    let msg = 'Failed to update employee.';
+    if(xhr.responseJSON) {
+      if(xhr.responseJSON.errors) {
+        msg = Object.values(xhr.responseJSON.errors).map(e => e.join(', ')).join('\n');
+      } else if(xhr.responseJSON.message) {
+        msg = xhr.responseJSON.message;
+      }
+    }
+    if(typeof toastr !== 'undefined') toastr.error(msg);
+    else alert(msg);
+  })
+  .always(function() {
+    btn.disabled = false;
+    btn.innerHTML = origText;
+  });
+}
+
 function clearMaidsFilter(){
   $('#maids_filter_name').val('');
   $('#maids_filter_ref').val('');
-  $('#maids_filter_inside_country_or_outside').val('');
+
   $('#maids_filter_inside_status').val('');
   $('#maids_filter_nationality').val('');
   $('#maids_filter_payment_type').val('');
@@ -838,7 +1202,7 @@ function loadMaids(page){
     per_page: 25,
     name: $('#maids_filter_name').val(),
     reference_no: $('#maids_filter_ref').val(),
-    inside_country_or_outside: $('#maids_filter_inside_country_or_outside').val(),
+
     inside_status: $('#maids_filter_inside_status').val(),
     nationality: $('#maids_filter_nationality').val(),
     payment_type: $('#maids_filter_payment_type').val(),
@@ -868,26 +1232,19 @@ function renderMaidsTable(res){
   html += '<th style="width: 10%">Reference No</th>';
   html += '<th style="width: 20%">Name</th>';
   html += '<th class="text-center" style="width: 15%">Nationality</th>';
-  html += '<th class="text-center" style="width: 10%">Inside/Outside</th>';
-  html += '<th class="text-center" style="width: 10%">Inside Status</th>';
+  html += '<th class="text-center" style="width: 10%">Current Status</th>';
   html += '<th class="text-center" style="width: 10%">Payment Type</th>';
   html += '<th style="width: 20%">Passport / Emirates ID</th>';
+  html += '<th class="text-center" style="width: 5%">Actions</th>';
   html += '</tr></thead><tbody>';
 
   data.forEach(function(row){
-    // Inside Status Mapping
     let statusBadge = '<span class="badge bg-secondary">Unknown</span>';
     const statusVal = parseInt(row.inside_status);
-    if(statusVal === 0) statusBadge = '<span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 text-dark px-2 py-1 shadow-sm">Pending</span>';
+    if(statusVal === 0) statusBadge = '<span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 text-dark px-2 py-1 shadow-sm">Outside</span>';
     else if(statusVal === 1) statusBadge = '<span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-2 py-1 shadow-sm">Office</span>';
     else if(statusVal === 2) statusBadge = '<span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1 shadow-sm">Hired</span>';
     else if(statusVal === 3) statusBadge = '<span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-1 shadow-sm">Incidented</span>';
-
-    // Inside / Outside Mapping
-    let inOutBadge = '<span class="badge bg-secondary">Unknown</span>';
-    const inOutVal = parseInt(row.inside_country_or_outside);
-    if(inOutVal === 1) inOutBadge = '<span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1 shadow-sm">Outside</span>';
-    else if(inOutVal === 2) inOutBadge = '<span class="badge bg-indigo bg-opacity-10 text-indigo border border-indigo border-opacity-25 px-2 py-1 shadow-sm" style="color: #6610f2;">Inside</span>';
 
     // Payment Type
     let payStr = (row.payment_type || '-').toLowerCase();
@@ -898,12 +1255,18 @@ function renderMaidsTable(res){
     html += `<td class="align-middle text-dark">${row.reference_no || '-'}</td>`;
     html += `<td class="align-middle fw-bold text-dark">${row.name || '-'}</td>`;
     html += `<td class="text-center align-middle">${row.nationality || '-'}</td>`;
-    html += `<td class="text-center align-middle">${inOutBadge}</td>`;
     html += `<td class="text-center align-middle">${statusBadge}</td>`;
     html += `<td class="text-center align-middle">${paymentBadge}</td>`;
     html += `<td class="align-middle">
                <div class="small"><span class="text-muted">Pass:</span> ${row.passport_no || '-'}</div>
                <div class="small"><span class="text-muted">EID:</span> ${row.emirates_id || '-'}</div>
+             </td>`;
+             
+    const rowJson = JSON.stringify(row).replace(/'/g, "&#39;").replace(/"/g, '&quot;');
+    html += `<td class="text-center align-middle">
+               <button class="btn btn-sm btn-outline-primary" onclick="openEditEmployeeModal(${rowJson})" title="Edit Employee">
+                 <i class="fas fa-edit"></i>
+               </button>
              </td>`;
     html += '</tr>';
   });
