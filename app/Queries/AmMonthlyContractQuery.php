@@ -59,7 +59,7 @@ class AmMonthlyContractQuery
             $query->where('status', $filters['status']);
         }
 
-        return $query->orderBy('id')->paginate($perPage);
+        return $query->orderBy('id','desc')->paginate($perPage);
     }
 
 
